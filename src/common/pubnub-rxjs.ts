@@ -1,3 +1,5 @@
+// RxJs wrapper for pubnub
+
 import { Observable, ReplaySubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import Pubnub from 'pubnub';

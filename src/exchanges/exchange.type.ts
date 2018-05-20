@@ -48,8 +48,8 @@ export interface CandleStick {
   low: number;
   close: number;
   volume: number;
-  type: number; // number in minute ex. 1 (1 minute), 60 (1hour)
   timestamp: number;
+  type?: number; // number in minute ex. 1 (1 minute), 60 (1hour)
 }
 
 /*

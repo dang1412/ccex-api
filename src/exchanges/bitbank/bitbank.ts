@@ -4,8 +4,9 @@ import { map, concat } from 'rxjs/operators';
 import { PubnubRxJs } from '../../common/pubnub-rxjs';
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Depth, CandleStick } from '../exchange.type';
+import { publicUrl } from './bitbank-common';
+import { BitbankCandlestick } from './bitbank-candlestick';
 
-const publicUrl = 'https://public.bitbank.cc/';
 const subscribeKey = 'sub-c-e12e9174-dd60-11e6-806b-02ee2ddab7fe';
 
 interface RawData<T> {
@@ -30,6 +31,11 @@ interface BitbankPubnubTicker {
 
 export class Bitbank extends ExchangeApi {
   private pubnub: PubnubRxJs;
+  private bitbankCandlestick: BitbankCandlestick;
+
+  get pubnubRxJs(): PubnubRxJs {
+    return this.pubnub;
+  }
 
   get exchangeInfo(): ExchangeInfo {
     return {
@@ -64,6 +70,7 @@ export class Bitbank extends ExchangeApi {
   constructor() {
     super();
     this.pubnub = new PubnubRxJs({subscribeKey});
+    this.bitbankCandlestick = new BitbankCandlestick(this);
   }
 
   getTicker$(pair: string): Observable<Ticker> {
@@ -75,13 +82,17 @@ export class Bitbank extends ExchangeApi {
   fetchTicker$(pair: string): Observable<Ticker> {
     const tickerUrl = publicUrl + `${pair}/ticker`;
     return this.fetch<RawData<BitbankTicker>>(tickerUrl).pipe(
-      map(rawTicker => adaptBitbankTicker(rawTicker.data))
+      map(rawTicker => adaptBitbankTicker(rawTicker.data, pair))
     );
   }
 
   stopTicker(pair: string): void {
     const channel = 'ticker_' + pair;
     this.pubnub.unsubscribeChannel(channel);
+  }
+
+  fetchDepth$(pair: string): Observable<Depth> {
+    return empty();
   }
 
   getDepth$(pair: string): Observable<Depth> {
@@ -92,7 +103,7 @@ export class Bitbank extends ExchangeApi {
 
   }
 
-  getCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
+  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
     return empty();
   }
 
@@ -103,12 +114,12 @@ export class Bitbank extends ExchangeApi {
   private pubnubTicker$(pair: string): Observable<Ticker> {
     const channel = 'ticker_' + pair;
     return this.pubnub.subscribeChannel<BitbankPubnubTicker>(channel).pipe(
-      map(bitbankPubnubTicker => adaptBitbankTicker(bitbankPubnubTicker.data))
+      map(bitbankPubnubTicker => adaptBitbankTicker(bitbankPubnubTicker.data, pair))
     );
   }
 }
 
-function adaptBitbankTicker(bitbankTicker: BitbankTicker): Ticker {
+function adaptBitbankTicker(bitbankTicker: BitbankTicker, pair: string): Ticker {
   return {
     pair: bitbankTicker.pair,
     sell: +bitbankTicker.sell,

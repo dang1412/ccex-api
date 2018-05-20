@@ -7,7 +7,7 @@ import { Bitbank } from './bitbank';
 const bitbank = new Bitbank();
 
 describe('Test bitbank functions', () => {
-  it('should get btc_jpy ticker properly', (done) => {
+  it('should get xrp_jpy ticker realtime properly', (done) => {
     const pair = 'xrp_jpy';
     let count = 0;
     const sub = bitbank.getTicker$(pair).subscribe(ticker => {

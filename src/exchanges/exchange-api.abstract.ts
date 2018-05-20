@@ -9,11 +9,13 @@ export abstract class ExchangeApi {
   abstract get exchangeInfo(): ExchangeInfo;
   abstract get marketNames(): Observable<string[]>;
   abstract get supportFeatures(): SupportFeatures;
+  abstract fetchTicker$(pair: string): Observable<Ticker>;
   abstract getTicker$(pair: string): Observable<Ticker>;
   abstract stopTicker(pair: string): void;
+  abstract fetchDepth$(pair: string): Observable<Depth>;
   abstract getDepth$(pair: string): Observable<Depth>;
   abstract stopDepth(pair: string): void;
-  abstract getCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]>;
+  abstract fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]>;
   abstract getLastCandle$(pair: string, minutesFoot: number): Observable<CandleStick>;
 
   fetch<T>(url: string): Observable<T> {
