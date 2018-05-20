@@ -1,0 +1,30 @@
+{
+  "name": "exchange-realtime-api",
+  "version": "1.0.0",
+  "description": "Crypto currencies exchanges api implementation (include realtime api)",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -r ts-node/register ./src/**/*.spec.ts"
+  },
+  "keywords": [
+    "cryptocurrencies"
+  ],
+  "author": "Dang",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^2.1.2",
+    "pubnub": "^4.20.3",
+    "rxjs": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.3",
+    "@types/mocha": "^5.2.0",
+    "@types/node": "^10.1.2",
+    "@types/node-fetch": "^1.6.9",
+    "@types/pubnub": "^4.0.2",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "ts-node": "^6.0.3",
+    "typescript": "^2.8.3"
+  }
+}
