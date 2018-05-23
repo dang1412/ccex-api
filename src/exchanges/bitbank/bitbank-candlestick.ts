@@ -1,7 +1,7 @@
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { PubnubRxJs } from '../../common/pubnub-rxjs';
+// import { PubnubRxJs } from '../../common/pubnub-rxjs';
 import { CandleStick } from '../exchange.type';
 import { Bitbank } from './bitbank';
 import { publicUrl } from './bitbank-common';
@@ -56,6 +56,7 @@ export class BitbankCandlestick {
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
     const resolution = minutesToResolution[minutesFoot] || '1hour';
     const timestrArray = getTimeStrArrayFromRange(resolution, start, end);
+
     const requestArray = timestrArray.map(timestr => this.fetchCandleStickFile$(pair, resolution, timestr));
     return forkJoin(...requestArray).pipe(
       map(results => Array.prototype.concat.apply([], results))

@@ -1,1 +1,1 @@
-export const publicUrl = 'https://public.bitbank.cc/';
+export const publicUrl = 'https://public.bitbank.cc';

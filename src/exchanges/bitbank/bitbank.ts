@@ -73,14 +73,14 @@ export class Bitbank extends ExchangeApi {
     this.bitbankCandlestick = new BitbankCandlestick(this);
   }
 
-  getTicker$(pair: string): Observable<Ticker> {
+  ticker$(pair: string): Observable<Ticker> {
     return this.fetchTicker$(pair).pipe(
       concat(this.pubnubTicker$(pair))
     );
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {
-    const tickerUrl = publicUrl + `${pair}/ticker`;
+    const tickerUrl = publicUrl + `/${pair}/ticker`;
     return this.fetch<RawData<BitbankTicker>>(tickerUrl).pipe(
       map(rawTicker => adaptBitbankTicker(rawTicker.data, pair))
     );
@@ -95,7 +95,7 @@ export class Bitbank extends ExchangeApi {
     return empty();
   }
 
-  getDepth$(pair: string): Observable<Depth> {
+  depth$(pair: string): Observable<Depth> {
     return empty();
   }
 
@@ -104,10 +104,10 @@ export class Bitbank extends ExchangeApi {
   }
 
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
-    return empty();
+    return this.bitbankCandlestick.fetchCandleStickRange$(pair, minutesFoot, start, end);
   }
 
-  getLastCandle$(pair: string, minutesFoot: number): Observable<CandleStick> {
+  lastCandle$(pair: string, minutesFoot: number): Observable<CandleStick> {
     return empty();
   }
 

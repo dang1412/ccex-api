@@ -10,7 +10,7 @@ describe('Test bitbank functions', () => {
   it('should get xrp_jpy ticker realtime properly', (done) => {
     const pair = 'xrp_jpy';
     let count = 0;
-    const sub = bitbank.getTicker$(pair).subscribe(ticker => {
+    const sub = bitbank.ticker$(pair).subscribe(ticker => {
       console.log('Got btc_jpy ticker =>', ticker);
       count ++;
       expect(checkTicker(ticker)).to.true;

@@ -4,7 +4,8 @@
   "description": "Crypto currencies exchanges api implementation (include realtime api)",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register ./src/**/*.spec.ts"
+    "build": "tsc",
+    "test": "mocha -r ts-node/register ./src/**/*candlestick.spec.ts"
   },
   "keywords": [
     "cryptocurrencies"
