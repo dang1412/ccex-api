@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "test": "mocha -r ts-node/register ./src/**/*candlestick.spec.ts"
+    "test": "mocha -r ts-node/register ./src/**/bitbank.spec.ts"
   },
   "keywords": [
     "cryptocurrencies"
