@@ -41,9 +41,7 @@ export class PubnubRxJs {
   private addEventListener() {
     this.pubnub.addListener({
       status: function (statusEvent: any) {
-        if (statusEvent.category === 'PNConnectedCategory') {
-          console.log('PNConnectedCategory');
-        }
+        if (statusEvent.category === 'PNConnectedCategory') {}
       },
       message: messageEvent => {
         if (messageEvent && messageEvent.channel && messageEvent.message) {

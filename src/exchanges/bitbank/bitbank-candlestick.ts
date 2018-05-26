@@ -1,12 +1,13 @@
-import { Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, forkJoin, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 // import { PubnubRxJs } from '../../common/pubnub-rxjs';
 import { CandleStick } from '../exchange.type';
 import { Bitbank } from './bitbank';
-import { publicUrl } from './bitbank-common';
+import { publicUrl, BitbankRawCandlesticks } from './bitbank-common';
+import { adaptBitbankCandle, convertTimestampToCandleFoot, getTimeStrArrayFromRange, isLatestTime } from './bitbank-functions';
 
-// const CANDLES_CACHE: { [key: string]: CandleStick[] } = {};
+const candleFileCaches: { [key: string]: CandleStick[] } = {};
 
 const minutesToResolution = {
   1: '1min',
@@ -18,134 +19,77 @@ const minutesToResolution = {
   1440: '1day',
 };
 
-// each resolution is stored in a file of 1 day or 1 year,
-// this indicates resolutions that stored in 1 day file (1hour or lower)
-const resolutionUseDay = {
-  '1min': true,
-  '5min': true,
-  '15min': true,
-  '30min': true,
-  '1hour': true,
-};
-
-type BitbankCandle = [
-  string, // open
-  string, // high
-  string, // low
-  string, // close
-  string, // volume
-  number  // timestamp
-];
-
-interface BitbankRawCandlesticks {
-  success: 0 | 1;
-  data: {
-    candlestick: {
-      type: string;
-      ohlcv: BitbankCandle[];
-    }[];
-  }
-}
-
 export class BitbankCandlestick {
   private bitbank: Bitbank;
+
   constructor(bitbank: Bitbank) {
     this.bitbank = bitbank;
   }
 
+  /**
+   * @param pair
+   * @param timestamp
+   * @param minutesFoot (resolution)
+   */
+  getApproximateHistoryPrice(pair: string, timestamp: number, minutesFoot: number): Observable<number> {
+    const candleTimestamp = convertTimestampToCandleFoot(timestamp, minutesFoot);
+    return this.fetchCandleStickRange$(pair, minutesFoot, candleTimestamp, candleTimestamp).pipe(
+      map(candles => {
+        const candle = candles.find(_candle => _candle.timestamp === candleTimestamp);
+        return candle ? candle.close : 0;
+      })
+    );
+  }
+
+  /**
+   * 
+   * @param pair 
+   * @param minutesFoot 
+   * @param start 
+   * @param end 
+   */
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
     const resolution = minutesToResolution[minutesFoot] || '1hour';
     const timestrArray = getTimeStrArrayFromRange(resolution, start, end);
 
-    const requestArray = timestrArray.map(timestr => this.fetchCandleStickFile$(pair, resolution, timestr));
+    const requestArray = timestrArray.map(timestr => this.fetchAndCacheCandleStick$(pair, resolution, timestr));
     return forkJoin(...requestArray).pipe(
       map(results => Array.prototype.concat.apply([], results))
     );
   }
 
+  /**
+   * 
+   * @param pair 
+   * @param resolution 
+   * @param timeString 
+   */
+  private fetchAndCacheCandleStick$(pair: string, resolution: string, timeString: string): Observable<CandleStick[]> {
+    const key = pair + resolution + timeString;
+    if (candleFileCaches[key]) {
+      return of(candleFileCaches[key]);
+    }
+
+    return this.fetchCandleStickFile$(pair, resolution, timeString).pipe(
+      tap(candles => {
+        // cache file request result if it is not newest file
+        if (candles && candles.length && !isLatestTime(timeString)) {
+          candleFileCaches[key] = candles;
+        }
+      })
+    );
+  }
+
+  /**
+   * 
+   * @param pair 
+   * @param resolution 
+   * @param timeString 
+   */
   private fetchCandleStickFile$(pair: string, resolution: string, timeString: string): Observable<CandleStick[]> {
     const url = `${publicUrl}/${pair}/candlestick/${resolution}/${timeString}`;
     return this.bitbank.fetch<BitbankRawCandlesticks>(url).pipe(
       map(raw => raw.data.candlestick[0].ohlcv.map(adaptBitbankCandle))
     )
   }
-}
-
-function getTimeStrArrayFromRange(resolution: string, start: number, end: number): string[] {
-  const useDay = resolutionUseDay[resolution];
-  return useDay ? getDayTimeStringArrayFromRange(start, end) : getYearTimeStringArrayFromRange(start, end);
-}
-
-/**
- * 
- * @param ts timestamp
- * @result YYYYMMDD
- */
-function getUTCDateString(ts: number): string {
-  const d = new Date(ts);
-  const yearStr = d.getUTCFullYear() + '';
-
-  const month = d.getUTCMonth() + 1;
-  const monthStr = (month < 10 ? '0' : '') + month;
-
-  const day = d.getUTCDate();
-  const dayStr = (day < 10 ? '0' : '') + day;
-
-  return yearStr + monthStr + dayStr;
-}
-
-function nextDateString(dateString: string): string {
-  const dayStr = dateString.substr(6, 8);
-  const date = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 6)}-${dayStr} 00:00:00`);
-  const nextDay = +dayStr + 1;
-  return getUTCDateString(date.setUTCDate(nextDay));
-}
-
-function getUTCYearString(ts: number): number {
-  const d = new Date(ts);
-  return d.getUTCFullYear();
-}
-
-function getDayTimeStringArrayFromRange(start: number, end: number): string[] {
-  let dateString = getUTCDateString(start);
-  const endDateString = getUTCDateString(end);
-
-  const timeStringArray = [];
-
-  // loop condition: dateFormat <= endDateFormat;
-  while (dateString <= endDateString) {
-    timeStringArray.push(dateString);
-    dateString = nextDateString(dateString);
-  }
-
-  return timeStringArray;
-}
-
-function getYearTimeStringArrayFromRange(start: number, end: number): string[] {
-  let year = getUTCYearString(start);
-  const endYear = getUTCYearString(end);
-
-  const timeStringArray = [];
-
-  // loop condition: dateFormat <= endDateFormat;
-  while (year <= endYear) {
-    timeStringArray.push(year + '');
-    year += 1;
-  }
-
-  return timeStringArray;
-}
-
-/**
- * @param bitbankCandle 
- */
-function adaptBitbankCandle(bitbankCandle: BitbankCandle): CandleStick {
-  return {
-    open: +bitbankCandle[0],
-    high: +bitbankCandle[1],
-    low: +bitbankCandle[2],
-    close: +bitbankCandle[3],
-    volume: +bitbankCandle[4],
-    timestamp: bitbankCandle[5],
-  };
 }

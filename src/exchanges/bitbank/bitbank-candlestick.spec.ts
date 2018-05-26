@@ -4,8 +4,7 @@ import 'mocha';
 import { Bitbank } from './bitbank';
 import { BitbankCandlestick } from './bitbank-candlestick';
 
-const bitbank = new Bitbank();
-const bitbankCandlestick = new BitbankCandlestick(bitbank);
+const bitbankCandlestick = new BitbankCandlestick(new Bitbank());
 
 describe('Test bitbank-candlestick functions', () => {
   it('should get btc_jpy 5min candles properly', (done) => {
