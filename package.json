@@ -1,5 +1,5 @@
 {
-  "name": "exchange-realtime-api",
+  "name": "ccex-realtime-api",
   "version": "0.0.1",
   "description": "Crypto currencies exchanges api implementation (include realtime api)",
   "main": "index.js",
