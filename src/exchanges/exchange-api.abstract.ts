@@ -1,9 +1,5 @@
-import { Observable, from } from 'rxjs';
-import { getFetchFunction } from '../common/functions';
-
+import { Observable } from 'rxjs';
 import { ExchangeInfo, SupportFeatures, Ticker, Depth, CandleStick } from './exchange.type';
-
-const fetch = getFetchFunction();
 
 export abstract class ExchangeApi {
   abstract get exchangeInfo(): ExchangeInfo;
@@ -25,8 +21,4 @@ export abstract class ExchangeApi {
   abstract fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]>;
   // realtime last candlestick
   abstract lastCandle$(pair: string, minutesFoot: number): Observable<CandleStick>;
-
-  fetch<T>(url: string): Observable<T> {
-    return from(fetch(url).then(res => res.json()));
-  }
 }

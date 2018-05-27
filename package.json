@@ -1,21 +1,25 @@
 {
   "name": "exchange-realtime-api",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Crypto currencies exchanges api implementation (include realtime api)",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "mocha -r ts-node/register ./src/**/*.spec.ts"
   },
   "keywords": [
-    "cryptocurrencies"
+    "crypto",
+    "cryptocurrencies",
+    "exchange"
   ],
-  "author": "Dang",
+  "repository": "git@github.com:dang1412/exchange-realtime-api.git",
+  "author": "Dang Thanh Tung",
   "license": "MIT",
   "dependencies": {
     "node-fetch": "^2.1.2",
     "pubnub": "^4.20.3",
-    "rxjs": "^6.1.0"
+    "rxjs": "^6.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.3",

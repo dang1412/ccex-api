@@ -1,9 +1,8 @@
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-// import { PubnubRxJs } from '../../common/pubnub-rxjs';
+import { apiFetch } from '../../common';
 import { CandleStick } from '../exchange.type';
-import { Bitbank } from './bitbank';
 import { publicUrl, BitbankRawCandlesticks } from './bitbank-common';
 import { adaptBitbankCandle, convertTimestampToCandleFoot, getTimeStrArrayFromRange, isLatestTime } from './bitbank-functions';
 
@@ -20,11 +19,7 @@ const minutesToResolution = {
 };
 
 export class BitbankCandlestick {
-  private bitbank: Bitbank;
-
-  constructor(bitbank: Bitbank) {
-    this.bitbank = bitbank;
-  }
+  constructor() {}
 
   /**
    * @param pair
@@ -88,7 +83,7 @@ export class BitbankCandlestick {
    */
   private fetchCandleStickFile$(pair: string, resolution: string, timeString: string): Observable<CandleStick[]> {
     const url = `${publicUrl}/${pair}/candlestick/${resolution}/${timeString}`;
-    return this.bitbank.fetch<BitbankRawCandlesticks>(url).pipe(
+    return apiFetch<BitbankRawCandlesticks>(url).pipe(
       map(raw => raw.data.candlestick[0].ohlcv.map(adaptBitbankCandle))
     )
   }

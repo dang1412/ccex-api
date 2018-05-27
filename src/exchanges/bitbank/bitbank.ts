@@ -1,7 +1,7 @@
 import { Observable, of, empty } from 'rxjs';
 import { map, concat } from 'rxjs/operators';
 
-import { PubnubRxJs } from '../../common/pubnub-rxjs';
+import { PubnubRxJs, apiFetch } from '../../common';
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Depth, CandleStick } from '../exchange.type';
 import { publicUrl } from './bitbank-common';
@@ -23,10 +23,6 @@ interface BitbankTicker {
   last: string;
   vol: string;
   timestamp: number;
-}
-
-interface BitbankPubnubTicker {
-  data: BitbankTicker;
 }
 
 export class Bitbank extends ExchangeApi {
@@ -70,7 +66,7 @@ export class Bitbank extends ExchangeApi {
   constructor() {
     super();
     this.pubnub = new PubnubRxJs({subscribeKey});
-    this.bitbankCandlestick = new BitbankCandlestick(this);
+    this.bitbankCandlestick = new BitbankCandlestick();
   }
 
   ticker$(pair: string): Observable<Ticker> {
@@ -81,7 +77,7 @@ export class Bitbank extends ExchangeApi {
 
   fetchTicker$(pair: string): Observable<Ticker> {
     const tickerUrl = publicUrl + `/${pair}/ticker`;
-    return this.fetch<RawData<BitbankTicker>>(tickerUrl).pipe(
+    return apiFetch<RawData<BitbankTicker>>(tickerUrl).pipe(
       map(rawTicker => adaptBitbankTicker(rawTicker.data, pair))
     );
   }
@@ -113,7 +109,7 @@ export class Bitbank extends ExchangeApi {
 
   private pubnubTicker$(pair: string): Observable<Ticker> {
     const channel = 'ticker_' + pair;
-    return this.pubnub.subscribeChannel<BitbankPubnubTicker>(channel).pipe(
+    return this.pubnub.subscribeChannel<RawData<BitbankTicker>>(channel).pipe(
       map(bitbankPubnubTicker => adaptBitbankTicker(bitbankPubnubTicker.data, pair))
     );
   }
