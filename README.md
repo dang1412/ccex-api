@@ -19,7 +19,7 @@ Or you can include only the part that you need
 ```
 import { BitbankCandlestick } from 'ccex-realtime-api/exchanges/bitbank/bitbank-candlestick;
 
-const bitbankCandlestick = new BitbankCandlestick(bitbankApi);
+const bitbankCandlestick = new BitbankCandlestick();
 bitbankCandlestick.getApproximateHistoryPrice('btc_jpy', 1526917534904, 1).subscribe(price => console.log(price));
 ```
 
