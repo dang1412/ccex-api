@@ -1,5 +1,5 @@
-import { Bitbank } from './exchanges/bitbank/bitbank';
+import { BitbankApi } from './exchanges/bitbank';
 
 export {
-  Bitbank
+  BitbankApi
 }

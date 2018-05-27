@@ -25,7 +25,7 @@ interface BitbankTicker {
   timestamp: number;
 }
 
-export class Bitbank extends ExchangeApi {
+export class BitbankApi extends ExchangeApi {
   private pubnub: PubnubRxJs;
   private bitbankCandlestick: BitbankCandlestick;
 
