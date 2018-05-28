@@ -24,6 +24,7 @@ bitbankCandlestick.getApproximateHistoryPrice('btc_jpy', 1526917534904, 1).subsc
 ```
 
 # Api
+Basically all exchanges have these following api implemented.
 ```
 export abstract class ExchangeApi {
   abstract get exchangeInfo(): ExchangeInfo;
@@ -47,6 +48,9 @@ export abstract class ExchangeApi {
   abstract lastCandle$(pair: string, minutesFoot: number): Observable<CandleStick>;
 }
 ```
+
+Besides, an exchange may have more specific functions. It depends on exchange features and implementation.
+In that case, it is good to have specific guide for that exchange located at `exchanges/{exchange}/README.md`
 # Test
 
 ## Test all exchange

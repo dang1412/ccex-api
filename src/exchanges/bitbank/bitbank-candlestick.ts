@@ -1,7 +1,7 @@
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { apiFetch } from '../../common';
+import { rxjsFetch } from '../../common';
 import { CandleStick } from '../exchange.type';
 import { publicUrl, BitbankRawCandlesticks } from './bitbank-common';
 import { adaptBitbankCandle, convertTimestampToCandleFoot, getTimeStrArrayFromRange, isLatestTime } from './bitbank-functions';
@@ -83,7 +83,7 @@ export class BitbankCandlestick {
    */
   private fetchCandleStickFile$(pair: string, resolution: string, timeString: string): Observable<CandleStick[]> {
     const url = `${publicUrl}/${pair}/candlestick/${resolution}/${timeString}`;
-    return apiFetch<BitbankRawCandlesticks>(url).pipe(
+    return rxjsFetch<BitbankRawCandlesticks>(url).pipe(
       map(raw => raw.data.candlestick[0].ohlcv.map(adaptBitbankCandle))
     )
   }

@@ -1,7 +1,7 @@
 import { Observable, of, empty } from 'rxjs';
 import { map, concat } from 'rxjs/operators';
 
-import { PubnubRxJs, apiFetch } from '../../common';
+import { PubnubRxJs, rxjsFetch } from '../../common';
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Depth, CandleStick } from '../exchange.type';
 import { publicUrl } from './bitbank-common';
@@ -77,7 +77,7 @@ export class BitbankApi extends ExchangeApi {
 
   fetchTicker$(pair: string): Observable<Ticker> {
     const tickerUrl = publicUrl + `/${pair}/ticker`;
-    return apiFetch<RawData<BitbankTicker>>(tickerUrl).pipe(
+    return rxjsFetch<RawData<BitbankTicker>>(tickerUrl).pipe(
       map(rawTicker => adaptBitbankTicker(rawTicker.data, pair))
     );
   }
