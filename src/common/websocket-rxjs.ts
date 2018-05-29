@@ -8,6 +8,13 @@ export class WebSocketRxJs<T> {
   private data$ = new ReplaySubject<T>(1);
   private opened$ = new ReplaySubject<boolean>(1);
 
+  /**
+   * message stream
+   */
+  get message$(): Observable<T> {
+    return this.data$.asObservable();
+  }
+
   constructor(url: string) {
     this.webSocket = new WebSocket(url);
     this.webSocket.onopen = (e) => { this.opened$.next(true); };
@@ -22,18 +29,11 @@ export class WebSocketRxJs<T> {
   }
 
   /**
-   * @param url
-   */
-  message$(url: string): Observable<T> {
-    return this.data$.asObservable();
-  }
-
-  /**
    * @param text
    */
   send(text: string) {
     // wait until socket open and send the text only once per call
-    this.opened$.pipe(filter(opened => opened), take(1)).subscribe(() => {
+    this.opened$.pipe(take(1), filter(opened => opened)).subscribe(() => {
       this.webSocket.send(text);
     });
   }
