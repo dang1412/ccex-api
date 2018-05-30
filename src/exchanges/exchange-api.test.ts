@@ -1,10 +1,8 @@
 import 'mocha';
-import { expect } from 'chai';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, finalize } from 'rxjs/operators';
 
-import { Ticker } from './exchange.type';
 import { ExchangeApi } from './exchange-api.abstract';
+import { checkTicker } from './exchange-test.functions';
 
 export class ExchangeApiTest {
   private exchange: ExchangeApi;
@@ -42,35 +40,16 @@ function testExchange(exchange: ExchangeApi, only = false): void {
     it(`should get tickers realtime for all pairs`, (done) => {
       let count = markets.length;
       markets.forEach(market => {
-        testTickerStream(exchange.ticker$(market), () => {
-          count --;
+        exchange.ticker$(market).pipe(take(2), finalize(() => {
+          count--;
           if (count === 0) {
             done();
           }
-        });
+        })).subscribe(ticker => checkTicker(ticker));
       })
     });
 
     // it test for depth
     it('should get depths realtime for all pairs');
   });
-}
-
-function testTickerStream(ticker$: Observable<Ticker>, cb: Function, checkNumber = 1): void {
-  ticker$.pipe(take(checkNumber)).subscribe(
-    (ticker) => {
-      expect(checkTicker(ticker)).to.true;
-    },
-    (e) => {},
-    () => {
-      cb();
-    }
-  );
-}
-
-function checkTicker(ticker: Ticker): boolean {
-  return ticker
-    && typeof ticker.last === 'number'
-    && typeof ticker.low === 'number'
-    && typeof ticker.high === 'number';
 }
