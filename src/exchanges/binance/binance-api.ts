@@ -1,7 +1,5 @@
 import { Observable, of, empty } from 'rxjs';
-import { map, concat } from 'rxjs/operators';
 
-import { rxjsFetch } from '../../common';
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Depth, CandleStick } from '../exchange.type';
 
