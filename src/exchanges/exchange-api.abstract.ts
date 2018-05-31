@@ -3,7 +3,7 @@ import { ExchangeInfo, SupportFeatures, Ticker, Depth, CandleStick } from './exc
 
 export abstract class ExchangeApi {
   abstract get exchangeInfo(): ExchangeInfo;
-  abstract get marketNames(): Observable<string[]>;
+  abstract get marketNames(): string[];
   abstract get supportFeatures(): SupportFeatures;
   // request ticker
   abstract fetchTicker$(pair: string): Observable<Ticker>;

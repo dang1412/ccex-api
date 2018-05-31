@@ -3,19 +3,19 @@ import { Observable, empty } from 'rxjs';
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Depth, CandleStick } from '../exchange.type';
 
-export class BinanceApi extends ExchangeApi {
+export class BitfinexApi extends ExchangeApi {
   get exchangeInfo(): ExchangeInfo {
     return {
-      name: 'binance',
-      logoUrl: 'https://www.binance.com/resources/img/logo-en.svg',
-      homepage: 'https://www.binance.com/?ref=16635017',
-      country: 'cn'
+      name: 'bitfinex',
+      logoUrl: 'https://files.readme.io/65ad6c8-small-logo.png',
+      homepage: 'https://www.bitfinex.com/',
+      country: 'British Virgin Islands'
     };
   }
 
   get marketNames(): string[] {
     return [
-      'btc_usdt',
+      'btc_usd',
       'eos_btc',
       'eth_btc',
       'ltc_btc',

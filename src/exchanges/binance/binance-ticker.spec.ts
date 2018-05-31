@@ -7,7 +7,7 @@ import { BinanceTicker } from './binance-ticker';
 
 const binanceTicker = new BinanceTicker();
 
-describe.only('Test Binance ticker', function() {
+describe('Test Binance ticker', function() {
   this.timeout(0);
   const markets = ['btc_usdt', 'eos_btc', 'eos_usdt'];
   markets.forEach(market => {

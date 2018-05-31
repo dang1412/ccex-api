@@ -1,5 +1,5 @@
 import 'mocha';
-import { take, finalize } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 import { ExchangeApi } from './exchange-api.abstract';
 import { checkTicker } from './exchange-test.functions';
@@ -21,31 +21,21 @@ export class ExchangeApiTest {
 }
 
 function testExchange(exchange: ExchangeApi, only = false): void {
-  // get all markets before run it
-  let markets = [];
-  before((done) => {
-    exchange.marketNames.subscribe((marketNames) => {
-      markets = marketNames;
-      done();
-    });
-  });
-
   const describeFunc = only ? describe.only : describe;
+  const markets = exchange.marketNames;
 
   describeFunc(`Test ${exchange.exchangeInfo.name} functions`, function () {
     // remove limited timeout
     this.timeout(0);
 
     // it test for ticker
-    it(`should get tickers realtime for all pairs`, (done) => {
-      let count = markets.length;
-      markets.forEach(market => {
-        exchange.ticker$(market).pipe(take(2), finalize(() => {
-          count--;
-          if (count === 0) {
-            done();
-          }
-        })).subscribe(ticker => checkTicker(ticker));
+    markets.forEach(market => {
+      it(`should get ticker ${market}`, (done) => {
+        exchange.ticker$(market).pipe(take(2)).subscribe(
+          ticker => checkTicker(ticker),
+          (e) => console.log('Error', e),
+          () => done()
+        );
       })
     });
 

@@ -1,4 +1,4 @@
-import { Observable, of, empty } from 'rxjs';
+import { Observable, empty } from 'rxjs';
 import { map, concat } from 'rxjs/operators';
 
 import { PubnubRxJs, rxjsFetch } from '../../common';
@@ -42,8 +42,8 @@ export class BitbankApi extends ExchangeApi {
     };
   }
 
-  get marketNames(): Observable<string[]> {
-    return of([
+  get marketNames(): string[] {
+    return [
       'btc_jpy',
       'xrp_jpy',
       'eth_btc',
@@ -52,7 +52,7 @@ export class BitbankApi extends ExchangeApi {
       'mona_btc',
       'bcc_jpy',
       'bcc_btc',
-    ]);
+    ];
   }
 
   get supportFeatures(): SupportFeatures {
