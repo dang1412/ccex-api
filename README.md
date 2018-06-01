@@ -3,6 +3,7 @@
 cryptocurrency exchange realtime api wrapper
 
 # Usage
+This library is designed to be usable in both nodejs and browser (with frontend framework) environment
 ## install
 ```
 npm i --save ccex-api
@@ -23,6 +24,10 @@ import { BitbankCandlestick } from 'ccex-api/exchanges/bitbank/bitbank-candlesti
 const bitbankCandlestick = new BitbankCandlestick();
 bitbankCandlestick.getApproximateHistoryPrice('btc_jpy', 1526917534904, 1).subscribe(price => console.log(price));
 ```
+
+# Supported Exchanges
+
+Bitbank, Binance, Bitfinex
 
 # Api
 Basically all exchanges have these following api implemented.
@@ -52,6 +57,10 @@ export abstract class ExchangeApi {
 
 Besides, an exchange may have more specific functions. It depends on exchange features and implementation.
 In that case, it is good to have specific guide for that exchange located at `exchanges/{exchange}/README.md`
+
+# Contributor guide
+clone folder `src/exchanges/sample`
+
 # Test
 
 ## Test all exchange

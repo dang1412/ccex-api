@@ -16,9 +16,11 @@ export class BitfinexWebsocket {
 
   /**
    * 
-   * @param channel 'ticker'
-   * @param symbol 'tEOSBTC'
+   * @param subscribeRequest
+   * { "event": "subscribe", "channel": "ticker", "symbol": "tEOSBTC" }
+   * { "event": "subscribe", "channel": "candles", "key": "trade:1h:tEOSBTC" }
    */
+  
   subscribe<T>(subscribeRequest: WebsocketSubscribeRequest): Observable<T> {
     if (!this.ws) {
       this.initWs();
@@ -57,6 +59,3 @@ export class BitfinexWebsocket {
 function getKey(subscribeObject: WebsocketSubscribeRequest | WebsocketSubscribeResponse): string {
   return subscribeObject.channel + (subscribeObject.symbol || '') + (subscribeObject.key || '');
 }
-
-// { "event": "subscribe", "channel": "ticker", "symbol": "tEOSBTC" }
-// { "event": "subscribe", "channel": "candles", "key": "trade:1h:tEOSBTC" }

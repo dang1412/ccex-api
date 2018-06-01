@@ -21,5 +21,3 @@ export function adaptBitfinexTicker(bitfinexTicker: BitfinexTickerI, pair: strin
     timestamp: new Date().getTime(),
   };
 }
-
-
