@@ -1,8 +1,8 @@
 import { Observable, empty } from 'rxjs';
 
 import { Ticker } from '../exchange.type';
-import { SampleRawTicker } from './sample-types';
-import { adaptSampleRawTicker } from './sample-functions';
+// import { SampleRawTicker } from './sample-types';
+// import { adaptSampleRawTicker } from './sample-functions';
 
 export class SampleTicker {
   fetchTicker$(pair: string): Observable<Ticker> {
