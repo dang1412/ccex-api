@@ -64,7 +64,7 @@ export interface Transaction {
 
 export interface SupportFeatures {
   ticker: boolean;
-  depth: boolean;
+  orderbook: boolean;
   chart: boolean;
 }
 

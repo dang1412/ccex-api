@@ -28,7 +28,7 @@ export class SampleApi extends ExchangeApi {
   get supportFeatures(): SupportFeatures {
     return {
       ticker: false,
-      depth: false,
+      orderbook: false,
       chart: false
     };
   }

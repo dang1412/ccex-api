@@ -59,14 +59,13 @@ export class BitbankApi extends ExchangeApi {
     return [
       'btc_jpy',
       'xrp_jpy',
-      'eth_btc',
     ];
   }
 
   get supportFeatures(): SupportFeatures {
     return {
       ticker: true,
-      depth: true,
+      orderbook: true,
       chart: true
     };
   }

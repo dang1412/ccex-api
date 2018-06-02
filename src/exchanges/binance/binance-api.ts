@@ -33,7 +33,7 @@ export class BinanceApi extends ExchangeApi {
   get supportFeatures(): SupportFeatures {
     return {
       ticker: true,
-      depth: true,
+      orderbook: true,
       chart: true
     };
   }

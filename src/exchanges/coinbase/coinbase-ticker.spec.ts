@@ -9,7 +9,7 @@ import { wsEndpoint } from './coinbase-functions';
 const coinbaseWebsocket = new CoinbaseWebsocket(wsEndpoint);
 const coinbaseTicker = new CoinbaseTicker(coinbaseWebsocket);
 
-describe.only('Test Coinbase tickers', function () {
+describe('Test Coinbase tickers', function () {
   this.timeout(0);
 
   const markets = ['btc_usd', 'eth_usd', 'eth_btc'];
