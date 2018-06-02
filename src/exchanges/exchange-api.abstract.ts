@@ -1,9 +1,10 @@
 import { Observable } from 'rxjs';
-import { ExchangeInfo, SupportFeatures, Ticker, Depth, CandleStick } from './exchange.type';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from './exchange.type';
 
 export abstract class ExchangeApi {
   abstract get exchangeInfo(): ExchangeInfo;
-  abstract get marketNames(): string[];
+  abstract get markets(): string[];
+  abstract get testMarkets(): string[];
   abstract get supportFeatures(): SupportFeatures;
   // request ticker
   abstract fetchTicker$(pair: string): Observable<Ticker>;
@@ -12,11 +13,11 @@ export abstract class ExchangeApi {
   // stop realtime ticker
   abstract stopTicker(pair: string): void;
   // request depth
-  abstract fetchDepth$(pair: string): Observable<Depth>;
+  abstract fetchOrderbook$(pair: string): Observable<Orderbook>;
   // realtime depth
-  abstract depth$(pair: string): Observable<Depth>;
+  abstract orderbook$(pair: string): Observable<Orderbook>;
   // stop realtime depth
-  abstract stopDepth(pair: string): void;
+  abstract stopOrderbook(pair: string): void;
   // request candlestick
   abstract fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]>;
   // realtime last candlestick

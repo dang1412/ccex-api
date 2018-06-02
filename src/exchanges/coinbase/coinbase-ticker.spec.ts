@@ -22,6 +22,7 @@ describe.only('Test Coinbase tickers', function () {
         },
         (e) => console.log('Error'),
         () => {
+          coinbaseTicker.stopTicker(market);
           done();
         }
       );

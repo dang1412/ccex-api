@@ -1,5 +1,5 @@
 /*
- * Basic info
+ * Exchange basic info
  */
 export interface ExchangeInfo {
   name: string;
@@ -7,6 +7,7 @@ export interface ExchangeInfo {
   homepage: string;
   country: string;
 }
+
 /*
  * Ticker
  */
@@ -25,19 +26,19 @@ export interface Ticker {
 }
 
 /*
- * Depth
+ * Orderbook
  */
-export interface Depth {
+export interface Orderbook {
   asks: [string, string][]; // asc order
   bids: [string, string][]; // des order
   timestamp?: number;
 }
 
-export interface DepthExtended {
-  asks: [string, string, string][]; // asc order
-  bids: [string, string, string][]; // des order
-  timestamp?: number;
-}
+// export interface DepthExtended {
+//   asks: [string, string, string][]; // asc order
+//   bids: [string, string, string][]; // des order
+//   timestamp?: number;
+// }
 
 /*
  * CandleStick

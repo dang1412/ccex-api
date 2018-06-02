@@ -3,7 +3,7 @@ import { map, concat } from 'rxjs/operators';
 
 import { PubnubRxJs, fetchRxjs } from '../../common';
 import { ExchangeApi } from '../exchange-api.abstract';
-import { ExchangeInfo, SupportFeatures, Ticker, Depth, CandleStick } from '../exchange.type';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from '../exchange.type';
 import { publicUrl } from './bitbank-common';
 import { BitbankCandlestick } from './bitbank-candlestick';
 
@@ -42,7 +42,7 @@ export class BitbankApi extends ExchangeApi {
     };
   }
 
-  get marketNames(): string[] {
+  get markets(): string[] {
     return [
       'btc_jpy',
       'xrp_jpy',
@@ -52,6 +52,14 @@ export class BitbankApi extends ExchangeApi {
       'mona_btc',
       'bcc_jpy',
       'bcc_btc',
+    ];
+  }
+
+  get testMarkets(): string[] {
+    return [
+      'btc_jpy',
+      'xrp_jpy',
+      'eth_btc',
     ];
   }
 
@@ -87,15 +95,15 @@ export class BitbankApi extends ExchangeApi {
     this.pubnub.unsubscribeChannel(channel);
   }
 
-  fetchDepth$(pair: string): Observable<Depth> {
+  fetchOrderbook$(pair: string): Observable<Orderbook> {
     return empty();
   }
 
-  depth$(pair: string): Observable<Depth> {
+  orderbook$(pair: string): Observable<Orderbook> {
     return empty();
   }
 
-  stopDepth(pair: string): void {
+  stopOrderbook(pair: string): void {
 
   }
 

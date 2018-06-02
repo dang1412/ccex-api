@@ -1,7 +1,7 @@
 import { Observable, empty } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
-import { ExchangeInfo, SupportFeatures, Ticker, Depth, CandleStick } from '../exchange.type';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from '../exchange.type';
 
 export class BitfinexApi extends ExchangeApi {
   get exchangeInfo(): ExchangeInfo {
@@ -13,7 +13,17 @@ export class BitfinexApi extends ExchangeApi {
     };
   }
 
-  get marketNames(): string[] {
+  get markets(): string[] {
+    return [
+      'btc_usd',
+      'eos_btc',
+      'eth_btc',
+      'ltc_btc',
+      'bcc_btc',
+    ];
+  }
+
+  get testMarkets(): string[] {
     return [
       'btc_usd',
       'eos_btc',
@@ -43,15 +53,15 @@ export class BitfinexApi extends ExchangeApi {
 
   }
 
-  fetchDepth$(pair: string): Observable<Depth> {
+  fetchOrderbook$(pair: string): Observable<Orderbook> {
     return empty();
   }
 
-  depth$(pair: string): Observable<Depth> {
+  orderbook$(pair: string): Observable<Orderbook> {
     return empty();
   }
 
-  stopDepth(pair: string): void {
+  stopOrderbook(pair: string): void {
 
   }
 

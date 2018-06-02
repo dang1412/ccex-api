@@ -1,7 +1,7 @@
 import { Observable, empty } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
-import { ExchangeInfo, SupportFeatures, Ticker, Depth, CandleStick } from '../exchange.type';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from '../exchange.type';
 
 import { SampleTicker } from './sample-ticker';
 
@@ -17,7 +17,11 @@ export class SampleApi extends ExchangeApi {
     };
   }
 
-  get marketNames(): string[] {
+  get markets(): string[] {
+    return [];
+  }
+
+  get testMarkets(): string[] {
     return [];
   }
 
@@ -50,17 +54,17 @@ export class SampleApi extends ExchangeApi {
   }
 
   // api request for depth
-  fetchDepth$(pair: string): Observable<Depth> {
+  fetchOrderbook$(pair: string): Observable<Orderbook> {
     return empty();
   }
 
   // realtime depth
-  depth$(pair: string): Observable<Depth> {
+  orderbook$(pair: string): Observable<Orderbook> {
     return empty();
   }
 
   // stop realtime depth
-  stopDepth(pair: string): void {}
+  stopOrderbook(pair: string): void {}
 
   // request candlestick by time range and resolution
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {

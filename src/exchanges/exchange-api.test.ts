@@ -22,7 +22,7 @@ export class ExchangeApiTest {
 
 function testExchange(exchange: ExchangeApi, only = false): void {
   const describeFunc = only ? describe.only : describe;
-  const markets = exchange.marketNames;
+  const markets = exchange.markets;
 
   describeFunc(`Test ${exchange.exchangeInfo.name} functions`, function () {
     // remove limited timeout
