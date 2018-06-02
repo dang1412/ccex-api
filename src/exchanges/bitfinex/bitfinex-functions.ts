@@ -10,8 +10,8 @@ export function getSymbol(pair: string): string {
 export function adaptBitfinexTicker(bitfinexTicker: BitfinexTickerI, pair: string): Ticker {
   return {
     pair,
-    sell: bitfinexTicker[2],
-    buy: bitfinexTicker[0],
+    ask: bitfinexTicker[2],
+    bid: bitfinexTicker[0],
     low: bitfinexTicker[9],
     high: bitfinexTicker[8],
     last: bitfinexTicker[6],

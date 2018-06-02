@@ -118,8 +118,8 @@ export class BitbankApi extends ExchangeApi {
 function adaptBitbankTicker(bitbankTicker: BitbankTicker, pair: string): Ticker {
   return {
     pair: pair,
-    sell: +bitbankTicker.sell,
-    buy: +bitbankTicker.buy,
+    ask: +bitbankTicker.sell,
+    bid: +bitbankTicker.buy,
     low: +bitbankTicker.low,
     high: +bitbankTicker.high,
     last: +bitbankTicker.last,

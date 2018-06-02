@@ -9,7 +9,7 @@ import { BitfinexTicker } from './bitfinex-ticker';
 const bitfinexWebsocket = new BitfinexWebsocket(wsEndpoint);
 const bitfinexTicker = new BitfinexTicker(bitfinexWebsocket);
 
-describe.only('Test Bitfinex tickers', function () {
+describe('Test Bitfinex tickers', function () {
   this.timeout(0);
   const markets = ['btc_usd', 'eos_btc', 'eos_usd'];
   markets.forEach(market => {
@@ -27,4 +27,3 @@ describe.only('Test Bitfinex tickers', function () {
     });
   });
 });
-

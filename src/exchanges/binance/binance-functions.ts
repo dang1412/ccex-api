@@ -14,8 +14,8 @@ export function binanceTickerChannel(pair: string): string {
 export function adaptBinanceTicker(binanceTicker: BinanceTickerI, pair: string): Ticker {
   return {
     pair,
-    sell: +binanceTicker.a,
-    buy: +binanceTicker.b,
+    ask: +binanceTicker.a,
+    bid: +binanceTicker.b,
     low: +binanceTicker.l,
     high: +binanceTicker.h,
     last: +binanceTicker.c,

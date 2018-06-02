@@ -12,8 +12,8 @@ export interface ExchangeInfo {
  */
 export interface Ticker {
   pair: string;
-  sell: number;
-  buy: number;
+  ask: number;
+  bid: number;
   low: number;
   high: number;
   last: number;
