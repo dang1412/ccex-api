@@ -6,6 +6,6 @@ export function isNode(): boolean {
     !((typeof WorkerGlobalScope !== 'undefined') && (self instanceof WorkerGlobalScope))
 }
 
-export function rxjsFetch<T>(url: string): Observable<T> {
+export function fetchRxjs<T>(url: string): Observable<T> {
   return from(fetch(url).then(res => res.json()));
 }
