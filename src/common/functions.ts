@@ -6,6 +6,8 @@ export function isNode(): boolean {
     !((typeof WorkerGlobalScope !== 'undefined') && (self instanceof WorkerGlobalScope))
 }
 
-export function fetchRxjs<T>(url: string): Observable<T> {
-  return from(fetch(url).then(res => res.json()));
+export function fetchRxjs<T>(url: string, options?: {}): Observable<T> {
+  // patch the error in browser running webpack built js: change the context of fetch to not window object
+  const fetchFunc = fetch;
+  return from(fetchFunc(url, options).then(res => res.json()));
 }

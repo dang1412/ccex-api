@@ -9,7 +9,7 @@ These features are supported with all major exchanges
 - Support for both Nodejs and Browser environment
 - Modular structure make sure you include minimum code as you need (exspecially for client side application)
 - Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere)
-- More to come: Tradingview datafeed for each exchange, private rest api with api key
+- More to come: Tradingview datafeed for each exchange, private rest api with api key...
 
 # Supported Exchanges
 
