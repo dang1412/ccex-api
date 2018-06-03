@@ -3,7 +3,7 @@ import { map, concat } from 'rxjs/operators';
 
 import { PubnubRxJs, fetchRxjs } from '../../common';
 import { ExchangeApi } from '../exchange-api.abstract';
-import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from '../exchange.type';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from '../exchange-types';
 import { publicUrl, subscribeKey } from './bitbank-common';
 import { RawData, BitbankTicker } from './bitbank-types';
 import { BitbankCandlestick } from './bitbank-candlestick';

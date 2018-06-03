@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { WebSocketRxJs } from '../../common/websocket-rxjs';
-import { Ticker } from '../exchange.type';
+import { Ticker } from '../exchange-types';
 import { BinanceTickerI } from './binance-types';
 import { adaptBinanceTicker, binanceTickerChannel } from './binance-functions';
 

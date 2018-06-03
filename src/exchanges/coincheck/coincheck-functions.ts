@@ -1,4 +1,4 @@
-import { Ticker } from '../exchange.type';
+import { Ticker } from '../exchange-types';
 import { CoincheckRawTicker } from './coincheck-types';
 
 export const publicUrl = 'https://coincheck.com';

@@ -1,4 +1,4 @@
-import { Ticker } from '../exchange.type';
+import { Ticker } from '../exchange-types';
 import { CoinbaseRawTicker } from './coinbase-types';
 
 export const wsEndpoint = 'wss://ws-feed.gdax.com';

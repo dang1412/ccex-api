@@ -1,4 +1,4 @@
-import { CandleStick } from '../exchange.type';
+import { CandleStick } from '../exchange-types';
 import { BitbankCandle } from './bitbank-types';
 
 /**

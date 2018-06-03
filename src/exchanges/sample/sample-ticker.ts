@@ -1,6 +1,6 @@
 import { Observable, empty } from 'rxjs';
 
-import { Ticker } from '../exchange.type';
+import { Ticker } from '../exchange-types';
 // import { SampleRawTicker } from './sample-types';
 // import { adaptSampleRawTicker } from './sample-functions';
 

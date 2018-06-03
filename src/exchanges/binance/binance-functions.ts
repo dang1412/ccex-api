@@ -1,4 +1,4 @@
-import { Ticker } from '../exchange.type';
+import { Ticker } from '../exchange-types';
 import { BinanceTickerI } from './binance-types';
 
 const wsEndpoint = 'wss://stream2.binance.com:9443/ws/';

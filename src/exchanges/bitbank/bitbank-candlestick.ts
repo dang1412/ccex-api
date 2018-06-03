@@ -2,7 +2,7 @@ import { Observable, forkJoin, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { fetchRxjs } from '../../common';
-import { CandleStick } from '../exchange.type';
+import { CandleStick } from '../exchange-types';
 import { publicUrl } from './bitbank-common';
 import { RawData, BitbankRawCandlesticks } from './bitbank-types';
 import { adaptBitbankCandle, convertTimestampToCandleFoot, getTimeStrArrayFromRange, isLatestTime } from './bitbank-functions';

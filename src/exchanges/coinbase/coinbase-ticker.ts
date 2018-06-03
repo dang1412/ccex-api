@@ -1,6 +1,6 @@
 import { Observable, empty } from 'rxjs';
 
-import { Ticker } from '../exchange.type';
+import { Ticker } from '../exchange-types';
 import { CoinbaseRawTicker, WebsocketSubscribeRequest, WebsocketUnSubscribeRequest } from './coinbase-types';
 import { adaptCoinbaseRawTicker, getProductId } from './coinbase-functions';
 import { CoinbaseWebsocket } from './coinbase-websocket';

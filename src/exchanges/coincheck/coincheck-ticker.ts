@@ -1,7 +1,7 @@
 import { Observable, empty } from 'rxjs';
 
 import { fetchRxjs } from '../../common';
-import { Ticker } from '../exchange.type';
+import { Ticker } from '../exchange-types';
 import { CoincheckRawTicker } from './coincheck-types';
 import { adaptCoincheckRawTicker, publicUrl } from './coincheck-functions';
 import { map } from 'rxjs/operators';

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from './exchange.type';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from './exchange-types';
 
 export abstract class ExchangeApi {
   abstract get exchangeInfo(): ExchangeInfo;

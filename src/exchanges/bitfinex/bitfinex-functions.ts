@@ -1,4 +1,4 @@
-import { Ticker } from '../exchange.type';
+import { Ticker } from '../exchange-types';
 import { BitfinexTickerI } from './bitfinex-types';
 
 export const wsEndpoint = 'wss://api.bitfinex.com/ws/2';

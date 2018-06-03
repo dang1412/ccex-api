@@ -1,5 +1,1 @@
-import { BitbankApi } from './exchanges/bitbank';
-
-export {
-  BitbankApi
-}
+export * from './exchanges';

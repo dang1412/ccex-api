@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { Ticker, Orderbook } from './exchange.type';
+import { Ticker, Orderbook } from './exchange-types';
 
 export function checkTicker(ticker: Ticker): void {
   assert(ticker);
