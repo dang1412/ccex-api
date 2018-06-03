@@ -1,15 +1,19 @@
 import { CandleStick } from '../exchange.type';
-import { BitbankCandle } from './bitbank-common';
+import { BitbankCandle } from './bitbank-types';
 
-// each resolution is stored in a file of 1 day or 1 year,
-// this indicates resolutions that stored in 1 day file (1hour or lower)
-const resolutionUseDay = {
-  '1min': true,
-  '5min': true,
-  '15min': true,
-  '30min': true,
-  '1hour': true,
-};
+/**
+ * @param bitbankCandle 
+ */
+export function adaptBitbankCandle(bitbankCandle: BitbankCandle): CandleStick {
+  return {
+    open: +bitbankCandle[0],
+    high: +bitbankCandle[1],
+    low: +bitbankCandle[2],
+    close: +bitbankCandle[3],
+    volume: +bitbankCandle[4],
+    timestamp: bitbankCandle[5],
+  };
+}
 
 /**
  * @param timestamp 
@@ -28,22 +32,17 @@ export function isLatestTime(timeString: string): boolean {
 }
 
 export function getTimeStrArrayFromRange(resolution: string, start: number, end: number): string[] {
+  // each resolution is stored in a file of 1 day or 1 year,
+  // this indicates resolutions that stored in 1 day file (1hour or lower)
+  const resolutionUseDay = {
+    '1min': true,
+    '5min': true,
+    '15min': true,
+    '30min': true,
+    '1hour': true,
+  };
   const useDay = resolutionUseDay[resolution];
   return useDay ? getDayTimeStringArrayFromRange(start, end) : getYearTimeStringArrayFromRange(start, end);
-}
-
-/**
- * @param bitbankCandle 
- */
-export function adaptBitbankCandle(bitbankCandle: BitbankCandle): CandleStick {
-  return {
-    open: +bitbankCandle[0],
-    high: +bitbankCandle[1],
-    low: +bitbankCandle[2],
-    close: +bitbankCandle[3],
-    volume: +bitbankCandle[4],
-    timestamp: bitbankCandle[5],
-  };
 }
 
 /**

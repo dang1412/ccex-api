@@ -1,15 +1,28 @@
 # -----This is currently under development-----
 # ccex-api
-cryptocurrency exchange realtime api wrapper
+cryptocurrency exchanges client api wrapper
+
+# Features
+These features are supported with all major exchanges
+- Public realtime api
+- Public rest api
+- Support for both Nodejs and Browser environment
+- Modular structure make sure you include minimum code as you need (exspecially for client side application)
+- Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere)
+- More to come: Tradingview datafeed for each exchange, private rest api with api key
+
+# Supported Exchanges
+
+Bitbank, Binance, Bitfinex, Coinbase (Gdax), Coincheck...
 
 # Usage
-This library is designed to be usable in both nodejs and browser (with frontend framework) environment
-## install
+This library is designed to be usable in both nodejs and browser (with frontend framework like Angular, React, Vue,...) environment
+## Installation
 ```
 npm i --save ccex-api
 ```
 
-## code
+## Simple use
 ```
 import { BitbankApi } from 'ccex-api/exchanges/bitbank;
 
@@ -25,16 +38,13 @@ const bitbankCandlestick = new BitbankCandlestick();
 bitbankCandlestick.getApproximateHistoryPrice('btc_jpy', 1526917534904, 1).subscribe(price => console.log(price));
 ```
 
-# Supported Exchanges
-
-Bitbank, Binance, Bitfinex
-
 # Api
 Basically all exchanges have these following api implemented.
 ```
 export abstract class ExchangeApi {
   abstract get exchangeInfo(): ExchangeInfo;
-  abstract get marketNames(): Observable<string[]>;
+  abstract get markets(): string[];
+  abstract get testMarkets(): string[];
   abstract get supportFeatures(): SupportFeatures;
   // request ticker
   abstract fetchTicker$(pair: string): Observable<Ticker>;
@@ -42,24 +52,24 @@ export abstract class ExchangeApi {
   abstract ticker$(pair: string): Observable<Ticker>;
   // stop realtime ticker
   abstract stopTicker(pair: string): void;
-  // request depth
-  abstract fetchDepth$(pair: string): Observable<Depth>;
-  // realtime depth
-  abstract depth$(pair: string): Observable<Depth>;
-  // stop realtime depth
-  abstract stopDepth(pair: string): void;
+  // request orderbook
+  abstract fetchOrderbook$(pair: string): Observable<Orderbook>;
+  // realtime orderbook
+  abstract orderbook$(pair: string): Observable<Orderbook>;
+  // stop realtime orderbook
+  abstract stopOrderbook(pair: string): void;
   // request candlestick
   abstract fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]>;
-  // realtime last candlestick
+  // realtime last candlestick (used for tradingview datafeed)
   abstract lastCandle$(pair: string, minutesFoot: number): Observable<CandleStick>;
 }
 ```
 
-Besides, an exchange may have more specific functions. It depends on exchange features and implementation.
+Besides, an exchange may have more specific functions. It depends on exchange provided features and implementation.
 In that case, it is good to have specific guide for that exchange located at `exchanges/{exchange}/README.md`
 
 # Contributor guide
-clone folder `src/exchanges/sample`
+In order to add a new exchange, simply clone folder `src/exchanges/sample`, rename and implement functions
 
 # Test
 

@@ -4,26 +4,10 @@ import { map, concat } from 'rxjs/operators';
 import { PubnubRxJs, fetchRxjs } from '../../common';
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from '../exchange.type';
-import { publicUrl } from './bitbank-common';
+import { publicUrl, subscribeKey } from './bitbank-common';
+import { RawData, BitbankTicker } from './bitbank-types';
 import { BitbankCandlestick } from './bitbank-candlestick';
 
-const subscribeKey = 'sub-c-e12e9174-dd60-11e6-806b-02ee2ddab7fe';
-
-interface RawData<T> {
-  success: 1;
-  data: T;
-}
-
-interface BitbankTicker {
-  pair: string;
-  sell: string;
-  buy: string;
-  low: string;
-  high: string;
-  last: string;
-  vol: string;
-  timestamp: number;
-}
 
 export class BitbankApi extends ExchangeApi {
   private pubnub: PubnubRxJs;

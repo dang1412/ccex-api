@@ -12,14 +12,14 @@ export abstract class ExchangeApi {
   abstract ticker$(pair: string): Observable<Ticker>;
   // stop realtime ticker
   abstract stopTicker(pair: string): void;
-  // request depth
+  // request orderbook
   abstract fetchOrderbook$(pair: string): Observable<Orderbook>;
-  // realtime depth
+  // realtime orderbook
   abstract orderbook$(pair: string): Observable<Orderbook>;
-  // stop realtime depth
+  // stop realtime orderbook
   abstract stopOrderbook(pair: string): void;
   // request candlestick
   abstract fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]>;
-  // realtime last candlestick
+  // realtime last candlestick (used for tradingview datafeed)
   abstract lastCandle$(pair: string, minutesFoot: number): Observable<CandleStick>;
 }
