@@ -28,7 +28,6 @@ export class BitbankCandlestick {
   }
 
   /**
-   * 
    * @param pair 
    * @param minutesFoot 
    * @param start 

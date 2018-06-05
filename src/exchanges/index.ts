@@ -1,6 +1,6 @@
-export { BinanceApi } from './binance/binance-api';
-export { BitbankApi } from './bitbank/bitbank-api';
-export { BitfinexApi } from './bitfinex/bitfinex-api';
-export { CoinbaseApi } from './coinbase/coinbase-api';
-export { CoincheckApi } from './coincheck/coincheck-api';
+export { BinanceApi } from './binance';
+export { BitbankApi } from './bitbank';
+export { BitfinexApi } from './bitfinex';
+export { CoinbaseApi } from './coinbase';
+export { CoincheckApi } from './coincheck';
 export * from './exchange-types';

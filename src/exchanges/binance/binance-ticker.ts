@@ -8,7 +8,6 @@ import { adaptBinanceTicker, binanceTickerChannel } from './binance-functions';
 
 export class BinanceTicker {
   private pairTickerStreamMap: { [pair: string]: Observable<Ticker> } = {};
-  constructor() {}
 
   ticker$(pair: string): Observable<Ticker> {
     if (!this.pairTickerStreamMap[pair]) {

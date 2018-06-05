@@ -3,7 +3,7 @@ export interface RawData<T> {
   data: T;
 }
 
-export interface BitbankTicker {
+export interface BitbankRawTicker {
   pair: string;
   sell: string;
   buy: string;
@@ -14,7 +14,7 @@ export interface BitbankTicker {
   timestamp: number;
 }
 
-export type BitbankCandle = [
+export type BitbankRawCandle = [
   string, // open
   string, // high
   string, // low
@@ -26,6 +26,6 @@ export type BitbankCandle = [
 export interface BitbankRawCandlesticks {
   candlestick: {
     type: string;
-    ohlcv: BitbankCandle[];
+    ohlcv: BitbankRawCandle[];
   }[];
 }

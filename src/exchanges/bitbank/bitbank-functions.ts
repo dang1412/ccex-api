@@ -1,10 +1,23 @@
-import { CandleStick } from '../exchange-types';
-import { BitbankCandle } from './bitbank-types';
+import { CandleStick, Ticker } from '../exchange-types';
+import { BitbankRawCandle, BitbankRawTicker } from './bitbank-types';
+
+export function adaptBitbankTicker(bitbankTicker: BitbankRawTicker, pair: string): Ticker {
+  return {
+    pair: pair,
+    ask: +bitbankTicker.sell,
+    bid: +bitbankTicker.buy,
+    low: +bitbankTicker.low,
+    high: +bitbankTicker.high,
+    last: +bitbankTicker.last,
+    vol: +bitbankTicker.vol,
+    timestamp: bitbankTicker.timestamp
+  };
+}
 
 /**
  * @param bitbankCandle 
  */
-export function adaptBitbankCandle(bitbankCandle: BitbankCandle): CandleStick {
+export function adaptBitbankCandle(bitbankCandle: BitbankRawCandle): CandleStick {
   return {
     open: +bitbankCandle[0],
     high: +bitbankCandle[1],

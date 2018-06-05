@@ -11,12 +11,16 @@ These features are supported with all major exchanges
 - Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere)
 - More to come: Tradingview datafeed for each exchange, private rest api with api key...
 
-# Supported Exchanges
+# Modular structure
+This one way dependencies diagram demonstrates how the code is structured. This may differentiated from one exchange to another
 
+When you include a module you also include all of its dependencies
+
+# Supported Exchanges
 Bitbank, Binance, Bitfinex, Coinbase (Gdax), Coincheck...
 
 # Usage
-This library is designed to be usable in both nodejs and browser (with frontend framework like Angular, React, Vue,...) environment
+This library is designed to be usable in both nodejs and browser (with frontend framework like Angular, React, Vue,...) environments
 ## Installation
 ```
 npm i --save ccex-api
@@ -27,7 +31,10 @@ npm i --save ccex-api
 import { BitbankApi } from 'ccex-api/exchanges/bitbank;
 
 const bitbankApi = new BitbankApi();
+
 bitbankApi.fetchTicker$('btc_jpy').subscribe(ticker => console.log(ticker));
+bitbankApi.ticker$('btc_jpy').subscribe(ticker => console.log(ticker));
+setTimeout(() => { bitbankApi.stopTicker('btc_jpy') }, 5000);
 ```
 
 Or you can include only the part that you need
@@ -82,3 +89,9 @@ npm run test
 ```
 npm run test bitbank binance
 ```
+
+# Dependencies
+This library is built strongly upon Rxjs
+- [Rxjs](https://github.com/ReactiveX/rxjs)
+- [node-fetch](https://github.com/bitinn/node-fetch) (nodejs)
+- [ws](https://github.com/websockets/ws) (nodejs)
