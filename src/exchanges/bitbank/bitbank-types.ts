@@ -14,6 +14,12 @@ export interface BitbankRawTicker {
   timestamp: number;
 }
 
+export interface BitbankRawOrderbook {
+  asks: [string, string][];
+  bids: [string, string][];
+  timestamp: number;
+}
+
 export type BitbankRawCandle = [
   string, // open
   string, // high
