@@ -12,7 +12,9 @@ These features are supported with all major exchanges
 - More to come: Tradingview datafeed for each exchange, private rest api with api key...
 
 # Modular structure
-This one way dependencies diagram demonstrates how the code is structured. This may differentiated from one exchange to another
+This sample of one way dependencies diagram demonstrates how modules are structured and combined. This may differentiated from one exchange to another.
+
+<p align="center"><img src="assets/ccex-api-sample-structure.png"></p>
 
 When you include a module you also include all of its dependencies
 
