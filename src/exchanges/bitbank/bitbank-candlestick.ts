@@ -3,6 +3,7 @@ import { map, tap } from 'rxjs/operators';
 
 import { fetchRxjs } from '../../common';
 import { CandleStick } from '../exchange-types';
+
 import { publicUrl } from './bitbank-common';
 import { RawData, BitbankRawCandlesticks } from './bitbank-types';
 import { adaptBitbankCandle, convertTimestampToCandleFoot, getTimeStrArrayFromRange, isLatestTime } from './bitbank-functions';
@@ -10,7 +11,6 @@ import { adaptBitbankCandle, convertTimestampToCandleFoot, getTimeStrArrayFromRa
 const candleFileCaches: { [key: string]: CandleStick[] } = {};
 
 export class BitbankCandlestick {
-  constructor() {}
 
   /**
    * @param pair
@@ -33,7 +33,7 @@ export class BitbankCandlestick {
    * @param start 
    * @param end 
    */
-  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
+  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end?: number): Observable<CandleStick[]> {
     const minutesToResolution = {
       1: '1min',
       5: '5min',
@@ -43,6 +43,7 @@ export class BitbankCandlestick {
       240: '4hour',
       1440: '1day',
     };
+    end = end || Date.now();
     const resolution = minutesToResolution[minutesFoot] || '1hour';
     const timestrArray = getTimeStrArrayFromRange(resolution, start, end);
 

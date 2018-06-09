@@ -1,7 +1,7 @@
 import { Observable, empty } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
-import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from '../exchange-types';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
 
 export class BitfinexApi extends ExchangeApi {
   get exchangeInfo(): ExchangeInfo {
@@ -49,9 +49,7 @@ export class BitfinexApi extends ExchangeApi {
     return empty();
   }
 
-  stopTicker(pair: string): void {
-
-  }
+  stopTicker(pair: string): void {}
 
   fetchOrderbook$(pair: string): Observable<Orderbook> {
     return empty();
@@ -61,15 +59,19 @@ export class BitfinexApi extends ExchangeApi {
     return empty();
   }
 
-  stopOrderbook(pair: string): void {
+  stopOrderbook(pair: string): void {}
 
-  }
-
-  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
+  fetchTrades$(pair: string): Observable<Trade[]> {
     return empty();
   }
 
-  lastCandle$(pair: string, minutesFoot: number): Observable<CandleStick> {
+  trade$(pair: string): Observable<Trade> {
+    return empty();
+  }
+
+  stopTrade(pair: string): void {}
+
+  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
     return empty();
   }
 }

@@ -20,6 +20,14 @@ export interface BitbankRawOrderbook {
   timestamp: number;
 }
 
+export interface BitbankRawTrade {
+  transaction_id: number;
+  side: 'buy' | 'sell';
+  price: string;
+  amount: string;
+  executed_at: number;
+}
+
 export type BitbankRawCandle = [
   string, // open
   string, // high

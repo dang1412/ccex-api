@@ -5,13 +5,13 @@ import { PubnubRxJs, fetchRxjs } from '../../common';
 import { Ticker } from '../exchange-types';
 import { RawData, BitbankRawTicker } from './bitbank-types';
 import { adaptBitbankTicker } from './bitbank-functions';
-import { publicUrl } from './bitbank-common';
+import { publicUrl, subscribeKey } from './bitbank-common';
 
 export class BitbankTicker {
   private pubnub: PubnubRxJs;
 
-  constructor(pubnub: PubnubRxJs) {
-    this.pubnub = pubnub;
+  constructor(pubnub?: PubnubRxJs) {
+    this.pubnub = pubnub || new PubnubRxJs({ subscribeKey });
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {

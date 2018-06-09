@@ -1,17 +1,21 @@
-import { Observable, empty } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { PubnubRxJs } from '../../common';
 import { ExchangeApi } from '../exchange-api.abstract';
-import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from '../exchange-types';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
 import { subscribeKey } from './bitbank-common';
 import { BitbankCandlestick } from './bitbank-candlestick';
 import { BitbankTicker } from './bitbank-ticker';
+import { BitbankOrderbook } from './bitbank-orderbook';
+import { BitbankTrade } from './bitbank-trade';
 
 
 export class BitbankApi extends ExchangeApi {
   private pubnub: PubnubRxJs;
   private bitbankCandlestick: BitbankCandlestick;
   private bitbankTicker: BitbankTicker;
+  private bitbankOrderbook: BitbankOrderbook;
+  private bitbankTrade: BitbankTrade;
 
   get pubnubRxJs(): PubnubRxJs {
     return this.pubnub;
@@ -59,6 +63,8 @@ export class BitbankApi extends ExchangeApi {
     this.pubnub = new PubnubRxJs({subscribeKey});
     this.bitbankCandlestick = new BitbankCandlestick();
     this.bitbankTicker = new BitbankTicker(this.pubnub);
+    this.bitbankOrderbook = new BitbankOrderbook(this.pubnub);
+    this.bitbankTrade = new BitbankTrade(this.pubnub);
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {
@@ -74,22 +80,30 @@ export class BitbankApi extends ExchangeApi {
   }
 
   fetchOrderbook$(pair: string): Observable<Orderbook> {
-    return empty();
+    return this.bitbankOrderbook.fetchOrderbook$(pair);
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
-    return empty();
+    return this.bitbankOrderbook.orderbook$(pair);
   }
 
   stopOrderbook(pair: string): void {
+    this.bitbankOrderbook.stopOrderbook(pair);
+  }
 
+  fetchTrades$(pair: string): Observable<Trade[]> {
+    return this.bitbankTrade.fetchTrades$(pair);
+  }
+
+  trade$(pair: string): Observable<Trade> {
+    return this.bitbankTrade.trade$(pair);
+  }
+
+  stopTrade(pair: string): void {
+    this.bitbankTrade.stopTrade(pair);
   }
 
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
     return this.bitbankCandlestick.fetchCandleStickRange$(pair, minutesFoot, start, end);
-  }
-
-  lastCandle$(pair: string, minutesFoot: number): Observable<CandleStick> {
-    return empty();
   }
 }

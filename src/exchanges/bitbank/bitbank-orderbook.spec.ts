@@ -2,12 +2,9 @@ import 'mocha';
 import { take } from 'rxjs/operators';
 
 import { checkOrderbook } from '../exchange-test.functions';
-import { PubnubRxJs } from '../../common';
-import { subscribeKey } from './bitbank-common';
 import { BitbankOrderbook } from './bitbank-orderbook';
 
-const pubnub = new PubnubRxJs({subscribeKey});
-const bitbankOrderbook = new BitbankOrderbook(pubnub);
+const bitbankOrderbook = new BitbankOrderbook();
 
 describe('Test Bitbank orderbook', function () {
   this.timeout(0);

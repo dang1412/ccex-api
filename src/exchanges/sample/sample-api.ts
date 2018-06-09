@@ -1,7 +1,7 @@
 import { Observable, empty } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
-import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, CandleStick } from '../exchange-types';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
 
 import { SampleTicker } from './sample-ticker';
 
@@ -66,13 +66,18 @@ export class SampleApi extends ExchangeApi {
   // stop realtime depth
   stopOrderbook(pair: string): void {}
 
-  // request candlestick by time range and resolution
-  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
+  fetchTrades$(pair: string): Observable<Trade[]> {
     return empty();
   }
 
-  // realtime last candle
-  lastCandle$(pair: string, minutesFoot: number): Observable<CandleStick> {
+  trade$(pair: string): Observable<Trade> {
+    return empty();
+  }
+
+  stopTrade(pair: string): void {}
+
+  // request candlestick by time range and resolution
+  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
     return empty();
   }
 }

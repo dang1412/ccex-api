@@ -1,5 +1,5 @@
-import { CandleStick, Ticker } from '../exchange-types';
-import { BitbankRawCandle, BitbankRawTicker } from './bitbank-types';
+import { CandleStick, Ticker, Trade } from '../exchange-types';
+import { BitbankRawCandle, BitbankRawTicker, BitbankRawTrade } from './bitbank-types';
 
 export function adaptBitbankTicker(bitbankTicker: BitbankRawTicker, pair: string): Ticker {
   return {
@@ -11,6 +11,16 @@ export function adaptBitbankTicker(bitbankTicker: BitbankRawTicker, pair: string
     last: +bitbankTicker.last,
     vol: +bitbankTicker.vol,
     timestamp: bitbankTicker.timestamp
+  };
+}
+
+export function adaptBitbankTrade(bitbankTrade: BitbankRawTrade): Trade {
+  return {
+    id: bitbankTrade.transaction_id,
+    side: bitbankTrade.side,
+    price: +bitbankTrade.price,
+    amount: +bitbankTrade.amount,
+    timestamp: bitbankTrade.executed_at,
   };
 }
 

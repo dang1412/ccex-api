@@ -34,11 +34,13 @@ export interface Orderbook {
   timestamp?: number;
 }
 
-// export interface DepthExtended {
-//   asks: [string, string, string][]; // asc order
-//   bids: [string, string, string][]; // des order
-//   timestamp?: number;
-// }
+export interface Trade {
+  id: number;
+  side: 'buy' | 'sell';
+  price: number;
+  amount: number;
+  timestamp: number;
+}
 
 /*
  * CandleStick
@@ -51,15 +53,6 @@ export interface CandleStick {
   volume: number;
   timestamp: number;
   type?: number; // number in minute ex. 1 (1 minute), 60 (1hour)
-}
-
-/*
- * Transactions
- */
-export interface Transaction {
-  price: number;
-  amount: number;
-  executedAt: number;
 }
 
 export interface SupportFeatures {

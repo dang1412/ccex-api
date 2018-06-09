@@ -4,14 +4,13 @@ import { map, concat } from 'rxjs/operators';
 import { PubnubRxJs, fetchRxjs } from '../../common';
 import { Orderbook } from '../exchange-types';
 import { RawData } from './bitbank-types';
-
-import { publicUrl } from './bitbank-common';
+import { publicUrl, subscribeKey } from './bitbank-common';
 
 export class BitbankOrderbook {
   private pubnub: PubnubRxJs;
 
-  constructor(pubnub: PubnubRxJs) {
-    this.pubnub = pubnub;
+  constructor(pubnub?: PubnubRxJs) {
+    this.pubnub = pubnub || new PubnubRxJs({ subscribeKey });
   }
 
   fetchOrderbook$(pair: string): Observable<Orderbook> {

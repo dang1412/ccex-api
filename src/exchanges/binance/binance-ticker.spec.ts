@@ -1,5 +1,4 @@
 import 'mocha';
-// import { assert } from 'chai';
 import { take } from 'rxjs/operators';
 
 import { checkTicker } from '../exchange-test.functions';
