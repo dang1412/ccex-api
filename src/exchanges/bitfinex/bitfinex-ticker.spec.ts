@@ -2,12 +2,9 @@ import 'mocha';
 import { take } from 'rxjs/operators';
 
 import { checkTicker } from '../exchange-test.functions';
-import { wsEndpoint } from './bitfinex-functions';
-import { BitfinexWebsocket } from './bitfinex-websocket';
 import { BitfinexTicker } from './bitfinex-ticker';
 
-const bitfinexWebsocket = new BitfinexWebsocket(wsEndpoint);
-const bitfinexTicker = new BitfinexTicker(bitfinexWebsocket);
+const bitfinexTicker = new BitfinexTicker();
 
 describe('Test Bitfinex tickers', function () {
   this.timeout(0);

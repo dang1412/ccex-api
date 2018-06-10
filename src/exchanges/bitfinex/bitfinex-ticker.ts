@@ -9,8 +9,8 @@ import { adaptBitfinexTicker, getSymbol } from './bitfinex-functions';
 export class BitfinexTicker {
   private bitfinexWs: BitfinexWebsocket;
 
-  constructor(bitfinexWs: BitfinexWebsocket) {
-    this.bitfinexWs = bitfinexWs;
+  constructor(bitfinexWs?: BitfinexWebsocket) {
+    this.bitfinexWs = bitfinexWs || new BitfinexWebsocket();
   }
 
   ticker$(pair: string): Observable<Ticker> {
@@ -24,5 +24,15 @@ export class BitfinexTicker {
     return this.bitfinexWs.subscribe<BitfinexTickerI>(subscribeRequest).pipe(
       map(bitfinexTicker => adaptBitfinexTicker(bitfinexTicker, pair))
     );
+  }
+
+  stopTicker(pair: string): void {
+    const unsubscribeRequest = {
+      event: 'unsubscribe',
+      channel: 'ticker',
+      symbol: getSymbol(pair)
+    };
+
+    this.bitfinexWs.unsubscribe(unsubscribeRequest);
   }
 }

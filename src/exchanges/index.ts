@@ -1,3 +1,4 @@
+export { ExchangeApi } from './exchange-api.abstract';
 export { BinanceApi } from './binance';
 export { BitbankApi } from './bitbank';
 export { BitfinexApi } from './bitfinex';

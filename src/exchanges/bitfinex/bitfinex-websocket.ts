@@ -1,18 +1,15 @@
+import { Observable, ReplaySubject } from 'rxjs';
+
 import { WebSocketRxJs } from '../../common/websocket-rxjs';
 import { WebsocketSubscribeRequest, WebsocketSubscribeResponse, WebsocketMessageResponse } from './bitfinex-types';
-import { Observable, ReplaySubject } from 'rxjs';
+import { wsEndpoint } from './bitfinex-common';
 
 type WsResponse = WebsocketSubscribeResponse | WebsocketMessageResponse<any>;
 
 export class BitfinexWebsocket {
   private ws: WebSocketRxJs<WsResponse>;
-  private url: string;
   private keyStreamMap: {[key: string]: ReplaySubject<any>} = {};
   private chanIdKeyMap: { [chanId: number]: string } = {};
-
-  constructor(url: string) {
-    this.url = url;
-  }
 
   /**
    * 
@@ -35,12 +32,24 @@ export class BitfinexWebsocket {
     return this.keyStreamMap[key].asObservable();
   }
 
+  unsubscribe(unsubscribeRequest: WebsocketSubscribeRequest): void {
+    if (!this.ws) {
+      return;
+    }
+
+    if (unsubscribeRequest.event !== 'unsubscribe') {
+      throw new Error('in order to unsubscribe a channel, request event must be "unsubscribe"');
+    }
+
+    this.ws.send(JSON.stringify(unsubscribeRequest));
+  }
+
   private initWs() {
     if (this.ws) {
       throw new Error('Bitfinex websocket is already initialized');
     }
 
-    this.ws = new WebSocketRxJs<WsResponse>(this.url);
+    this.ws = new WebSocketRxJs<WsResponse>(wsEndpoint);
     this.ws.message$.subscribe((response: any) => {
       if (response.event === 'subscribed') {
         const subcribedResponse = <WebsocketSubscribeResponse>response;

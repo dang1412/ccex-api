@@ -1,7 +1,7 @@
 export interface WebsocketSubscribeRequest {
   event: string;
   channel: string;
-  // when subscribe ticker, depth
+  // when subscribe ticker, orderbook
   symbol?: string;
   // when subscribe candles
   key?: string;
@@ -11,7 +11,7 @@ export interface WebsocketSubscribeResponse {
   event: string;
   channel: string;
   chanId: number;
-  // when subscribe ticker, depth
+  // when subscribe ticker, orderbook
   symbol?: string;
   // when subscribe candles
   key?: string;

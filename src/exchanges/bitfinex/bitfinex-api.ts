@@ -2,8 +2,13 @@ import { Observable, empty } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
+import { BitfinexWebsocket } from './bitfinex-websocket';
+import { BitfinexTicker } from './bitfinex-ticker';
 
 export class BitfinexApi extends ExchangeApi {
+  private bitfinexWebsocket: BitfinexWebsocket;
+  private bitfinexTicker: BitfinexTicker;
+
   get exchangeInfo(): ExchangeInfo {
     return {
       name: 'bitfinex',
@@ -41,15 +46,23 @@ export class BitfinexApi extends ExchangeApi {
     };
   }
 
-  ticker$(pair: string): Observable<Ticker> {
-    return empty();
+  constructor() {
+    super();
+    this.bitfinexWebsocket = new BitfinexWebsocket();
+    this.bitfinexTicker = new BitfinexTicker(this.bitfinexWebsocket);
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {
     return empty();
   }
 
-  stopTicker(pair: string): void {}
+  ticker$(pair: string): Observable<Ticker> {
+    return this.bitfinexTicker.ticker$(pair);
+  }
+
+  stopTicker(pair: string): void {
+    this.bitfinexTicker.stopTicker(pair);
+  }
 
   fetchOrderbook$(pair: string): Observable<Orderbook> {
     return empty();
