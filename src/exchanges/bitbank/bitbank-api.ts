@@ -4,10 +4,10 @@ import { PubnubRxJs } from '../../common';
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
 import { subscribeKey } from './bitbank-common';
-import { BitbankCandlestick } from './bitbank-candlestick';
-import { BitbankTicker } from './bitbank-ticker';
-import { BitbankOrderbook } from './bitbank-orderbook';
-import { BitbankTrade } from './bitbank-trade';
+import { BitbankCandlestick } from './candlestick';
+import { BitbankTicker } from './ticker';
+import { BitbankOrderbook } from './orderbook';
+import { BitbankTrade } from './trade';
 
 
 export class BitbankApi extends ExchangeApi {

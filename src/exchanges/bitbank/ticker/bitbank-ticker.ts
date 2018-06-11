@@ -1,11 +1,11 @@
 import { Observable } from 'rxjs';
 import { map, concat } from 'rxjs/operators';
-import { PubnubRxJs, fetchRxjs } from '../../common';
 
-import { Ticker } from '../exchange-types';
-import { RawData, BitbankRawTicker } from './bitbank-types';
-import { adaptBitbankTicker } from './bitbank-functions';
-import { publicUrl, subscribeKey } from './bitbank-common';
+import { PubnubRxJs, fetchRxjs } from '../../../common';
+import { Ticker } from '../../exchange-types';
+import { RawData, BitbankRawTicker } from '../bitbank-types';
+import { adaptBitbankTicker } from '../bitbank-functions';
+import { publicUrl, subscribeKey } from '../bitbank-common';
 
 export class BitbankTicker {
   private pubnub: PubnubRxJs;

@@ -1,7 +1,7 @@
 import 'mocha';
 import { take } from 'rxjs/operators';
 
-import { checkOrderbook } from '../exchange-test.functions';
+import { checkOrderbook } from '../../exchange-test.functions';
 import { BitbankOrderbook } from './bitbank-orderbook';
 
 const bitbankOrderbook = new BitbankOrderbook();

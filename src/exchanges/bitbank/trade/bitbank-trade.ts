@@ -1,11 +1,11 @@
 import { Observable, from } from 'rxjs';
 import { map, concatMap } from 'rxjs/operators';
-import { PubnubRxJs, fetchRxjs } from '../../common';
+import { PubnubRxJs, fetchRxjs } from '../../../common';
 
-import { Trade } from '../exchange-types';
-import { RawData, BitbankRawTrade } from './bitbank-types';
-import { adaptBitbankTrade } from './bitbank-functions';
-import { publicUrl, subscribeKey } from './bitbank-common';
+import { Trade } from '../../exchange-types';
+import { RawData, BitbankRawTrade } from '../bitbank-types';
+import { adaptBitbankTrade } from '../bitbank-functions';
+import { publicUrl, subscribeKey } from '../bitbank-common';
 
 interface BitbankRawTrades {
   transactions: BitbankRawTrade[];

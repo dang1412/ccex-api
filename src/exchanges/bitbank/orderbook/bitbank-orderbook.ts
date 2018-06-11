@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs';
 import { map, concat } from 'rxjs/operators';
 
-import { PubnubRxJs, fetchRxjs } from '../../common';
-import { Orderbook } from '../exchange-types';
-import { RawData } from './bitbank-types';
-import { publicUrl, subscribeKey } from './bitbank-common';
+import { PubnubRxJs, fetchRxjs } from '../../../common';
+import { Orderbook } from '../../exchange-types';
+import { RawData } from '../bitbank-types';
+import { publicUrl, subscribeKey } from '../bitbank-common';
 
 export class BitbankOrderbook {
   private pubnub: PubnubRxJs;
