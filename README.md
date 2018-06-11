@@ -82,18 +82,12 @@ In order to add a new exchange, simply clone folder `src/exchanges/sample`, rena
 
 # Test
 
-## Test all exchange
 ```
-npm run test
-```
-
-## Test specific exchanges
-```
-npm run test bitbank binance
+npm test
 ```
 
 # Dependencies
-This library is built strongly upon Rxjs
+This library is built strongly upon Rxjs (v6.0.0 or above)
 - [Rxjs](https://github.com/ReactiveX/rxjs)
 - [node-fetch](https://github.com/bitinn/node-fetch) (nodejs)
 - [ws](https://github.com/websockets/ws) (nodejs)

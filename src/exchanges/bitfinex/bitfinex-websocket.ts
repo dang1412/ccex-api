@@ -41,7 +41,26 @@ export class BitfinexWebsocket {
       throw new Error('in order to unsubscribe a channel, request event must be "unsubscribe"');
     }
 
-    this.ws.send(JSON.stringify(unsubscribeRequest));
+    const key = getKey(unsubscribeRequest);
+
+    const chanId = getKeyByValue(this.chanIdKeyMap, key);
+    if (chanId) {
+      // delete key
+      delete this.chanIdKeyMap[chanId];
+    }
+
+    const subject = this.keyStreamMap[key];
+    if (subject) {
+      // complete subject
+      subject.complete();
+      // delete subject
+      delete this.keyStreamMap[key];
+    }
+
+    this.ws.send(JSON.stringify({
+      event: 'unsubscribe',
+      chanId
+    }));
   }
 
   private initWs() {
@@ -52,14 +71,21 @@ export class BitfinexWebsocket {
     this.ws = new WebSocketRxJs<WsResponse>(wsEndpoint);
     this.ws.message$.subscribe((response: any) => {
       if (response.event === 'subscribed') {
+        // subscribe success
         const subcribedResponse = <WebsocketSubscribeResponse>response;
         const key = getKey(subcribedResponse);
         this.chanIdKeyMap[subcribedResponse.chanId] = key;
+      } else if (response.event === 'unsubscribed') {
+        // unsubscribe success
+        // chanId = response.chanId
       } else if (response.length === 2 && typeof response[0] === 'number' && response[1] !== 'hb') {
+        // subscribed channel's message come
         const chanId = response[0];
         const key = this.chanIdKeyMap[chanId];
         const subject = this.keyStreamMap[key];
-        subject.next(response[1]);
+        if (subject) {
+          subject.next(response[1]);
+        }
       }
     });
   }
@@ -67,4 +93,8 @@ export class BitfinexWebsocket {
 
 function getKey(subscribeObject: WebsocketSubscribeRequest | WebsocketSubscribeResponse): string {
   return subscribeObject.channel + (subscribeObject.symbol || '') + (subscribeObject.key || '');
+}
+
+function getKeyByValue(object: {[key: number]: string}, value: string): number {
+  return +Object.keys(object).find(key => object[key] === value);
 }

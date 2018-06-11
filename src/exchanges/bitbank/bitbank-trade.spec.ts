@@ -6,7 +6,7 @@ import { BitbankTrade } from './bitbank-trade';
 
 const bitbankTrade = new BitbankTrade();
 
-describe.only('Test Bitbank trades', function () {
+describe('Test Bitbank trades', function () {
   this.timeout(0);
   const markets = ['btc_jpy', 'xrp_jpy'];
   markets.forEach(market => {

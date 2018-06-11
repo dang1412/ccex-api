@@ -18,6 +18,7 @@ describe('Test Bitfinex tickers', function () {
         },
         (e) => console.log('Error'),
         () => {
+          bitfinexTicker.stopTicker(market);
           done();
         }
       );
