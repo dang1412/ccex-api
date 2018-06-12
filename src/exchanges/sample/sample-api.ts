@@ -3,7 +3,7 @@ import { Observable, empty } from 'rxjs';
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
 
-import { SampleTicker } from './sample-ticker';
+import { SampleTicker } from './ticker/sample-ticker';
 
 export class SampleApi extends ExchangeApi {
   private sampleTicker: SampleTicker;

@@ -1,10 +1,10 @@
 import { Observable, empty } from 'rxjs';
-
-import { fetchRxjs } from '../../common';
-import { Ticker } from '../exchange-types';
-import { CoincheckRawTicker } from './coincheck-types';
-import { adaptCoincheckRawTicker, publicUrl } from './coincheck-functions';
 import { map } from 'rxjs/operators';
+
+import { fetchRxjs } from '../../../common';
+import { Ticker } from '../../exchange-types';
+import { CoincheckRawTicker } from '../coincheck-types';
+import { adaptCoincheckRawTicker, publicUrl } from '../coincheck-functions';
 
 export class CoincheckTicker {
   fetchTicker$(pair: string): Observable<Ticker> {

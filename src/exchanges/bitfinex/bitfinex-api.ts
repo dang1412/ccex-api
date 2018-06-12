@@ -3,7 +3,7 @@ import { Observable, empty } from 'rxjs';
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
 import { BitfinexWebsocket } from './bitfinex-websocket';
-import { BitfinexTicker } from './bitfinex-ticker';
+import { BitfinexTicker } from './ticker/bitfinex-ticker';
 
 export class BitfinexApi extends ExchangeApi {
   private bitfinexWebsocket: BitfinexWebsocket;

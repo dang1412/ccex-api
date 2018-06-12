@@ -6,7 +6,7 @@ cryptocurrency exchanges client api wrapper
 These features are supported with all major exchanges
 - Public realtime api
 - Public rest api
-- Support for both Nodejs and Browser environment
+- Support for both Nodejs and Browser environments
 - Modular structure make sure you include minimum code as you need (exspecially for client side application)
 - Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere)
 - More to come: Tradingview datafeed for each exchange, private rest api with api key...
@@ -41,7 +41,7 @@ setTimeout(() => { bitbankApi.stopTicker('btc_jpy') }, 5000);
 
 Or you can include only the part that you need
 ```
-import { BitbankCandlestick } from 'ccex-api/exchanges/bitbank/bitbank-candlestick;
+import { BitbankCandlestick } from 'ccex-api/exchanges/bitbank/candlestick;
 
 const bitbankCandlestick = new BitbankCandlestick();
 bitbankCandlestick.getApproximateHistoryPrice('btc_jpy', 1526917534904, 1).subscribe(price => console.log(price));

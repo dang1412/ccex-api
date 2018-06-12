@@ -2,8 +2,7 @@ import { Observable, empty } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
-
-import { CoincheckTicker } from './coincheck-ticker';
+import { CoincheckTicker } from './ticker/coincheck-ticker';
 
 export class CoincheckApi extends ExchangeApi {
   private coincheckTicker: CoincheckTicker;

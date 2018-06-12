@@ -1,10 +1,10 @@
 import { Observable, empty } from 'rxjs';
-
-import { Ticker } from '../exchange-types';
-import { CoinbaseRawTicker, WebsocketSubscribeRequest, WebsocketUnSubscribeRequest } from './coinbase-types';
-import { adaptCoinbaseRawTicker, getProductId } from './coinbase-functions';
-import { CoinbaseWebsocket } from './coinbase-websocket';
 import { map } from 'rxjs/operators';
+
+import { Ticker } from '../../exchange-types';
+import { CoinbaseRawTicker, WebsocketSubscribeRequest, WebsocketUnSubscribeRequest } from '../coinbase-types';
+import { adaptCoinbaseRawTicker, getProductId } from '../coinbase-functions';
+import { CoinbaseWebsocket } from '../coinbase-websocket';
 
 export class CoinbaseTicker {
   private coinbaseWs: CoinbaseWebsocket;

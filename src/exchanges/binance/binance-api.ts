@@ -2,8 +2,11 @@ import { Observable, empty } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
+import { BinanceTicker } from './ticker/binance-ticker';
 
 export class BinanceApi extends ExchangeApi {
+  private binanceTicker: BinanceTicker;
+
   get exchangeInfo(): ExchangeInfo {
     return {
       name: 'binance',
@@ -38,12 +41,17 @@ export class BinanceApi extends ExchangeApi {
     };
   }
 
-  ticker$(pair: string): Observable<Ticker> {
-    return empty();
+  constructor() {
+    super();
+    this.binanceTicker = new BinanceTicker();
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {
     return empty();
+  }
+
+  ticker$(pair: string): Observable<Ticker> {
+    return this.binanceTicker.ticker$(pair);
   }
 
   stopTicker(pair: string): void {}

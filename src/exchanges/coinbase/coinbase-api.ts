@@ -4,7 +4,7 @@ import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
 import { wsEndpoint } from './coinbase-functions';
 import { CoinbaseWebsocket } from './coinbase-websocket';
-import { CoinbaseTicker } from './coinbase-ticker';
+import { CoinbaseTicker } from './ticker/coinbase-ticker';
 
 export class CoinbaseApi extends ExchangeApi {
   private coinbaseTicker: CoinbaseTicker;
