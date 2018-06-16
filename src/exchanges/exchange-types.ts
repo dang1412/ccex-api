@@ -1,3 +1,9 @@
+export interface ExchangeOptions {
+  apiKey?: string;
+  apiSecret?: string;
+  corsProxy?: string;
+}
+
 /*
  * Exchange basic info
  */
@@ -31,6 +37,7 @@ export interface Ticker {
 export interface Orderbook {
   asks: [string, string][]; // asc order
   bids: [string, string][]; // des order
+  lastUpdateId?: number;
   timestamp?: number;
 }
 

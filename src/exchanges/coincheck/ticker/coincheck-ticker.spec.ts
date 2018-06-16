@@ -1,6 +1,6 @@
 import 'mocha';
 
-import { checkTicker } from '../exchange-test.functions';
+import { checkTicker } from '../../exchange-test.functions';
 import { CoincheckTicker } from './coincheck-ticker';
 
 const coincheckTicker = new CoincheckTicker();

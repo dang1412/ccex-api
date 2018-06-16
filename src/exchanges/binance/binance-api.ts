@@ -4,6 +4,12 @@ import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
 import { BinanceTicker } from './ticker/binance-ticker';
 
+const defaultOptions = {
+  apiKey: '',
+  apiSecret: '',
+  corsProxy: '',
+};
+
 export class BinanceApi extends ExchangeApi {
   private binanceTicker: BinanceTicker;
 
@@ -47,14 +53,16 @@ export class BinanceApi extends ExchangeApi {
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {
-    return empty();
+    return this.binanceTicker.fetchTicker$(pair);
   }
 
   ticker$(pair: string): Observable<Ticker> {
     return this.binanceTicker.ticker$(pair);
   }
 
-  stopTicker(pair: string): void {}
+  stopTicker(pair: string): void {
+    this.binanceTicker.stopTicker(pair);
+  }
 
   fetchOrderbook$(pair: string): Observable<Orderbook> {
     return empty();

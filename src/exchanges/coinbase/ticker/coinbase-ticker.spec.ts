@@ -1,10 +1,11 @@
 import 'mocha';
 import { take } from 'rxjs/operators';
 
-import { checkTicker } from '../exchange-test.functions';
+import { checkTicker } from '../../exchange-test.functions';
+import { CoinbaseWebsocket } from '../coinbase-websocket';
+import { wsEndpoint } from '../coinbase-functions';
+
 import { CoinbaseTicker } from './coinbase-ticker';
-import { CoinbaseWebsocket } from './coinbase-websocket';
-import { wsEndpoint } from './coinbase-functions';
 
 const coinbaseWebsocket = new CoinbaseWebsocket(wsEndpoint);
 const coinbaseTicker = new CoinbaseTicker(coinbaseWebsocket);

@@ -1,7 +1,7 @@
 import 'mocha';
 import { take } from 'rxjs/operators';
 
-import { checkTicker } from '../exchange-test.functions';
+import { checkTicker } from '../../exchange-test.functions';
 import { BitfinexTicker } from './bitfinex-ticker';
 
 const bitfinexTicker = new BitfinexTicker();

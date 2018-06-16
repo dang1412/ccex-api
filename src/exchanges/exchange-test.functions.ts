@@ -4,6 +4,11 @@ import { Ticker, Orderbook } from './exchange-types';
 
 export function checkTicker(ticker: Ticker): void {
   assert(ticker);
+  assert(ticker.bid);
+  assert(ticker.ask);
+  assert(ticker.low);
+  assert(ticker.high);
+  assert(ticker.vol);
   assert.typeOf(ticker.bid, 'number');
   assert.typeOf(ticker.ask, 'number');
   assert.typeOf(ticker.low, 'number');

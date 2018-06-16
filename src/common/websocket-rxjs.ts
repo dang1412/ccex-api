@@ -37,4 +37,9 @@ export class WebSocketRxJs<T=any> {
       this.webSocket.send(text);
     });
   }
+
+  close() {
+    this.webSocket.close();
+    this.data$.complete();
+  }
 }

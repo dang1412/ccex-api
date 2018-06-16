@@ -1,6 +1,6 @@
 import 'mocha';
 
-import { checkTicker } from '../exchange-test.functions';
+import { checkTicker } from '../../exchange-test.functions';
 import { SampleTicker } from './sample-ticker';
 
 const sampleTicker = new SampleTicker();
