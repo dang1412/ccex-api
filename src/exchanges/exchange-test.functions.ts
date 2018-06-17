@@ -22,6 +22,6 @@ export function checkOrderbook(orderbook: Orderbook): void {
   assert(orderbook.bids);
   assert(orderbook.asks.length);
   assert(orderbook.bids.length);
-  assert(orderbook.asks[0].length === 2);
-  assert(orderbook.bids[0].length === 2);
+  assert(orderbook.asks[0].length >= 2);
+  assert(orderbook.bids[0].length >= 2);
 }

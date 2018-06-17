@@ -8,6 +8,7 @@ const bitbankTrade = new BitbankTrade();
 
 describe('Test Bitbank trades', function () {
   this.timeout(0);
+
   const markets = ['btc_jpy', 'xrp_jpy'];
   markets.forEach(market => {
     it('should get trades ' + market, (done) => {

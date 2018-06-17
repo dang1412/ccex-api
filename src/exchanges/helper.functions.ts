@@ -4,7 +4,6 @@
 
 import { CandleStick, Trade } from './exchange-types';
 
-
 /**
  * @param candle 
  * @param trade 

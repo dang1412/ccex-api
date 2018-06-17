@@ -8,6 +8,7 @@ const bitbankOrderbook = new BitbankOrderbook();
 
 describe('Test Bitbank orderbook', function () {
   this.timeout(0);
+
   const markets = ['btc_jpy', 'xrp_jpy'];
   markets.forEach(market => {
     it('should get depth ' + market, (done) => {

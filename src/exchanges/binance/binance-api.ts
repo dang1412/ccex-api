@@ -1,17 +1,15 @@
 import { Observable, empty } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
-import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick, ExchangeOptions } from '../exchange-types';
+import { defaultOptions } from '../exchange-default.options';
 import { BinanceTicker } from './ticker/binance-ticker';
-
-const defaultOptions = {
-  apiKey: '',
-  apiSecret: '',
-  corsProxy: '',
-};
+import { BinanceOrderbook } from './orderbook/binance-orderbook';
 
 export class BinanceApi extends ExchangeApi {
+  private options: ExchangeOptions;
   private binanceTicker: BinanceTicker;
+  private binanceOrderbook: BinanceOrderbook;
 
   get exchangeInfo(): ExchangeInfo {
     return {
@@ -39,6 +37,7 @@ export class BinanceApi extends ExchangeApi {
       'eth_btc',
     ];
   }
+
   get supportFeatures(): SupportFeatures {
     return {
       ticker: true,
@@ -47,9 +46,14 @@ export class BinanceApi extends ExchangeApi {
     };
   }
 
-  constructor() {
+  constructor(options?: ExchangeOptions) {
     super();
-    this.binanceTicker = new BinanceTicker();
+
+    this.options = Object.assign({}, defaultOptions, options);
+    const corsProxy = this.options.corsProxy;
+
+    this.binanceTicker = new BinanceTicker(corsProxy);
+    this.binanceOrderbook = new BinanceOrderbook(corsProxy);
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {
@@ -65,14 +69,16 @@ export class BinanceApi extends ExchangeApi {
   }
 
   fetchOrderbook$(pair: string): Observable<Orderbook> {
-    return empty();
+    return this.binanceOrderbook.fetchOrderbook$(pair);
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
-    return empty();
+    return this.binanceOrderbook.orderbook$(pair);
   }
 
-  stopOrderbook(pair: string): void {}
+  stopOrderbook(pair: string): void {
+    this.binanceOrderbook.stopOrderbook(pair);
+  }
 
   fetchTrades$(pair: string): Observable<Trade[]> {
     return empty();
