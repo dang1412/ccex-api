@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { Ticker, Orderbook } from './exchange-types';
+import { Ticker, Orderbook, Trade } from './exchange-types';
 
 export function checkTicker(ticker: Ticker): void {
   assert(ticker);
@@ -24,4 +24,23 @@ export function checkOrderbook(orderbook: Orderbook): void {
   assert(orderbook.bids.length);
   assert(orderbook.asks[0].length >= 2);
   assert(orderbook.bids[0].length >= 2);
+}
+
+export function checkTrades(trades: Trade[]): void {
+  assert(trades);
+  assert(trades.length >= 0);
+
+  let lastTradeTime = 0;
+  trades.forEach((trade) => {
+    assert(trade.id);
+    assert(trade.price);
+    assert(trade.amount >= 0);
+    assert(trade.side);
+    assert(trade.timestamp);
+
+    // trade array must be in increase timestamp order
+    assert(trade.timestamp >= lastTradeTime);
+    // update last timestamp
+    lastTradeTime = trade.timestamp;
+  });
 }

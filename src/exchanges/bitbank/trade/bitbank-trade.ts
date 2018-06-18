@@ -31,7 +31,7 @@ export class BitbankTrade {
       map(raw => raw.data.transactions.map(adaptBitbankTrade)),
       // sort the trades in ascending order of timestamp (old to new one)
       map(trades => trades.sort((t1, t2) => t1.timestamp - t2.timestamp)),
-      // turn the stream of array into stream of single element
+      // turn the stream of trade array into stream of single trade
       concatMap(trades => from(trades))
     );
   }

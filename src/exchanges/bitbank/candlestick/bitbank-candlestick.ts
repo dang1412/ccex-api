@@ -28,10 +28,10 @@ export class BitbankCandlestick {
   }
 
   /**
-   * @param pair 
-   * @param minutesFoot 
-   * @param start 
-   * @param end 
+   * @param pair
+   * @param minutesFoot
+   * @param start
+   * @param end
    */
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end?: number): Observable<CandleStick[]> {
     const minutesToResolution = {

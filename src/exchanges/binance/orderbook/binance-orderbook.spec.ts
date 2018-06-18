@@ -6,7 +6,7 @@ import { BinanceOrderbook } from './binance-orderbook';
 
 const binanceOrderbook = new BinanceOrderbook();
 
-describe.only('Test Binance orderbook', function () {
+describe('Test Binance orderbook', function () {
   this.timeout(0);
 
   const markets = ['btc_usdt', 'eos_btc', 'eos_usdt'];

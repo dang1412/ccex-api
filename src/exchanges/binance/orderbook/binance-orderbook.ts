@@ -48,11 +48,11 @@ export class BinanceOrderbook {
     const ws = new WebSocketRxJs<BinanceRawWsOrderbook>(channel);
     this.pairSocketMap[pair] = ws;
 
-    // orderbook fetched from rest api
+    // orderbook fetched from rest api stream
     const fetchOrderbook$ = this.fetchOrderbook$(pair);
-    // orderbook (diff) realtime from websocket
+    // orderbook (diff) realtime stream
     const update$ = ws.message$.pipe(map(adaptBinanceWsOrderbook));
-    // orderbook (diff) realtime, buffered in time range: [fetch start => fetch done]
+    // orderbook (diff) realtime stream, buffered in time range: [fetch start => fetch done]
     const updateBufferBeforeFetchDone$ = update$.pipe(buffer(fetchOrderbook$), take(1), mergeMap(bufferOrderbooks => from(bufferOrderbooks)));
 
     // start these 2 streams concurrently at first, data come in order and then complete:

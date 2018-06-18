@@ -1,26 +1,3 @@
-export interface BinanceRawOrderbook {
-  bids: [string, string][];
-  asks: [string, string][];
-  lastUpdateId: number;
-}
-
-export interface BinanceRawWsOrderbook {
-  // event type 'depthUpdate'
-  e: string;
-  // event time
-  E: number;
-  // symbol 'BNBBTC'
-  s: string;
-  // first update id
-  U: number;
-  // last update id
-  u: number;
-  // bids
-  b: [string, string][];
-  // asks
-  a: [string, string][];
-}
-
 export interface BinanceRawRestTicker {
   symbol: string;
   priceChange: string;
@@ -69,4 +46,59 @@ export interface BinanceRawWsTicker {
   'F': number;      // First trade ID
   'L': number;      // Last trade Id
   'n': number;      // Total number of trades
+}
+
+export interface BinanceRawOrderbook {
+  bids: [string, string][];
+  asks: [string, string][];
+  lastUpdateId: number;
+}
+
+export interface BinanceRawWsOrderbook {
+  // event type 'depthUpdate'
+  e: string;
+  // event time
+  E: number;
+  // symbol 'BNBBTC'
+  s: string;
+  // first update id
+  U: number;
+  // last update id
+  u: number;
+  // bids
+  b: [string, string][];
+  // asks
+  a: [string, string][];
+}
+
+export interface BinanceRawRestTrade {
+  id: number;
+  price: string;
+  qty: string;
+  time: number;
+  isBuyerMaker: boolean;
+  isBestMatch: boolean;
+}
+
+export interface BinanceRawWsTrade {
+  // Event type
+  e: 'trade';
+  // Event time
+  E: number;
+  // Symbol
+  s: string;
+  // Trade ID
+  t: number;
+  // Price
+  p: string;
+  // Quantity
+  q: string;
+  // Buyer order Id
+  b: number;
+  // Seller order Id
+  a: number;
+  // Trade time
+  T: number;
+  // Is the buyer the market maker?
+  m: boolean;
 }

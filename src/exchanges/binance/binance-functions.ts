@@ -1,5 +1,5 @@
-import { Ticker, Orderbook } from '../exchange-types';
-import { BinanceRawWsTicker, BinanceRawRestTicker, BinanceRawWsOrderbook } from './binance-types';
+import { Ticker, Orderbook, Trade } from '../exchange-types';
+import { BinanceRawWsTicker, BinanceRawRestTicker, BinanceRawWsOrderbook, BinanceRawRestTrade, BinanceRawWsTrade } from './binance-types';
 
 const wsEndpoint = 'wss://stream2.binance.com:9443/ws/';
 const apiEndPoint = 'https://api.binance.com';
@@ -67,5 +67,35 @@ export function adaptBinanceWsOrderbook(binanceOrderbook: BinanceRawWsOrderbook)
     bids: binanceOrderbook.b,
     asks: binanceOrderbook.a,
     lastUpdateId: binanceOrderbook.u,
+  };
+}
+
+// trades rest api url
+export function binanceTradeApiUrl(pair: string, limit = 100): string {
+  return apiEndPoint + '/api/v1/trades?limit=' + limit + '&symbol=' + binancePair(pair).toUpperCase();
+}
+
+// trades ws channel
+export function binanceTradeChannel(pair: string): string {
+  return wsEndpoint + binancePair(pair) + '@trade';
+}
+
+export function adaptBinanceRestTrade(binanceTrade: BinanceRawRestTrade): Trade {
+  return {
+    id: binanceTrade.id,
+    price: +binanceTrade.price,
+    amount: +binanceTrade.qty,
+    side: binanceTrade.isBuyerMaker ? 'buy' : 'sell',
+    timestamp: binanceTrade.time
+  };
+}
+
+export function adaptBinanceWsTrade(binanceTrade: BinanceRawWsTrade): Trade {
+  return {
+    id: binanceTrade.t,
+    price: +binanceTrade.p,
+    amount: +binanceTrade.q,
+    side: binanceTrade.m ? 'buy' : 'sell',
+    timestamp: binanceTrade.T
   };
 }
