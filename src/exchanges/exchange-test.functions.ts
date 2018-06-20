@@ -26,7 +26,7 @@ export function checkOrderbook(orderbook: Orderbook): void {
   assert(orderbook.bids[0].length >= 2);
 }
 
-export function checkTrades(trades: Trade[]): void {
+export function checkTrades(trades: Trade[], increaseTimestamp = true): void {
   assert(trades);
   assert(trades.length >= 0);
 
@@ -38,8 +38,11 @@ export function checkTrades(trades: Trade[]): void {
     assert(trade.side);
     assert(trade.timestamp);
 
-    // trade array must be in increase timestamp order
-    assert(trade.timestamp >= lastTradeTime);
+    if (increaseTimestamp) {
+      // trade array must be in increase timestamp order
+      assert(trade.timestamp >= lastTradeTime, 'should have increase timestamp order');
+    }
+
     // update last timestamp
     lastTradeTime = trade.timestamp;
   });

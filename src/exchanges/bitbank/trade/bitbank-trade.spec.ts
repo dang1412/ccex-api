@@ -1,7 +1,7 @@
 import 'mocha';
-import { take } from 'rxjs/operators';
+import { take, bufferCount } from 'rxjs/operators';
 
-// import { checkOrderbook } from '../exchange-test.functions';
+import { checkTrades } from '../../exchange-test.functions';
 import { BitbankTrade } from './bitbank-trade';
 
 const bitbankTrade = new BitbankTrade();
@@ -10,17 +10,31 @@ describe('Test Bitbank trades', function () {
   this.timeout(0);
 
   const markets = ['btc_jpy', 'xrp_jpy'];
+
   markets.forEach(market => {
-    it('should get trades ' + market, (done) => {
-      // bitbankTrade.trades$(market).subscribe(trades => console.log(trades));
-      bitbankTrade.trade$(market).pipe(take(10)).subscribe(
-        (trade) => {
-          console.log(trade.timestamp);
-          // checkOrderbook(orderbook);
+    it('should get realtime trades ' + market, (done) => {
+      bitbankTrade.trade$(market).pipe(bufferCount(10), take(1)).subscribe(
+        (trades) => {
+          checkTrades(trades);
         },
         (e) => console.log('Error'),
         () => {
           bitbankTrade.stopTrade(market);
+          done();
+        }
+      );
+    });
+  });
+
+  markets.forEach(market => {
+    it('should fetch rest api trades ' + market, (done) => {
+      bitbankTrade.fetchTrades$(market).subscribe(
+        (trades) => {
+          // check trades without increase timestamp order
+          checkTrades(trades, false);
+        },
+        (e) => console.log('Error'),
+        () => {
           done();
         }
       );

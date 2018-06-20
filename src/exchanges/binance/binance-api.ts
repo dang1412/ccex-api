@@ -1,15 +1,19 @@
-import { Observable, empty } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick, ExchangeOptions } from '../exchange-types';
 import { defaultOptions } from '../exchange-default.options';
-import { BinanceTicker } from './ticker/binance-ticker';
-import { BinanceOrderbook } from './orderbook/binance-orderbook';
+import { BinanceTicker } from './ticker';
+import { BinanceOrderbook } from './orderbook';
+import { BinanceTrade } from './trade';
+import { BinanceCandleStick } from './candlestick';
 
 export class BinanceApi extends ExchangeApi {
   private options: ExchangeOptions;
   private binanceTicker: BinanceTicker;
   private binanceOrderbook: BinanceOrderbook;
+  private binanceTrade: BinanceTrade;
+  private binanceCandleStick: BinanceCandleStick;
 
   get exchangeInfo(): ExchangeInfo {
     return {
@@ -54,6 +58,8 @@ export class BinanceApi extends ExchangeApi {
 
     this.binanceTicker = new BinanceTicker(corsProxy);
     this.binanceOrderbook = new BinanceOrderbook(corsProxy);
+    this.binanceTrade = new BinanceTrade(corsProxy);
+    this.binanceCandleStick = new BinanceCandleStick(corsProxy);
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {
@@ -81,16 +87,18 @@ export class BinanceApi extends ExchangeApi {
   }
 
   fetchTrades$(pair: string): Observable<Trade[]> {
-    return empty();
+    return this.binanceTrade.fetchTrades$(pair);
   }
 
   trade$(pair: string): Observable<Trade> {
-    return empty();
+    return this.binanceTrade.trade$(pair);
   }
 
-  stopTrade(pair: string): void {}
+  stopTrade(pair: string): void {
+    this.binanceTrade.stopTrade(pair);
+  }
 
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
-    return empty();
+    return this.binanceCandleStick.fetchCandleStickRange$(pair, minutesFoot, start, end);
   }
 }

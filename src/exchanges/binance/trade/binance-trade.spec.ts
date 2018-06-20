@@ -6,7 +6,7 @@ import { BinanceTrade } from './binance-trade';
 
 const binanceTrade = new BinanceTrade();
 
-describe.only('Test Binance trades', function () {
+describe('Test Binance trades', function () {
   this.timeout(0);
 
   const markets = ['btc_usdt', 'eth_btc'];
