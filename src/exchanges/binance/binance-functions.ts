@@ -1,5 +1,6 @@
 import { Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
-import { BinanceRawWsTicker, BinanceRawRestTicker, BinanceRawWsOrderbook, BinanceRawRestTrade, BinanceRawWsTrade, BinanceRawRestCandle } from './binance-types';
+import { BinanceRawWsTicker, BinanceRawRestTicker, BinanceRawWsOrderbook,
+  BinanceRawRestTrade, BinanceRawWsTrade, BinanceRawRestCandle, BinanceRawWsCandle } from './binance-types';
 
 const wsEndpoint = 'wss://stream2.binance.com:9443/ws/';
 const apiEndPoint = 'https://api.binance.com';
@@ -80,6 +81,7 @@ export function binanceTradeChannel(pair: string): string {
   return wsEndpoint + binancePair(pair) + '@trade';
 }
 
+// candlestick rest api url
 export function binanceCandleStickApiUrl(pair: string, minutesFoot: number, startTime?: number, endTime?: number, limit?: number): string {
   const symbol = binancePair(pair).toUpperCase();
   const interval = getCandleInterval(minutesFoot);
@@ -96,6 +98,12 @@ export function binanceCandleStickApiUrl(pair: string, minutesFoot: number, star
   }
 
   return url;
+}
+
+// candlestick ws channel
+export function binanceCandleStickChannel(pair: string, minutesFoot: number): string {
+  const interval = getCandleInterval(minutesFoot);
+  return wsEndpoint + binancePair(pair) + '@kline_' + interval;
 }
 
 export function adaptBinanceRestTrade(binanceTrade: BinanceRawRestTrade): Trade {
@@ -126,6 +134,17 @@ export function adaptBinanceRestCandle(binanceCandle: BinanceRawRestCandle): Can
     close: +binanceCandle[4],
     volume: +binanceCandle[5],
     timestamp: binanceCandle[6],
+  }
+}
+
+export function adaptBinanceWsCandle(binanceCandle: BinanceRawWsCandle): CandleStick {
+  return {
+    open: +binanceCandle.k.o,
+    high: +binanceCandle.k.h,
+    low: +binanceCandle.k.l,
+    close: +binanceCandle.k.c,
+    volume: +binanceCandle.k.v,
+    timestamp: binanceCandle.k.t,
   }
 }
 
