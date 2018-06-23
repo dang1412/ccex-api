@@ -22,7 +22,7 @@ export class CoinbaseApi extends ExchangeApi {
     return [];
   }
 
-  get testMarkets(): string[] {
+  get representativeMarkets(): string[] {
     return [];
   }
 

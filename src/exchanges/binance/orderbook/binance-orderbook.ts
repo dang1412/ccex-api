@@ -2,10 +2,10 @@ import { Observable, concat, from, merge } from 'rxjs';
 import { map, scan, buffer, take, mergeMap } from 'rxjs/operators';
 
 import { WebSocketRxJs, fetchRxjs } from '../../../common';
+import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
 import { BinanceRawOrderbook, BinanceRawWsOrderbook } from '../binance-types';
 import { binanceOrderbookApiUrl, binanceOrderbookChannel, adaptBinanceWsOrderbook } from '../binance-functions';
-import { updateOrderbook } from '../../../helpers';
 
 export class BinanceOrderbook {
   private pairStreamMap: { [pair: string]: Observable<Orderbook> } = {};

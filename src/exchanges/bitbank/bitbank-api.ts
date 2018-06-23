@@ -43,7 +43,7 @@ export class BitbankApi extends ExchangeApi {
     ];
   }
 
-  get testMarkets(): string[] {
+  get representativeMarkets(): string[] {
     return [
       'btc_jpy',
       'xrp_jpy',

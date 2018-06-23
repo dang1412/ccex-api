@@ -3,11 +3,13 @@ import { Observable, empty } from 'rxjs';
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
 import { BitfinexWebsocket } from './bitfinex-websocket';
-import { BitfinexTicker } from './ticker/bitfinex-ticker';
+import { BitfinexTicker } from './ticker';
+import { BitfinexOrderbook } from './orderbook'
 
 export class BitfinexApi extends ExchangeApi {
   private bitfinexWebsocket: BitfinexWebsocket;
   private bitfinexTicker: BitfinexTicker;
+  private bitfinexOrderbook: BitfinexOrderbook;
 
   get exchangeInfo(): ExchangeInfo {
     return {
@@ -28,13 +30,11 @@ export class BitfinexApi extends ExchangeApi {
     ];
   }
 
-  get testMarkets(): string[] {
+  get representativeMarkets(): string[] {
     return [
       'btc_usd',
       'eos_btc',
       'eth_btc',
-      'ltc_btc',
-      'bcc_btc',
     ];
   }
 
@@ -50,6 +50,7 @@ export class BitfinexApi extends ExchangeApi {
     super();
     this.bitfinexWebsocket = new BitfinexWebsocket();
     this.bitfinexTicker = new BitfinexTicker(this.bitfinexWebsocket);
+    this.bitfinexOrderbook = new BitfinexOrderbook(this.bitfinexWebsocket);
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {
@@ -69,10 +70,12 @@ export class BitfinexApi extends ExchangeApi {
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
-    return empty();
+    return this.bitfinexOrderbook.orderbook$(pair);
   }
 
-  stopOrderbook(pair: string): void {}
+  stopOrderbook(pair: string): void {
+    this.bitfinexOrderbook.stopOrderbook(pair);
+  }
 
   fetchTrades$(pair: string): Observable<Trade[]> {
     return empty();

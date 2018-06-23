@@ -7,7 +7,7 @@ import { updateLastCandleWithNewTrade } from './helper.functions';
 export abstract class ExchangeApi {
   abstract get exchangeInfo(): ExchangeInfo;
   abstract get markets(): string[];
-  abstract get testMarkets(): string[];
+  abstract get representativeMarkets(): string[];
   abstract get supportFeatures(): SupportFeatures;
 
   // request ticker

@@ -20,7 +20,7 @@ export class CoincheckApi extends ExchangeApi {
     return ['btc_jpy'];
   }
 
-  get testMarkets(): string[] {
+  get representativeMarkets(): string[] {
     return ['btc_jpy'];
   }
 

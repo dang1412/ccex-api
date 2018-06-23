@@ -34,7 +34,7 @@ export class BinanceApi extends ExchangeApi {
     ];
   }
 
-  get testMarkets(): string[] {
+  get representativeMarkets(): string[] {
     return [
       'btc_usdt',
       'eos_btc',
@@ -100,5 +100,9 @@ export class BinanceApi extends ExchangeApi {
 
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
     return this.binanceCandleStick.fetchCandleStickRange$(pair, minutesFoot, start, end);
+  }
+
+  candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {
+    return this.binanceCandleStick.candlestick$(pair, minutesFoot);
   }
 }

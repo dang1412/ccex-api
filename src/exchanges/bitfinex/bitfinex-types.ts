@@ -1,25 +1,63 @@
-export interface WebsocketSubscribeRequest {
-  event: string;
+export interface WebsocketSubOrUnSubRequest {
   channel: string;
-  // when subscribe ticker, orderbook
+  event?: string;
+
+  // (ticker, orderbook)
   symbol?: string;
-  // when subscribe candles
+
+  // (orderbook)
+  // level of price aggregation (P0, P1, P2, P3)
+  // default: P0
+  prec?: string;
+
+  // (orderbook)
+  // Frequency of updates(F0, F1).
+  // F0 = realtime / F1=2sec.
+  freq?: string;
+
+  // (orderbook)
+  len?: string;
+
+  // (candles)
   key?: string;
 }
 
-export interface WebsocketSubscribeResponse {
+export interface WebsocketRequestResponse {
   event: string;
   channel: string;
   chanId: number;
-  // when subscribe ticker, orderbook
+
+  // ex: BTCUSD
+  pair?: string;
+
+  // (ticker, orderbook)
   symbol?: string;
-  // when subscribe candles
+
+  // (orderbook)
+  // level of price aggregation (P0, P1, P2, P3)
+  // default: P0
+  prec?: string;
+
+  // (orderbook)
+  // Frequency of updates(F0, F1).
+  // F0 = realtime / F1=2sec.
+  freq?: string;
+
+  // (orderbook)
+  len?: string;
+
+  // (candles)
   key?: string;
 }
 
 export type WebsocketMessageResponse<T> = [number, T];
 
-export type BitfinexTickerI = [
+
+/**
+ * Ticker type
+ */
+
+export type BitfinexRawTicker = [
   number, // bid 8219.2,
   number, // bid size 51.73033331,
   number, // ask 8220,
@@ -30,4 +68,20 @@ export type BitfinexTickerI = [
   number, // volume 32325.84881438,
   number, // high 8278.7,
   number  // low 8073.6
+];
+
+
+/**
+ * Orderbook types
+ */
+
+export type BitfinexOrderbookSingleItem = [
+  // price
+  number,
+  // count
+  number,
+  // amount
+  // - (> 0): bids
+  // - (< 0): asks
+  number
 ];

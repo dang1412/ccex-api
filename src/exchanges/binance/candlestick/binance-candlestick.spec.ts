@@ -6,7 +6,7 @@ import { take } from 'rxjs/operators';
 
 const binanceCandlestick = new BinanceCandleStick();
 
-describe.only('Test binance candlestick functions', function () {
+describe('Test binance candlestick functions', function () {
   this.timeout(0);
 
   it('should fetch btc_usdt 5min candles in provided time range', (done) => {

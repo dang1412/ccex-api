@@ -1,10 +1,11 @@
 import { Observable, ReplaySubject } from 'rxjs';
 
 import { WebSocketRxJs } from '../../common/websocket-rxjs';
-import { WebsocketSubscribeRequest, WebsocketSubscribeResponse, WebsocketMessageResponse } from './bitfinex-types';
+import { WebsocketSubOrUnSubRequest, WebsocketRequestResponse, WebsocketMessageResponse } from './bitfinex-types';
 import { wsEndpoint } from './bitfinex-common';
+import { getKey } from './bitfinex-functions';
 
-type WsResponse = WebsocketSubscribeResponse | WebsocketMessageResponse<any>;
+type WsResponse = WebsocketRequestResponse | WebsocketMessageResponse<any>;
 
 export class BitfinexWebsocket {
   private ws: WebSocketRxJs<WsResponse>;
@@ -17,53 +18,68 @@ export class BitfinexWebsocket {
    * { "event": "subscribe", "channel": "ticker", "symbol": "tEOSBTC" }
    * { "event": "subscribe", "channel": "candles", "key": "trade:1h:tEOSBTC" }
    */
-  
-  subscribe<T>(subscribeRequest: WebsocketSubscribeRequest): Observable<T> {
+  subscribe<T>(subscribeRequest: WebsocketSubOrUnSubRequest): Observable<T> {
     if (!this.ws) {
-      this.initWs();
+      this.initWebsocket();
     }
 
+    // map each subscribe channel to an unique key
+    // use key to store corresponding stream
     const key = getKey(subscribeRequest);
     if (!this.keyStreamMap[key]) {
+      // prepare subject
       this.keyStreamMap[key] = new ReplaySubject<T>(1);
+      // send subscribe request
       this.ws.send(JSON.stringify(subscribeRequest));
     }
 
+    // return subject's stream
     return this.keyStreamMap[key].asObservable();
   }
 
-  unsubscribe(unsubscribeRequest: WebsocketSubscribeRequest): void {
+  /**
+   * 
+   * @param unsubscribeRequest 
+   */
+  unsubscribe(unsubscribeRequest: WebsocketSubOrUnSubRequest): void {
     if (!this.ws) {
       return;
     }
 
-    if (unsubscribeRequest.event !== 'unsubscribe') {
-      throw new Error('in order to unsubscribe a channel, request event must be "unsubscribe"');
-    }
-
+    // get key from unsubscribe request
     const key = getKey(unsubscribeRequest);
 
-    const chanId = getKeyByValue(this.chanIdKeyMap, key);
-    if (chanId) {
-      // delete key
-      delete this.chanIdKeyMap[chanId];
-    }
-
+    // complete and delete subject
     const subject = this.keyStreamMap[key];
     if (subject) {
-      // complete subject
       subject.complete();
-      // delete subject
       delete this.keyStreamMap[key];
     }
 
+    // get chanId from key and delete keyMap
+    const chanId = getKeyByValue(this.chanIdKeyMap, key);
+    if (chanId) {
+      delete this.chanIdKeyMap[chanId];
+    }
+
+    // send unsubscribe request using chanId
     this.ws.send(JSON.stringify({
       event: 'unsubscribe',
       chanId
     }));
   }
 
-  private initWs() {
+  destroy(): void {
+    this.ws.close();
+    this.ws = null;
+
+    // TODO complete and delete all subject
+  }
+
+  /**
+   * 
+   */
+  private initWebsocket() {
     if (this.ws) {
       throw new Error('Bitfinex websocket is already initialized');
     }
@@ -71,15 +87,16 @@ export class BitfinexWebsocket {
     this.ws = new WebSocketRxJs<WsResponse>(wsEndpoint);
     this.ws.message$.subscribe((response: any) => {
       if (response.event === 'subscribed') {
-        // subscribe success
-        const subcribedResponse = <WebsocketSubscribeResponse>response;
+        // subscribe response success
+        const subcribedResponse = <WebsocketRequestResponse>response;
         const key = getKey(subcribedResponse);
+        // map chanId => key
         this.chanIdKeyMap[subcribedResponse.chanId] = key;
       } else if (response.event === 'unsubscribed') {
         // unsubscribe success
         // chanId = response.chanId
       } else if (response.length === 2 && typeof response[0] === 'number' && response[1] !== 'hb') {
-        // subscribed channel's message come
+        // subscribed channel's message
         const chanId = response[0];
         const key = this.chanIdKeyMap[chanId];
         const subject = this.keyStreamMap[key];
@@ -89,10 +106,6 @@ export class BitfinexWebsocket {
       }
     });
   }
-}
-
-function getKey(subscribeObject: WebsocketSubscribeRequest | WebsocketSubscribeResponse): string {
-  return subscribeObject.channel + (subscribeObject.symbol || '') + (subscribeObject.key || '');
 }
 
 function getKeyByValue(object: {[key: number]: string}, value: string): number {

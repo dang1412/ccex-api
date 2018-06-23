@@ -2,15 +2,15 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Ticker } from '../../exchange-types';
-import { BitfinexTickerI } from '../bitfinex-types';
+import { BitfinexRawTicker } from '../bitfinex-types';
 import { BitfinexWebsocket } from '../bitfinex-websocket';
 import { adaptBitfinexTicker, getSymbol } from '../bitfinex-functions';
 
 export class BitfinexTicker {
-  private bitfinexWs: BitfinexWebsocket;
+  private bitfinexWebsocket: BitfinexWebsocket;
 
   constructor(bitfinexWs?: BitfinexWebsocket) {
-    this.bitfinexWs = bitfinexWs || new BitfinexWebsocket();
+    this.bitfinexWebsocket = bitfinexWs || new BitfinexWebsocket();
   }
 
   ticker$(pair: string): Observable<Ticker> {
@@ -21,18 +21,17 @@ export class BitfinexTicker {
       symbol: getSymbol(pair)
     }
 
-    return this.bitfinexWs.subscribe<BitfinexTickerI>(subscribeRequest).pipe(
+    return this.bitfinexWebsocket.subscribe<BitfinexRawTicker>(subscribeRequest).pipe(
       map(bitfinexTicker => adaptBitfinexTicker(bitfinexTicker, pair))
     );
   }
 
   stopTicker(pair: string): void {
     const unsubscribeRequest = {
-      event: 'unsubscribe',
       channel: 'ticker',
       symbol: getSymbol(pair)
     };
 
-    this.bitfinexWs.unsubscribe(unsubscribeRequest);
+    this.bitfinexWebsocket.unsubscribe(unsubscribeRequest);
   }
 }
