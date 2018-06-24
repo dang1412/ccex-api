@@ -11,8 +11,8 @@ export class BitfinexOrderbook {
   private bitfinexWebsocket: BitfinexWebsocket;
   private keyOderbookStreamMap: { [key: string]: Observable<Orderbook> } = {};
 
-  constructor(bitfinexWs?: BitfinexWebsocket) {
-    this.bitfinexWebsocket = bitfinexWs || new BitfinexWebsocket();
+  constructor(bitfinexWebsocket?: BitfinexWebsocket) {
+    this.bitfinexWebsocket = bitfinexWebsocket || new BitfinexWebsocket();
   }
 
   orderbook$(pair: string, prec = 'P0', freq = 'F0', len = '25'): Observable<Orderbook> {

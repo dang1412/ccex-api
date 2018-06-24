@@ -6,7 +6,7 @@ import { BitfinexOrderbook } from './bitfinex-orderbook';
 
 const bitfinexOrderbook = new BitfinexOrderbook();
 
-describe.only('Test Bitfinex orderbook', function () {
+describe('Test Bitfinex orderbook', function () {
   this.timeout(0);
 
   const markets = ['btc_usd', 'eos_btc', 'eth_btc'];

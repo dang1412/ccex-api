@@ -9,8 +9,8 @@ import { adaptBitfinexTicker, getSymbol } from '../bitfinex-functions';
 export class BitfinexTicker {
   private bitfinexWebsocket: BitfinexWebsocket;
 
-  constructor(bitfinexWs?: BitfinexWebsocket) {
-    this.bitfinexWebsocket = bitfinexWs || new BitfinexWebsocket();
+  constructor(bitfinexWebsocket?: BitfinexWebsocket) {
+    this.bitfinexWebsocket = bitfinexWebsocket || new BitfinexWebsocket();
   }
 
   ticker$(pair: string): Observable<Ticker> {
