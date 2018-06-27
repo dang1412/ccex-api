@@ -3,9 +3,12 @@ import { map, filter } from 'rxjs/operators';
 
 import { fetchRxjs } from '../../../common';
 import { CandleStick } from '../../exchange-types';
-import { BitfinexRawCandleStick, WebsocketSubOrUnSubRequest } from '../bitfinex-types';
-import { BitfinexWebsocket } from '../bitfinex-websocket';
-import { adaptBitfinexRestCandle, getCandleStickUrl, getSymbol, getCandleTimeFrame } from '../bitfinex-functions';
+import { WebsocketSubOrUnSubRequest } from '../bitfinex-common.types';
+import { getSymbol } from '../bitfinex-common';
+import { BitfinexWebsocket } from '../websocket';
+
+import { getCandleStickUrl, adaptBitfinexRawCandleStick, getCandleTimeFrame } from './internal/functions';
+import { BitfinexRawCandleStick } from './internal/types';
 
 export class BitfinexCandleStick {
   private corsProxy: string;
@@ -33,7 +36,7 @@ export class BitfinexCandleStick {
     const originUrl = getCandleStickUrl(pair, minutesFoot, start, end);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BitfinexRawCandleStick[]>(url).pipe(map(bitfinexCandles => bitfinexCandles.map(adaptBitfinexRestCandle)));
+    return fetchRxjs<BitfinexRawCandleStick[]>(url).pipe(map(bitfinexCandles => bitfinexCandles.map(adaptBitfinexRawCandleStick)));
   }
 
   /**
@@ -47,7 +50,7 @@ export class BitfinexCandleStick {
     return this.bitfinexWebsocket.subscribe<BitfinexRawCandleStick[] | BitfinexRawCandleStick>(subscribeRequest).pipe(
       // filter the first initial history data
       filter(candleArrayOrCandle => candleArrayOrCandle[0] && typeof candleArrayOrCandle[0] === 'number'),
-      map((candle: BitfinexRawCandleStick) => adaptBitfinexRestCandle(candle))
+      map((candle: BitfinexRawCandleStick) => adaptBitfinexRawCandleStick(candle))
     );
   }
 
@@ -60,14 +63,13 @@ export class BitfinexCandleStick {
     const subscribeRequest = getCandleSubcribeRequest(pair, minutesFoot);
 
     return this.bitfinexWebsocket.subscribe<BitfinexRawCandleStick[] | BitfinexRawCandleStick>(subscribeRequest).pipe(
-      // filter the first initial history data
       map((candleArrayOrCandle) => {
-        if (candleArrayOrCandle[0] && typeof candleArrayOrCandle[0] === 'number') {
+        if (candleArrayOrCandle[0] && typeof candleArrayOrCandle[0] === 'object') {
           const initialCandles = <BitfinexRawCandleStick[]>candleArrayOrCandle;
-          return initialCandles.map(adaptBitfinexRestCandle);
+          return initialCandles.map(adaptBitfinexRawCandleStick);
         }
 
-        return adaptBitfinexRestCandle(<BitfinexRawCandleStick>candleArrayOrCandle);
+        return adaptBitfinexRawCandleStick(<BitfinexRawCandleStick>candleArrayOrCandle);
       })
     );
   }

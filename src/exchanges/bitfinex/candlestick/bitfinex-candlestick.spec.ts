@@ -18,7 +18,7 @@ describe.only('Test bitfinex candlestick functions', function () {
   });
 
   it('should get btc_usd 5min last candle realtime', (done) => {
-    bitfinexCandlestick.candlestick$('btc_usd', 5).pipe(take(15)).subscribe(
+    bitfinexCandlestick.candlestick$('btc_usd', 5).pipe(take(5)).subscribe(
       (candle) => {
         console.log(candle);
       },

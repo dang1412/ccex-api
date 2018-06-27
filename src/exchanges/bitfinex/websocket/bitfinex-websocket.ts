@@ -1,9 +1,8 @@
 import { Observable, ReplaySubject } from 'rxjs';
 
-import { WebSocketRxJs } from '../../common/websocket-rxjs';
-import { WebsocketSubOrUnSubRequest, WebsocketRequestResponse, WebsocketMessageResponse } from './bitfinex-types';
-import { wsEndpoint } from './bitfinex-common';
-import { getKey } from './bitfinex-functions';
+import { WebSocketRxJs } from '../../../common/websocket-rxjs';
+import { WebsocketSubOrUnSubRequest, WebsocketRequestResponse, WebsocketMessageResponse } from '../bitfinex-common.types';
+import { getKey, wsEndpoint } from '../bitfinex-common';
 
 type WsResponse = WebsocketRequestResponse | WebsocketMessageResponse<any>;
 

@@ -2,9 +2,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Ticker } from '../../exchange-types';
-import { BitfinexRawTicker } from '../bitfinex-types';
-import { BitfinexWebsocket } from '../bitfinex-websocket';
-import { adaptBitfinexTicker, getSymbol } from '../bitfinex-functions';
+import { getSymbol } from '../bitfinex-common';
+import { BitfinexWebsocket } from '../websocket';
+
+import { adaptBitfinexTicker } from './internal/functions';
+import { BitfinexRawTicker } from './internal/types';
 
 export class BitfinexTicker {
   private bitfinexWebsocket: BitfinexWebsocket;

@@ -3,9 +3,12 @@ import { map, take, filter, bufferTime, scan } from 'rxjs/operators';
 
 import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
-import { BitfinexOrderbookSingleItem, WebsocketSubOrUnSubRequest } from '../bitfinex-types';
-import { BitfinexWebsocket } from '../bitfinex-websocket';
-import { adaptBitfinexOrderbook, arrangeBitfinexOrderbookItems, getSymbol, getKey } from '../bitfinex-functions';
+import { WebsocketSubOrUnSubRequest } from '../bitfinex-common.types';
+import { getSymbol, getKey } from '../bitfinex-common';
+import { BitfinexWebsocket } from '../websocket';
+
+import { adaptBitfinexOrderbook, arrangeBitfinexOrderbookItems } from './internal/functions';
+import { BitfinexOrderbookSingleItem } from './internal/types';
 
 export class BitfinexOrderbook {
   private bitfinexWebsocket: BitfinexWebsocket;
@@ -59,6 +62,7 @@ export class BitfinexOrderbook {
       filter((snapshot) => !!snapshot && !!snapshot.length),
       map((snapshot: any) => {
         // this case is not expected (1 item come instead of array),
+        // happen when the stream is hot (ws channel already subscribed before),
         // make snapshot the array of items
         if (typeof snapshot[0] === 'number' ) {
           snapshot = [snapshot];
