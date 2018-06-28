@@ -6,7 +6,7 @@ import { BitfinexCandleStick } from './bitfinex-candlestick';
 
 const bitfinexCandlestick = new BitfinexCandleStick();
 
-describe.only('Test bitfinex candlestick functions', function () {
+describe('Test bitfinex candlestick functions', function () {
   this.timeout(0);
 
   it('should fetch btc_usd 5min candles in time range', (done) => {

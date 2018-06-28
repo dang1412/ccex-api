@@ -87,6 +87,7 @@ export class BitfinexWebsocket {
     this.ws = new WebSocketRxJs<WsResponse>(wsEndpoint);
     this.ws.message$.subscribe((response: any) => {
       if (response.event === 'subscribed') {
+        // console.log('subcribe success ===>', response);
         // subscribe response success
         const subcribedResponse = <WebsocketRequestResponse>response;
         const key = getKey(subcribedResponse);
@@ -94,16 +95,23 @@ export class BitfinexWebsocket {
         this.chanIdKeyMap[subcribedResponse.chanId] = key;
       } else if (response.event === 'unsubscribed') {
         // unsubscribe success
+        // console.log('unsubcribe success ===>', response);
         const chanId = response.chanId;
         const key = this.chanIdKeyMap[chanId];
         this.unsubscribeSuccess$.next(key);
-      } else if (response.length === 2 && typeof response[0] === 'number' && response[1] && response[1] !== 'hb') {
+      } else if (response.length >= 2 && typeof response[0] === 'number' && response[1] && response[1] !== 'hb') {
         // subscribed channel's message
+
         const chanId = response[0];
         const key = this.chanIdKeyMap[chanId];
+
+        // special trades channel case: message is response[2]
+        // normally message is response[1]
+        const message = response[1] === 'tu' || response[1] === 'te' ? response[2] : response[1];
+        // console.log('message ==>', message);
         const subject = this.keyStreamMap[key];
-        if (subject) {
-          subject.next(response[1]);
+        if (subject && message) {
+          subject.next(message);
         }
       }
     });
