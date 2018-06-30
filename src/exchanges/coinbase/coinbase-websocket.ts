@@ -1,29 +1,33 @@
+import { Observable, ReplaySubject, empty } from 'rxjs';
+
 import { WebSocketRxJs } from '../../common/websocket-rxjs';
-import { WebsocketSubscribeRequest, WebsocketUnSubscribeRequest, WebsocketRequest, WebsocketMessageResponse } from './coinbase-types';
-import { Observable, ReplaySubject } from 'rxjs';
+import { WebsocketRequest, WebsocketMessageResponse } from './coinbase-common.types';
+import { websocketEndpoint } from './coinbase-common';
 
 export class CoinbaseWebsocket {
-  private ws: WebSocketRxJs<WebsocketMessageResponse>;
-  private url: string;
+  private websocket: WebSocketRxJs<WebsocketMessageResponse>;
   private keyStreamMap: {[key: string]: ReplaySubject<any>} = {};
 
-  constructor(url: string) {
-    this.url = url;
-  }
+  constructor() {}
 
   /**
+   * allow only 1 product and 1 channel for each subscribe
    * @param subscribeRequest
    * {"type":"subscribe","product_ids":["BTC-USD"],"channels":["ticker"]}
    */
-  subscribe<T>(subscribeRequest: WebsocketSubscribeRequest): Observable<T> {
-    if (!this.ws) {
-      this.initWs();
+  subscribe<T>(subscribeRequest: WebsocketRequest): Observable<T> {
+    if (!this.websocket) {
+      this.initWebsocket();
+    }
+
+    if (subscribeRequest.type !== 'subscribe') {
+      return empty();
     }
 
     const key = getKeyFromRequest(subscribeRequest);
     if (!this.keyStreamMap[key]) {
       this.keyStreamMap[key] = new ReplaySubject<T>(1);
-      this.ws.send(JSON.stringify(subscribeRequest));
+      this.websocket.send(JSON.stringify(subscribeRequest));
     }
 
     return this.keyStreamMap[key].asObservable();
@@ -34,23 +38,27 @@ export class CoinbaseWebsocket {
    * @param unsubscribeRequest
    * {"type":"unsubscribe","product_ids":["BTC-USD"],"channels":["ticker"]}
    */
-  unsubscribe(unsubscribeRequest: WebsocketUnSubscribeRequest): void{
-    if (!this.ws) {
+  unsubscribe(unsubscribeRequest: WebsocketRequest): void {
+    if (!this.websocket) {
       return;
     }
 
-    this.ws.send(JSON.stringify(unsubscribeRequest));
+    if (unsubscribeRequest.type !== 'unsubscribe') {
+      return;
+    }
+
+    this.websocket.send(JSON.stringify(unsubscribeRequest));
     const key = getKeyFromRequest(unsubscribeRequest);
     delete this.keyStreamMap[key];
   }
 
-  private initWs() {
-    if (this.ws) {
+  private initWebsocket() {
+    if (this.websocket) {
       throw new Error('Coinbase websocket is already initialized');
     }
 
-    this.ws = new WebSocketRxJs(this.url);
-    this.ws.message$.subscribe((response: any) => {
+    this.websocket = new WebSocketRxJs(websocketEndpoint);
+    this.websocket.message$.subscribe((response: any) => {
       if (response.type && response.product_id) {
         const messageResponse = <WebsocketMessageResponse>response;
         const key = getKeyFromResponse(messageResponse);

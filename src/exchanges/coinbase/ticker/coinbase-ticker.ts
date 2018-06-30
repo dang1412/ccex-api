@@ -1,41 +1,50 @@
-import { Observable, empty } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { fetchRxjs } from '../../../common';
 import { Ticker } from '../../exchange-types';
-import { CoinbaseRawTicker, WebsocketSubscribeRequest, WebsocketUnSubscribeRequest } from '../coinbase-types';
-import { adaptCoinbaseRawTicker, getProductId } from '../coinbase-functions';
+import { WebsocketRequest } from '../coinbase-common.types';
+import { getProductId } from '../coinbase-common';
 import { CoinbaseWebsocket } from '../coinbase-websocket';
 
-export class CoinbaseTicker {
-  private coinbaseWs: CoinbaseWebsocket;
+import { adaptCoinbaseRawWsTicker, adaptCoinbaseRawRestTicker, getTickerUrl } from './internal/functions';
+import { CoinbaseRawWsTicker, CoinbaseRawRestTicker } from './internal/types';
 
-  constructor(coinbaseWs: CoinbaseWebsocket) {
-    this.coinbaseWs = coinbaseWs;
+export class CoinbaseTicker {
+  private corsProxy: string;
+  private coinbaseWebsocket: CoinbaseWebsocket;
+
+  constructor(corsProxy?: string, coinbaseWebsocket?: CoinbaseWebsocket) {
+    this.corsProxy = corsProxy;
+    this.coinbaseWebsocket = coinbaseWebsocket || new CoinbaseWebsocket();
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {
     // receive rawTicker and adapt to Ticker here
-    return empty();
+    const originUrl = getTickerUrl(pair);
+    const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
+
+    return fetchRxjs<CoinbaseRawRestTicker>(url).pipe(map(rawRestTicker => adaptCoinbaseRawRestTicker(rawRestTicker, pair)));
   }
 
   ticker$(pair: string): Observable<Ticker> {
     // receive rawTicker and adapt to Ticker here
-    const request: WebsocketSubscribeRequest = {
+    const request: WebsocketRequest = {
       type: 'subscribe',
       channels: ['ticker'],
       product_ids: [getProductId(pair)]
     };
 
-    return this.coinbaseWs.subscribe<CoinbaseRawTicker>(request).pipe(map((rawTicker) => adaptCoinbaseRawTicker(rawTicker, pair)));
+    return this.coinbaseWebsocket.subscribe<CoinbaseRawWsTicker>(request).pipe(map((rawTicker) => adaptCoinbaseRawWsTicker(rawTicker, pair)));
   }
 
   stopTicker(pair: string) {
-    const request: WebsocketUnSubscribeRequest = {
+    const request: WebsocketRequest = {
       type: 'unsubscribe',
       channels: ['ticker'],
       product_ids: [getProductId(pair)]
     }
 
-    this.coinbaseWs.unsubscribe(request);
+    this.coinbaseWebsocket.unsubscribe(request);
   }
 }

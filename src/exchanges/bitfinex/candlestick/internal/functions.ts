@@ -51,4 +51,3 @@ const minutesTimeFrameMap = {
   10080: '7D',
   20160: '14D',
 }
-
