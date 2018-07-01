@@ -6,16 +6,16 @@ import { CoinbaseTicker } from './coinbase-ticker';
 
 const coinbaseTicker = new CoinbaseTicker();
 
-describe.only('Test Coinbase tickers', function () {
+describe('Test Coinbase tickers', function () {
   this.timeout(0);
 
   const markets = ['btc_usd', 'eth_usd', 'eth_btc'];
 
   /**
-   * Rest api tickers
+   * Rest api ticker
    */
   markets.forEach(market => {
-    it('should fetch ticker ' + market, (done) => {
+    it('should fetch ticker api' + market, (done) => {
       coinbaseTicker.fetchTicker$(market).subscribe(
         (ticker) => {
           console.log(ticker.pair, ticker.last);
@@ -30,10 +30,10 @@ describe.only('Test Coinbase tickers', function () {
   });
 
   /**
-   * Realtime tickers
+   * Realtime ticker
    */
   markets.forEach(market => {
-    it('should listen ticker stream ' + market, (done) => {
+    it('should listen ticker realtime ' + market, (done) => {
       coinbaseTicker.ticker$(market).pipe(take(2)).subscribe(
         (ticker) => {
           console.log(ticker.pair, ticker.last);

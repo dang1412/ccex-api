@@ -4,6 +4,13 @@ import { WebSocketRxJs } from '../../common/websocket-rxjs';
 import { WebsocketRequest, WebsocketMessageResponse } from './coinbase-common.types';
 import { websocketEndpoint } from './coinbase-common';
 
+// normally the type in response message is the same to subscribed channel
+// if it is different we have this to determine which channel the message belongs to
+const typeChannelMap = {
+  snapshot: 'level2',
+  l2update: 'level2'
+};
+
 export class CoinbaseWebsocket {
   private websocket: WebSocketRxJs<WebsocketMessageResponse>;
   private keyStreamMap: {[key: string]: ReplaySubject<any>} = {};
@@ -49,7 +56,11 @@ export class CoinbaseWebsocket {
 
     this.websocket.send(JSON.stringify(unsubscribeRequest));
     const key = getKeyFromRequest(unsubscribeRequest);
-    delete this.keyStreamMap[key];
+    // complete stream and delete
+    if (this.keyStreamMap[key]) {
+      this.keyStreamMap[key].complete();
+      delete this.keyStreamMap[key];
+    }
   }
 
   private initWebsocket() {
@@ -75,5 +86,5 @@ function getKeyFromRequest(request: WebsocketRequest): string {
 }
 
 function getKeyFromResponse(response: WebsocketMessageResponse): string {
-  return response.type + response.product_id;
+  return (typeChannelMap[response.type] || response.type) + response.product_id;
 }

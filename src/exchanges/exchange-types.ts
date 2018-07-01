@@ -35,6 +35,7 @@ export interface Ticker {
  * Orderbook
  */
 export interface Orderbook {
+  // [price, amount]
   asks: [string, string][]; // asc order
   bids: [string, string][]; // des order
   lastUpdateId?: number;

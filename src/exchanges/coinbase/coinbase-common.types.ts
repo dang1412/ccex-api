@@ -13,5 +13,5 @@ export interface WebsocketMessageResponse {
   // 'BTC-USD',
   product_id: string;
   // '2017-10-06T17:17:16.118000Z',
-  time: string;
+  time?: string;
 }
