@@ -6,7 +6,7 @@ import { CoinbaseOrderbook } from './coinbase-orderbook';
 
 const coinbaseOrderbook = new CoinbaseOrderbook();
 
-describe.only('Test Coinbase orderbook', function () {
+describe('Test Coinbase orderbook', function () {
   this.timeout(0);
 
   const markets = ['btc_usd', 'eth_usd'];
