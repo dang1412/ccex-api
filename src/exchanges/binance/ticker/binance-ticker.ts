@@ -1,11 +1,10 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { WebSocketRxJs } from '../../../common/websocket-rxjs';
+import { fetchRxjs, WebSocketRxJs } from '../../../common';
 import { Ticker } from '../../exchange-types';
-import { BinanceRawWsTicker, BinanceRawRestTicker } from '../binance-types';
-import { adaptBinanceWsTicker, adaptBinanceRestTicker, binanceTickerChannel, binanceTickerApiUrl } from '../binance-functions';
-import { fetchRxjs } from '../../../common';
+import { BinanceRawWsTicker, BinanceRawRestTicker } from './internal/types';
+import { adaptBinanceWsTicker, adaptBinanceRestTicker, binanceTickerChannel, binanceTickerApiUrl } from './internal/functions';
 
 export class BinanceTicker {
   private pairStreamMap: { [pair: string]: Observable<Ticker> } = {};

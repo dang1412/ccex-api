@@ -3,8 +3,8 @@ import { map } from 'rxjs/operators';
 
 import { fetchRxjs, WebSocketRxJs } from '../../../common';
 import { CandleStick } from '../../exchange-types';
-import { BinanceRawRestCandle, BinanceRawWsCandle } from '../binance-types';
-import { binanceCandleStickApiUrl, adaptBinanceRestCandle, adaptBinanceWsCandle, binanceCandleStickChannel } from '../binance-functions';
+import { BinanceRawRestCandle, BinanceRawWsCandle } from './internal/types';
+import { binanceCandleStickApiUrl, adaptBinanceRestCandle, adaptBinanceWsCandle, binanceCandleStickChannel } from './internal/functions';
 
 export class BinanceCandleStick {
   private pairStreamMap: { [pair: string]: Observable<CandleStick> } = {};

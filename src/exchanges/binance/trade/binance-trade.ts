@@ -3,8 +3,8 @@ import { map } from 'rxjs/operators';
 import { fetchRxjs, WebSocketRxJs } from '../../../common';
 
 import { Trade } from '../../exchange-types';
-import { BinanceRawRestTrade, BinanceRawWsTrade } from '../binance-types';
-import { adaptBinanceRestTrade, adaptBinanceWsTrade, binanceTradeApiUrl, binanceTradeChannel } from '../binance-functions';
+import { BinanceRawRestTrade, BinanceRawWsTrade } from './internal/types';
+import { adaptBinanceRestTrade, adaptBinanceWsTrade, binanceTradeApiUrl, binanceTradeChannel } from './internal/functions';
 
 export class BinanceTrade {
   private pairStreamMap: { [pair: string]: Observable<Trade> } = {};
