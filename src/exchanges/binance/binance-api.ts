@@ -112,6 +112,10 @@ export class BinanceApi extends ExchangeApi {
    * Specific exchange functions
    */
 
+  fetchOrderbookLimit$(pair: string, limit: number): Observable<Orderbook> {
+    return this.binanceOrderbook.fetchOrderbook$(pair, limit);
+  }
+
   candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {
     return this.binanceCandleStick.candlestick$(pair, minutesFoot);
   }

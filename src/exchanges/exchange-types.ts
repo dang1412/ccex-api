@@ -68,15 +68,3 @@ export interface SupportFeatures {
   orderbook: boolean;
   chart: boolean;
 }
-
-// export type TradingViewResolution = '1' | '5' | '15' | '30' | '60' | '240' | '480' | '720' | 'D' | 'W' | 'M';
-
-// export interface TradingViewBar {
-//   open: number;
-//   high: number;
-//   low: number;
-//   close: number;
-//   volume: number;
-//   time: number;
-//   originalTime: number; // tradingView auto adjust time property so it is safe to store originalTime
-// }

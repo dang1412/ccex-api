@@ -9,7 +9,7 @@ These features are supported with all major exchanges
 - Support for both Nodejs and Browser environments
 - Modular structure make sure you include minimum code as you need (exspecially for client side application)
 - Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere)
-- More to come: Tradingview datafeed for each exchange, private rest api with api key...
+- More to come: Tradingview datafeed, private rest api with api key...
 
 # Modular structure
 This sample of one way dependencies diagram demonstrates how modules are structured and combined. This may differentiated from one exchange to another.
@@ -49,6 +49,21 @@ bitbankCandlestick.getApproximateHistoryPrice('btc_jpy', 1526917534904, 1).subsc
 
 # Api
 Basically all exchanges have these following api implemented.
+
+|api|params|return value | desctiption |
+---|---|---|---
+exchangeInfo| | ExchangeInfo | |
+markets| |string[] | |
+representativeMarkets| | | |
+supportFeatures| | | |
+fetchTicker$| | | |
+ticker$| | | |
+stopTicker| | | |
+fetchOrderbook$| | | |
+orderbook$| | | |
+stopOrderbook| | | |
+fetchCandleStickRange$| | | |
+lastCandle$| | | |
 ```
 export abstract class ExchangeApi {
   abstract get exchangeInfo(): ExchangeInfo;
@@ -87,7 +102,7 @@ npm test
 ```
 
 # Dependencies
-This library is built strongly upon Rxjs (v6.0.0 or above)
+This library is built strongly on top of Rxjs (v6 or above)
 - [Rxjs](https://github.com/ReactiveX/rxjs)
 - [node-fetch](https://github.com/bitinn/node-fetch) (nodejs)
 - [ws](https://github.com/websockets/ws) (nodejs)
