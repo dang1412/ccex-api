@@ -22,7 +22,7 @@ When you include a module you also include all of its dependencies
 Bitbank, Binance, Bitfinex, Coinbase (Gdax), Coincheck...
 
 # Usage
-This library is designed to be usable in both nodejs and browser (with frontend framework like Angular, React, Vue,...) environments
+This library is designed to be usable in both nodejs and browser (with frontend framework like Angular, React, Vue,... The umd javascript file coming later) environments. When used in browser environment, the browser must support for native [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) and [websocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
 ## Installation
 ```
 npm i --save ccex-api
@@ -53,56 +53,46 @@ Basically all exchanges have these following api implemented.
 |api|params|return value | desctiption |
 ---|---|---|---
 exchangeInfo| | ExchangeInfo | |
-markets| |string[] | |
-representativeMarkets| | | |
-supportFeatures| | | |
-fetchTicker$| | | |
-ticker$| | | |
-stopTicker| | | |
-fetchOrderbook$| | | |
-orderbook$| | | |
-stopOrderbook| | | |
-fetchCandleStickRange$| | | |
-lastCandle$| | | |
-```
-export abstract class ExchangeApi {
-  abstract get exchangeInfo(): ExchangeInfo;
-  abstract get markets(): string[];
-  abstract get testMarkets(): string[];
-  abstract get supportFeatures(): SupportFeatures;
-  // request ticker
-  abstract fetchTicker$(pair: string): Observable<Ticker>;
-  // realtime ticker
-  abstract ticker$(pair: string): Observable<Ticker>;
-  // stop realtime ticker
-  abstract stopTicker(pair: string): void;
-  // request orderbook
-  abstract fetchOrderbook$(pair: string): Observable<Orderbook>;
-  // realtime orderbook
-  abstract orderbook$(pair: string): Observable<Orderbook>;
-  // stop realtime orderbook
-  abstract stopOrderbook(pair: string): void;
-  // request candlestick
-  abstract fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]>;
-  // realtime last candlestick (used for tradingview datafeed)
-  abstract lastCandle$(pair: string, minutesFoot: number): Observable<CandleStick>;
-}
-```
+markets| | string[] | |
+representativeMarkets| | string[] | |
+supportFeatures| | SupportFeatures | |
+fetchTicker$| pair: string | Observable\<Ticker> | api request for ticker |
+ticker$| pair: string | Observable\<Ticker> | realtime ticker stream |
+stopTicker| | | stop realtime ticker stream |
+fetchTrades$| pair: string | Observable\<Trade> | api request for trade |
+trade$| pair: string | Observable\<Trade> | realtime trade stream |
+stopTrade| | | stop realtime trade stream |
+fetchOrderbook$| pair: string | Observable\<Orderbook> | api request for orderbook |
+orderbook$| pair: string | Observable\<Orderbook> | realtime orderbook stream |
+stopOrderbook| | | stop realtime orderbook stream |
+fetchCandleStickRange$| pair: string <br> minutesFoot: number <br> start: number <br> end: number| Observable<CandleStick[]> | api request for candlestick |
+lastCandle$| pair: string <br> minutesFoot: number <br> lastCandle: CandleStick | Observable\<CandleStick> | Realtime candlestick stream, calculated from an initial lastCandle and realtime trade stream. <br> This function is useful in implementing Tradingview datafeed |
 
 Besides, an exchange may have more specific functions. It depends on exchange provided features and implementation.
 In that case, it is good to have specific guide for that exchange located at `exchanges/{exchange}/README.md`
 
 # Contributor guide
-In order to add a new exchange, simply clone folder `src/exchanges/sample`, rename and implement functions
+In order to add a new exchange, simply clone folder `src/exchanges/sample`, rename, implement functions and include appropiate tests for sub-modules (ticker, orderbook...) and some internal functions
 
-# Test
+Finally make sure the exchange `sample` pass our predefined test by running
 
 ```
-npm test
+npm run main-test --exchange sample
+```
+
+# Test
+main test: test for main module which implement the above interface directly
+```
+npm run main-test
+```
+
+sub test: test for sub-modules used inside main module and its internal functions
+```
+npm run sub-test
 ```
 
 # Dependencies
 This library is built strongly on top of Rxjs (v6 or above)
 - [Rxjs](https://github.com/ReactiveX/rxjs)
-- [node-fetch](https://github.com/bitinn/node-fetch) (nodejs)
+- [node-fetch](https://github.com/bitinn/node-fetch) (nodejs env only)
 - [ws](https://github.com/websockets/ws) (nodejs)
