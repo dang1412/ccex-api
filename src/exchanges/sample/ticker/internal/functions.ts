@@ -1,5 +1,5 @@
-import { Ticker } from '../exchange-types';
-import { SampleRawTicker } from './sample-types';
+import { Ticker } from '../../../exchange-types';
+import { SampleRawTicker } from './types';
 
 export function adaptSampleRawTicker(sampleRawTicker: SampleRawTicker): Ticker {
   return null;

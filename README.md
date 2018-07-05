@@ -12,7 +12,7 @@ These features are supported with all major exchanges
 - More to come: Tradingview datafeed, private rest api with api key...
 
 # Modular structure
-This sample of one way dependencies diagram demonstrates how modules are structured and combined. This may differentiated from one exchange to another.
+This sample of one way dependencies diagram demonstrates how modules are structured and combined. This may different from one another.
 
 <p align="center"><img src="assets/ccex-api-sample-structure.png"></p>
 
@@ -56,17 +56,17 @@ exchangeInfo| | ExchangeInfo | |
 markets| | string[] | |
 representativeMarkets| | string[] | |
 supportFeatures| | SupportFeatures | |
-fetchTicker$| pair: string | Observable\<Ticker> | api request for ticker |
-ticker$| pair: string | Observable\<Ticker> | realtime ticker stream |
+fetchTicker$| pair: `string` | Observable\<Ticker> | api request for ticker |
+ticker$| pair: `string` | Observable\<Ticker> | realtime ticker stream |
 stopTicker| | | stop realtime ticker stream |
-fetchTrades$| pair: string | Observable\<Trade> | api request for trade |
-trade$| pair: string | Observable\<Trade> | realtime trade stream |
+fetchTrades$| pair: `string` | Observable\<Trade> | api request for trade |
+trade$| pair: `string` | Observable\<Trade> | realtime trade stream |
 stopTrade| | | stop realtime trade stream |
-fetchOrderbook$| pair: string | Observable\<Orderbook> | api request for orderbook |
-orderbook$| pair: string | Observable\<Orderbook> | realtime orderbook stream |
+fetchOrderbook$| pair: `string` | Observable\<Orderbook> | api request for orderbook |
+orderbook$| pair: `string` | Observable\<Orderbook> | realtime orderbook stream |
 stopOrderbook| | | stop realtime orderbook stream |
-fetchCandleStickRange$| pair: string <br> minutesFoot: number <br> start: number <br> end: number| Observable<CandleStick[]> | api request for candlestick |
-lastCandle$| pair: string <br> minutesFoot: number <br> lastCandle: CandleStick | Observable\<CandleStick> | Realtime candlestick stream, calculated from an initial lastCandle and realtime trade stream. <br> This function is useful in implementing Tradingview datafeed |
+fetchCandleStickRange$| pair: `string` <br> minutesFoot: `number` <br> start: `number` <br> end: `number`| Observable<CandleStick[]> | api request for candlestick |
+lastCandle$| pair: `string` <br> minutesFoot: `number` <br> lastCandle: `CandleStick` | Observable\<CandleStick> | Realtime candlestick stream, calculated from an initial lastCandle and realtime trade stream. <br> This function is useful in implementing Tradingview datafeed |
 
 Besides, an exchange may have more specific functions. It depends on exchange provided features and implementation.
 In that case, it is good to have specific guide for that exchange located at `exchanges/{exchange}/README.md`
@@ -94,5 +94,6 @@ npm run sub-test
 # Dependencies
 This library is built strongly on top of Rxjs (v6 or above)
 - [Rxjs](https://github.com/ReactiveX/rxjs)
-- [node-fetch](https://github.com/bitinn/node-fetch) (nodejs env only)
-- [ws](https://github.com/websockets/ws) (nodejs)
+- [pubnub](https://www.pubnub.com/)
+- [node-fetch](https://github.com/bitinn/node-fetch) (nodejs only)
+- [ws](https://github.com/websockets/ws) (nodejs only)
