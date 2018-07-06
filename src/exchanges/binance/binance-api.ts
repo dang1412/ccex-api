@@ -62,7 +62,6 @@ export class BinanceApi extends ExchangeApi {
     this.binanceCandleStick = new BinanceCandleStick(corsProxy);
   }
 
-
   /**
    * Implement common interface
    */
@@ -106,7 +105,6 @@ export class BinanceApi extends ExchangeApi {
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
     return this.binanceCandleStick.fetchCandleStickRange$(pair, minutesFoot, start, end);
   }
-
 
   /**
    * Specific exchange functions

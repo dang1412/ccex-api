@@ -27,6 +27,6 @@ describe('Test bitfinex candlestick functions', function () {
         bitfinexCandlestick.stopCandleStick('btc_usd', 5);
         done();
       }
-    )
+    );
   });
 });

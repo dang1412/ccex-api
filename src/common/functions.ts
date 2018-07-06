@@ -3,7 +3,7 @@ import fetch from '../lib/isomorphic-fetch';
 
 export function isNode(): boolean {
   return (typeof window === 'undefined') &&
-    !((typeof WorkerGlobalScope !== 'undefined') && (self instanceof WorkerGlobalScope))
+    !((typeof WorkerGlobalScope !== 'undefined') && (self instanceof WorkerGlobalScope));
 }
 
 // note: this stream is hot (fetch function run without subscribe)

@@ -80,5 +80,5 @@ export interface BinanceRawWsCandle {
     Q: string;
     // Ignore
     B: string;
-  }
+  };
 }

@@ -41,7 +41,7 @@ export class CoinbaseOrderbook {
       type: 'unsubscribe',
       channels: ['level2'],
       product_ids: [getProductId(pair)]
-    }
+    };
 
     this.coinbaseWebsocket.unsubscribe(request);
     delete this.pairOderbookStreamMap[pair];

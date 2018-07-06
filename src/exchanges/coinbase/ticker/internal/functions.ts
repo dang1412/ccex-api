@@ -32,4 +32,3 @@ export function adaptCoinbaseRawRestTicker(coinbaseRawTicker: CoinbaseRawRestTic
     timestamp: new Date(coinbaseRawTicker.time).getTime()
   };
 }
-

@@ -25,5 +25,5 @@ export function adaptCoinbaseCandleStick(rawCandle: CoinbaseRawCandleStick): Can
     close: rawCandle[4],
     volume: rawCandle[5],
     timestamp: rawCandle[0] * 1000,
-  }
+  };
 }

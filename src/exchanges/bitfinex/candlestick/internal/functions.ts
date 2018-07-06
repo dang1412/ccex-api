@@ -1,6 +1,6 @@
-import { CandleStick } from "../../../exchange-types";
-import { getSymbol, apiEndpoint } from "../../bitfinex-common";
-import { BitfinexRawCandleStick } from "./types";
+import { CandleStick } from '../../../exchange-types';
+import { getSymbol, apiEndpoint } from '../../bitfinex-common';
+import { BitfinexRawCandleStick } from './types';
 
 export function getCandleStickUrl(pair: string, minutesFoot: number, start?: number, end?: number, limit?: number, sort = 1): string {
   // https://api.bitfinex.com/v2/candles/trade::TimeFrame::Symbol/Section
@@ -30,7 +30,7 @@ export function adaptBitfinexRawCandleStick(bitfinexCandle: BitfinexRawCandleSti
     close: +bitfinexCandle[4],
     volume: +bitfinexCandle[5],
     timestamp: bitfinexCandle[0],
-  }
+  };
 }
 
 export function getCandleTimeFrame(minutesFoot: number): string {
@@ -50,4 +50,4 @@ const minutesTimeFrameMap = {
   1440: '1D',
   10080: '7D',
   20160: '14D',
-}
+};

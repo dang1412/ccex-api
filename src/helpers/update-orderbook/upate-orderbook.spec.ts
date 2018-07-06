@@ -46,7 +46,7 @@ const askTestCases: AskTestCase[] = [
     updateAsks: [['900', '1'], ['1100', '0']],
     result: [['900', '1'], ['1000', '1'], ['1200', '1']]
   }
-]
+];
 
 describe('Test update-orderbook.ts helper functions', () => {
   bidTestCases.forEach((test, index) => {
@@ -64,4 +64,4 @@ describe('Test update-orderbook.ts helper functions', () => {
       assert.deepEqual(actualResult, test.result, '#' + index + ': actual result is different from expect result');
     });
   });
-})
+});

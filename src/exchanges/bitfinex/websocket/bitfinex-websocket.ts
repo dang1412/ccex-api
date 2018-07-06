@@ -13,7 +13,7 @@ export class BitfinexWebsocket {
   private unsubscribeSuccess$ = new ReplaySubject<string>(1);
 
   /**
-   * 
+   *
    * @param subscribeRequest
    * { "event": "subscribe", "channel": "ticker", "symbol": "tEOSBTC" }
    * { "event": "subscribe", "channel": "candles", "key": "trade:1h:tEOSBTC" }
@@ -38,8 +38,8 @@ export class BitfinexWebsocket {
   }
 
   /**
-   * 
-   * @param unsubscribeRequest 
+   *
+   * @param unsubscribeRequest
    */
   unsubscribe(unsubscribeRequest: WebsocketSubOrUnSubRequest): void {
     if (!this.ws) {
@@ -77,7 +77,7 @@ export class BitfinexWebsocket {
   }
 
   /**
-   * 
+   *
    */
   private initWebsocket() {
     if (this.ws) {

@@ -43,7 +43,7 @@ export class CoinbaseTicker {
       type: 'unsubscribe',
       channels: ['ticker'],
       product_ids: [getProductId(pair)]
-    }
+    };
 
     this.coinbaseWebsocket.unsubscribe(request);
   }

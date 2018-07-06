@@ -27,6 +27,6 @@ describe('Test binance candlestick functions', function () {
         binanceCandlestick.stopCandleStick('btc_usdt');
         done();
       }
-    )
+    );
   });
 });

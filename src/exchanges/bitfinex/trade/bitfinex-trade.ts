@@ -15,9 +15,9 @@ export class BitfinexTrade {
   private bitfinexWebsocket: BitfinexWebsocket;
 
   /**
-   * 
-   * @param corsProxy 
-   * @param bitfinexWebsocket 
+   *
+   * @param corsProxy
+   * @param bitfinexWebsocket
    */
   constructor(corsProxy?: string, bitfinexWebsocket?: BitfinexWebsocket) {
     this.corsProxy = corsProxy;

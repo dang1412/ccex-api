@@ -3,7 +3,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { take, filter } from 'rxjs/operators';
 import WebSocket from '../lib/isomorphic-ws';
 
-export class WebSocketRxJs<T=any> {
+export class WebSocketRxJs<T = any> {
   private webSocket: WebSocket;
   private data$ = new ReplaySubject<T>(1);
   private opened$ = new ReplaySubject<boolean>(1);
@@ -24,7 +24,9 @@ export class WebSocketRxJs<T=any> {
       try {
         const data = JSON.parse(<string>e.data);
         this.data$.next(data);
-      } catch (error) { }
+      } catch (error) {
+        console.error(error);
+      }
     };
   }
 

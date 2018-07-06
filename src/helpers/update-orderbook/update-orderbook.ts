@@ -46,12 +46,16 @@ export function mergeAsks(asks: [string, string][], newAsks: [string, string][])
 }
 
 /**
- * 
+ *
  * @param orders
  * @param newOrders
  * @param comparePrice
  */
-function mergeOrder(orders: [string, string][], newOrders: [string, string][], comparePrice: (price: number, newPrice: number) => 1 | 0 | -1): [string, string][] {
+function mergeOrder(
+  orders: [string, string][],
+  newOrders: [string, string][],
+  comparePrice: (price: number, newPrice: number) => 1 | 0 | -1
+): [string, string][] {
   return mergeArray<[string, string]>(orders, newOrders, (order, newOrder) => {
     if (!order) {
       return [newOrder, 0, 1];
@@ -73,7 +77,7 @@ function mergeOrder(orders: [string, string][], newOrders: [string, string][], c
 }
 
 /**
- * 
+ *
  * @param originArr
  * @param updateArr
  * @param compareStep

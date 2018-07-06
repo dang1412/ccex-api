@@ -15,8 +15,8 @@ export class CoinbaseTrade {
   private coinbaseWebsocket: CoinbaseWebsocket;
 
   /**
-   * 
-   * @param corsProxy 
+   *
+   * @param corsProxy
    * @param coinbaseWebsocket
    */
   constructor(corsProxy?: string, coinbaseWebsocket?: CoinbaseWebsocket) {
@@ -47,7 +47,7 @@ export class CoinbaseTrade {
       type: 'unsubscribe',
       channels: ['matches'],
       product_ids: [getProductId(pair)]
-    }
+    };
 
     this.coinbaseWebsocket.unsubscribe(request);
   }

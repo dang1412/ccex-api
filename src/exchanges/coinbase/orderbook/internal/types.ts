@@ -1,6 +1,5 @@
 import { WebsocketMessageResponse } from '../../coinbase-common.types';
 
-
 // {
 //   "sequence": "3",
 //   "bids": [

@@ -32,7 +32,6 @@ export class BinanceTrade {
     }
 
     return this.pairStreamMap[pair];
-    
   }
 
   // stop realtime trade

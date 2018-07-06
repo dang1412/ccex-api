@@ -35,7 +35,7 @@ export function adaptBinanceRestCandle(binanceCandle: BinanceRawRestCandle): Can
     close: +binanceCandle[4],
     volume: +binanceCandle[5],
     timestamp: binanceCandle[6],
-  }
+  };
 }
 
 export function adaptBinanceWsCandle(binanceCandle: BinanceRawWsCandle): CandleStick {
@@ -46,7 +46,7 @@ export function adaptBinanceWsCandle(binanceCandle: BinanceRawWsCandle): CandleS
     close: +binanceCandle.k.c,
     volume: +binanceCandle.k.v,
     timestamp: binanceCandle.k.t,
-  }
+  };
 }
 
 const minutesIntervalMap = {
@@ -64,7 +64,7 @@ const minutesIntervalMap = {
   1440: '1d',
   4320: '3d',
   10080: '1w',
-}
+};
 
 function getCandleInterval(minutesFoot: number): string {
   return minutesIntervalMap[minutesFoot] || '';

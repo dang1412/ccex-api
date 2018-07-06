@@ -5,9 +5,9 @@
 import { CandleStick, Trade } from './exchange-types';
 
 /**
- * @param candle 
- * @param trade 
- * @param minutesFoot 
+ * @param candle
+ * @param trade
+ * @param minutesFoot
  */
 export function updateLastCandleWithNewTrade(candle: CandleStick, trade: Trade, minutesFoot: number): CandleStick {
   const candleEndTimestamp = candle.timestamp + minutesFoot * 60000;
@@ -25,7 +25,7 @@ export function updateLastCandleWithNewTrade(candle: CandleStick, trade: Trade, 
       close: trade.price,
       volume: candle.volume + trade.amount,
       timestamp: candle.timestamp,
-    }
+    };
   }
 
   // create new candle with only 1 trade
@@ -36,13 +36,12 @@ export function updateLastCandleWithNewTrade(candle: CandleStick, trade: Trade, 
     close: trade.price,
     volume: trade.amount,
     timestamp: convertToCandleTimestamp(trade.timestamp, minutesFoot),
-  }
+  };
 }
 
-
 /**
- * @param timestamp 
- * @param minutesFoot 
+ * @param timestamp
+ * @param minutesFoot
  */
 export function convertToCandleTimestamp(timestamp: number, minutesFoot: number): number {
   return timestamp - (timestamp % (minutesFoot * 60000));

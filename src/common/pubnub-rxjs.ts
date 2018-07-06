@@ -15,7 +15,7 @@ export class PubnubRxJs {
   }
 
   /**
-   * @param channel 
+   * @param channel
    */
   subscribeChannel<T>(channel: string): Observable<T> {
     this.pubnub.subscribe({

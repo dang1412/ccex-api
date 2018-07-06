@@ -38,7 +38,7 @@ function testExchange(exchange: ExchangeApi, only = false): void {
             (e) => console.log('Error', e),
             () => done()
           );
-        })
+        });
       });
     }
 

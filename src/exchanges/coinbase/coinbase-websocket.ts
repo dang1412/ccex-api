@@ -16,8 +16,6 @@ export class CoinbaseWebsocket {
   private websocket: WebSocketRxJs<WebsocketMessageResponse>;
   private keyStreamMap: {[key: string]: ReplaySubject<any>} = {};
 
-  constructor() {}
-
   /**
    * allow only 1 product and 1 channel for each subscribe
    * @param subscribeRequest
@@ -42,7 +40,7 @@ export class CoinbaseWebsocket {
   }
 
   /**
-   * 
+   *
    * @param unsubscribeRequest
    * {"type":"unsubscribe","product_ids":["BTC-USD"],"channels":["ticker"]}
    */

@@ -4,4 +4,4 @@ export const defaultOptions: ExchangeOptions = {
   apiKey: '',
   apiSecret: '',
   corsProxy: ''
-}
+};

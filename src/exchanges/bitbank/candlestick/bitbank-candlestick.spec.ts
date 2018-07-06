@@ -20,6 +20,6 @@ describe('Test bitbank-candlestick functions', () => {
       console.log('Got price', price);
       assert(price && price === 935270);
       done();
-    })
+    });
   });
 });

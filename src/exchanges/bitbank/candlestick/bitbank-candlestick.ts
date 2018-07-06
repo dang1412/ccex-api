@@ -54,10 +54,10 @@ export class BitbankCandlestick {
   }
 
   /**
-   * 
-   * @param pair 
-   * @param resolution 
-   * @param timeString 
+   *
+   * @param pair
+   * @param resolution
+   * @param timeString
    */
   private fetchAndCacheCandleStick$(pair: string, resolution: string, timeString: string): Observable<CandleStick[]> {
     const key = pair + resolution + timeString;
@@ -76,15 +76,15 @@ export class BitbankCandlestick {
   }
 
   /**
-   * 
-   * @param pair 
-   * @param resolution 
-   * @param timeString 
+   *
+   * @param pair
+   * @param resolution
+   * @param timeString
    */
   private fetchCandleStickFile$(pair: string, resolution: string, timeString: string): Observable<CandleStick[]> {
     const url = `${publicUrl}/${pair}/candlestick/${resolution}/${timeString}`;
     return fetchRxjs<RawData<BitbankRawCandlesticks>>(url).pipe(
       map(raw => raw.data.candlestick[0].ohlcv.map(adaptBitbankCandle))
-    )
+    );
   }
 }

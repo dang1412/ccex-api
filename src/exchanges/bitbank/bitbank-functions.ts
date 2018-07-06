@@ -25,7 +25,7 @@ export function adaptBitbankTrade(bitbankTrade: BitbankRawTrade): Trade {
 }
 
 /**
- * @param bitbankCandle 
+ * @param bitbankCandle
  */
 export function adaptBitbankCandle(bitbankCandle: BitbankRawCandle): CandleStick {
   return {
@@ -39,8 +39,8 @@ export function adaptBitbankCandle(bitbankCandle: BitbankRawCandle): CandleStick
 }
 
 /**
- * @param timestamp 
- * @param resolution 
+ * @param timestamp
+ * @param resolution
  */
 export function convertTimestampToCandleFoot(timestamp: number, minutesFoot: number): number {
   return timestamp - timestamp % (minutesFoot * 60 * 1000);
@@ -69,7 +69,7 @@ export function getTimeStrArrayFromRange(resolution: string, start: number, end:
 }
 
 /**
- * 
+ *
  * @param ts timestamp
  * @result YYYYMMDD
  */

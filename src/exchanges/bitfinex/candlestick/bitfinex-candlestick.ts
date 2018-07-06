@@ -15,9 +15,9 @@ export class BitfinexCandleStick {
   private bitfinexWebsocket: BitfinexWebsocket;
 
   /**
-   * 
-   * @param corsProxy 
-   * @param bitfinexWebsocket 
+   *
+   * @param corsProxy
+   * @param bitfinexWebsocket
    */
   constructor(corsProxy?: string, bitfinexWebsocket?: BitfinexWebsocket) {
     this.corsProxy = corsProxy;
@@ -25,11 +25,11 @@ export class BitfinexCandleStick {
   }
 
   /**
-   * 
-   * @param pair 
-   * @param minutesFoot 
-   * @param start 
-   * @param end 
+   *
+   * @param pair
+   * @param minutesFoot
+   * @param start
+   * @param end
    */
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
     // https://api.bitfinex.com/v2/candles/trade::TimeFrame::Symbol/Section
@@ -40,9 +40,9 @@ export class BitfinexCandleStick {
   }
 
   /**
-   * 
-   * @param pair 
-   * @param minutesFoot 
+   *
+   * @param pair
+   * @param minutesFoot
    */
   candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {
     const subscribeRequest = getCandleSubcribeRequest(pair, minutesFoot);
@@ -55,9 +55,9 @@ export class BitfinexCandleStick {
   }
 
   /**
-   * 
-   * @param pair 
-   * @param minutesFoot 
+   *
+   * @param pair
+   * @param minutesFoot
    */
   candlestickWithInitialHistory$(pair: string, minutesFoot: number): Observable<CandleStick[] | CandleStick> {
     const subscribeRequest = getCandleSubcribeRequest(pair, minutesFoot);
@@ -75,9 +75,9 @@ export class BitfinexCandleStick {
   }
 
   /**
-   * 
-   * @param pair 
-   * @param minutesFoot 
+   *
+   * @param pair
+   * @param minutesFoot
    */
   stopCandleStick(pair: string, minutesFoot: number): void {
     const unsubscribeRequest = getCandleSubcribeRequest(pair, minutesFoot);
@@ -86,9 +86,9 @@ export class BitfinexCandleStick {
 }
 
 /**
- * 
- * @param pair 
- * @param minutesFoot 
+ *
+ * @param pair
+ * @param minutesFoot
  */
 function getCandleSubcribeRequest(pair: string, minutesFoot: number): WebsocketSubOrUnSubRequest {
   const symbol = getSymbol(pair);

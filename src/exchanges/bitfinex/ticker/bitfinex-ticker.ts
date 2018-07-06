@@ -21,7 +21,7 @@ export class BitfinexTicker {
       event: 'subscribe',
       channel: 'ticker',
       symbol: getSymbol(pair)
-    }
+    };
 
     return this.bitfinexWebsocket.subscribe<BitfinexRawTicker>(subscribeRequest).pipe(
       map(bitfinexTicker => adaptBitfinexTicker(bitfinexTicker, pair))

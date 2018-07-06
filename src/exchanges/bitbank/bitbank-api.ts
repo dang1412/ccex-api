@@ -9,7 +9,6 @@ import { BitbankTicker } from './ticker';
 import { BitbankOrderbook } from './orderbook';
 import { BitbankTrade } from './trade';
 
-
 export class BitbankApi extends ExchangeApi {
   private pubnub: PubnubRxJs;
   private bitbankCandlestick: BitbankCandlestick;

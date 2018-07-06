@@ -11,8 +11,8 @@ export class CoinbaseCandleStick {
   private corsProxy: string;
 
   /**
-   * 
-   * @param corsProxy 
+   *
+   * @param corsProxy
    */
   constructor(corsProxy?: string) {
     this.corsProxy = corsProxy;
