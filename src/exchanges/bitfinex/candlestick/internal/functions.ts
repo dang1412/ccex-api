@@ -33,10 +33,6 @@ export function adaptBitfinexRawCandleStick(bitfinexCandle: BitfinexRawCandleSti
   };
 }
 
-export function getCandleTimeFrame(minutesFoot: number): string {
-  return minutesTimeFrameMap[minutesFoot] || '';
-}
-
 // '1m', '5m', '15m', '30m', '1h', '3h', '6h', '12h', '1D', '7D', '14D', '1M'
 const minutesTimeFrameMap = {
   1: '1m',
@@ -51,3 +47,7 @@ const minutesTimeFrameMap = {
   10080: '7D',
   20160: '14D',
 };
+
+export function getCandleTimeFrame(minutesFoot: number): string {
+  return minutesTimeFrameMap[minutesFoot] || '';
+}
