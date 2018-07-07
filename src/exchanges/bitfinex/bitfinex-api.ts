@@ -6,12 +6,14 @@ import { BitfinexWebsocket } from './websocket';
 import { BitfinexTicker } from './ticker';
 import { BitfinexOrderbook } from './orderbook';
 import { BitfinexCandleStick } from './candlestick';
+import { BitfinexTrade } from './trade';
 
 export class BitfinexApi extends ExchangeApi {
   private bitfinexWebsocket: BitfinexWebsocket;
   private bitfinexTicker: BitfinexTicker;
   private bitfinexOrderbook: BitfinexOrderbook;
   private bitfinexCandleStick: BitfinexCandleStick;
+  private bitfinexTrade: BitfinexTrade;
 
   get exchangeInfo(): ExchangeInfo {
     return {
@@ -44,6 +46,7 @@ export class BitfinexApi extends ExchangeApi {
     this.bitfinexTicker = new BitfinexTicker(this.bitfinexWebsocket);
     this.bitfinexOrderbook = new BitfinexOrderbook(this.bitfinexWebsocket);
     this.bitfinexCandleStick = new BitfinexCandleStick(null, this.bitfinexWebsocket);
+    this.bitfinexTrade = new BitfinexTrade(null, this.bitfinexWebsocket);
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {
@@ -71,14 +74,16 @@ export class BitfinexApi extends ExchangeApi {
   }
 
   fetchTrades$(pair: string): Observable<Trade[]> {
-    return empty();
+    return this.bitfinexTrade.fetchTrades$(pair);
   }
 
   trade$(pair: string): Observable<Trade> {
-    return empty();
+    return this.bitfinexTrade.trade$(pair);
   }
 
-  stopTrade(pair: string): void {}
+  stopTrade(pair: string): void {
+    this.bitfinexTrade.stopTrade(pair);
+  }
 
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
     return this.bitfinexCandleStick.fetchCandleStickRange$(pair, minutesFoot, start, end);

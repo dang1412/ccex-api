@@ -15,5 +15,7 @@ export class SampleTicker {
     return empty();
   }
 
-  stopTicker(pair: string) {}
+  stopTicker(pair: string) {
+    // implement
+  }
 }

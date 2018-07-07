@@ -64,7 +64,9 @@ export class SampleApi extends ExchangeApi {
   }
 
   // stop realtime depth
-  stopOrderbook(pair: string): void {}
+  stopOrderbook(pair: string): void {
+    // implement
+  }
 
   fetchTrades$(pair: string): Observable<Trade[]> {
     return empty();
@@ -74,7 +76,9 @@ export class SampleApi extends ExchangeApi {
     return empty();
   }
 
-  stopTrade(pair: string): void {}
+  stopTrade(pair: string): void {
+    // implement
+  }
 
   // request candlestick by time range and resolution
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
