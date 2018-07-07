@@ -1,4 +1,4 @@
-import { Observable, empty } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
