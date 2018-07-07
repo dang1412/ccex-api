@@ -18,33 +18,23 @@ export class BitfinexApi extends ExchangeApi {
       name: 'bitfinex',
       logoUrl: 'https://files.readme.io/65ad6c8-small-logo.png',
       homepage: 'https://www.bitfinex.com/',
-      country: 'British Virgin Islands'
+      country: 'British Virgin Islands',
     };
   }
 
   get markets(): string[] {
-    return [
-      'btc_usd',
-      'eos_btc',
-      'eth_btc',
-      'ltc_btc',
-      'bcc_btc',
-    ];
+    return ['btc_usd', 'eos_btc', 'eth_btc', 'ltc_btc', 'bcc_btc'];
   }
 
   get representativeMarkets(): string[] {
-    return [
-      'btc_usd',
-      'eos_btc',
-      'eth_btc',
-    ];
+    return ['btc_usd', 'eos_btc', 'eth_btc'];
   }
 
   get supportFeatures(): SupportFeatures {
     return {
       ticker: true,
       orderbook: true,
-      chart: true
+      chart: true,
     };
   }
 

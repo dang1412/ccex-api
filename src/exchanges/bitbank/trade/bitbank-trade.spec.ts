@@ -6,27 +6,33 @@ import { BitbankTrade } from './bitbank-trade';
 
 const bitbankTrade = new BitbankTrade();
 
-describe('Test Bitbank trades', function () {
+describe('Test Bitbank trades', function() {
   this.timeout(0);
 
   const markets = ['btc_jpy', 'xrp_jpy'];
 
-  markets.forEach(market => {
+  markets.forEach((market) => {
     it('should get realtime trades ' + market, (done) => {
-      bitbankTrade.trade$(market).pipe(bufferCount(10), take(1)).subscribe(
-        (trades) => {
-          checkTrades(trades);
-        },
-        (e) => console.log('Error'),
-        () => {
-          bitbankTrade.stopTrade(market);
-          done();
-        }
-      );
+      bitbankTrade
+        .trade$(market)
+        .pipe(
+          bufferCount(10),
+          take(1),
+        )
+        .subscribe(
+          (trades) => {
+            checkTrades(trades);
+          },
+          (e) => console.log('Error'),
+          () => {
+            bitbankTrade.stopTrade(market);
+            done();
+          },
+        );
     });
   });
 
-  markets.forEach(market => {
+  markets.forEach((market) => {
     it('should fetch rest api trades ' + market, (done) => {
       bitbankTrade.fetchTrades$(market).subscribe(
         (trades) => {
@@ -36,7 +42,7 @@ describe('Test Bitbank trades', function () {
         (e) => console.log('Error'),
         () => {
           done();
-        }
+        },
       );
     });
   });

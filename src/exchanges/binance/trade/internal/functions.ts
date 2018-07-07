@@ -18,7 +18,7 @@ export function adaptBinanceRestTrade(binanceTrade: BinanceRawRestTrade): Trade 
     price: +binanceTrade.price,
     amount: +binanceTrade.qty,
     side: binanceTrade.isBuyerMaker ? 'buy' : 'sell',
-    timestamp: binanceTrade.time
+    timestamp: binanceTrade.time,
   };
 }
 
@@ -28,6 +28,6 @@ export function adaptBinanceWsTrade(binanceTrade: BinanceRawWsTrade): Trade {
     price: +binanceTrade.p,
     amount: +binanceTrade.q,
     side: binanceTrade.m ? 'buy' : 'sell',
-    timestamp: binanceTrade.T
+    timestamp: binanceTrade.T,
   };
 }

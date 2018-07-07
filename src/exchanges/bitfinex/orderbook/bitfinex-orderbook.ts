@@ -25,7 +25,7 @@ export class BitfinexOrderbook {
       symbol: getSymbol(pair),
       prec,
       freq,
-      len
+      len,
     };
 
     const key = getKey(subscribeRequest);
@@ -42,7 +42,7 @@ export class BitfinexOrderbook {
       symbol: getSymbol(pair),
       prec,
       freq,
-      len
+      len,
     };
 
     const key = getKey(unsubscribeRequest);
@@ -55,8 +55,9 @@ export class BitfinexOrderbook {
    * @param subscribeRequest
    */
   private startOrderbook$(subscribeRequest: WebsocketSubOrUnSubRequest): Observable<Orderbook> {
-    const orderbookSnapshotAndUpdate$ = this.bitfinexWebsocket
-      .subscribe<BitfinexOrderbookSingleItem[] | BitfinexOrderbookSingleItem>(subscribeRequest);
+    const orderbookSnapshotAndUpdate$ = this.bitfinexWebsocket.subscribe<BitfinexOrderbookSingleItem[] | BitfinexOrderbookSingleItem>(
+      subscribeRequest,
+    );
 
     // snapshot (array of items) come at first
     const orderbookSnapshot$ = orderbookSnapshotAndUpdate$.pipe(
@@ -65,7 +66,7 @@ export class BitfinexOrderbook {
         // this case is not expected (1 item come instead of array),
         // happen when the stream is hot (ws channel already subscribed before),
         // make snapshot the array of items
-        if (typeof snapshot[0] === 'number' ) {
+        if (typeof snapshot[0] === 'number') {
           snapshot = [snapshot];
         }
 
@@ -77,14 +78,12 @@ export class BitfinexOrderbook {
 
     // orderbook updates, buffer some changes in 1 second into 1 to improve performance
     const orderbookUpdate$ = orderbookSnapshotAndUpdate$.pipe(
-      filter(orderbookItem => orderbookItem && orderbookItem.length && typeof orderbookItem[0] === 'number'),
+      filter((orderbookItem) => orderbookItem && orderbookItem.length && typeof orderbookItem[0] === 'number'),
       bufferTime(1000),
       map((orderbookItems: BitfinexOrderbookSingleItem[]) => arrangeBitfinexOrderbookItems(orderbookItems)),
       map(adaptBitfinexOrderbook),
     );
 
-    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(
-      scan((orderbook, update) => updateOrderbook(orderbook, update))
-    );
+    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(scan((orderbook, update) => updateOrderbook(orderbook, update)));
   }
 }

@@ -9,21 +9,21 @@ export function getOrderbookUrl(pair: string): string {
 
 export function adaptCoinbaseRestOrderbook(restOrderbook: CoinbaseRestOrderbook): Orderbook {
   return {
-    bids: restOrderbook.bids.map(restBid => <[string, string]>restBid.slice(0, 2)),
-    asks: restOrderbook.asks.map(restAsk => <[string, string]>restAsk.slice(0, 2)),
+    bids: restOrderbook.bids.map((restBid) => <[string, string]>restBid.slice(0, 2)),
+    asks: restOrderbook.asks.map((restAsk) => <[string, string]>restAsk.slice(0, 2)),
   };
 }
 
 export function adaptCoinbaseWsOrderbookSnapshot(snapshot: CoinbaseWsOrderbookSnapshot): Orderbook {
   return {
     bids: snapshot.bids,
-    asks: snapshot.asks
+    asks: snapshot.asks,
   };
 }
 
 export function adaptCoinbaseWsOrderbookUpdate(update: CoinbaseWsOrderbookUpdate): Orderbook {
   const orderbook = { bids: [], asks: [] };
-  update.changes.forEach(change => {
+  update.changes.forEach((change) => {
     const orderbookItem = [change[1], change[2]];
     if (change[0] === 'buy') {
       orderbook.bids.push(orderbookItem);

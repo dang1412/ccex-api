@@ -37,7 +37,7 @@ export abstract class ExchangeApi {
   // realtime last candlestick using initial last candle and realtime trade (used for tradingview datafeed)
   lastCandle$(pair: string, lastCandle: CandleStick, minutesFoot: number): Observable<CandleStick> {
     return this.trade$(pair).pipe(
-      scan((candle: CandleStick, trade: Trade) => updateLastCandleWithNewTrade(candle, trade, minutesFoot), lastCandle)
+      scan((candle: CandleStick, trade: Trade) => updateLastCandleWithNewTrade(candle, trade, minutesFoot), lastCandle),
     );
   }
 

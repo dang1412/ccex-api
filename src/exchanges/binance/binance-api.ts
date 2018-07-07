@@ -20,33 +20,23 @@ export class BinanceApi extends ExchangeApi {
       name: 'binance',
       logoUrl: 'https://www.binance.com/resources/img/logo-en.svg',
       homepage: 'https://www.binance.com/?ref=16635017',
-      country: 'cn'
+      country: 'cn',
     };
   }
 
   get markets(): string[] {
-    return [
-      'btc_usdt',
-      'eos_btc',
-      'eth_btc',
-      'ltc_btc',
-      'bcc_btc',
-    ];
+    return ['btc_usdt', 'eos_btc', 'eth_btc', 'ltc_btc', 'bcc_btc'];
   }
 
   get representativeMarkets(): string[] {
-    return [
-      'btc_usdt',
-      'eos_btc',
-      'eth_btc',
-    ];
+    return ['btc_usdt', 'eos_btc', 'eth_btc'];
   }
 
   get supportFeatures(): SupportFeatures {
     return {
       ticker: true,
       orderbook: true,
-      chart: true
+      chart: true,
     };
   }
 

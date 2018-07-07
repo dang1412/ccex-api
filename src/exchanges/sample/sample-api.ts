@@ -13,7 +13,7 @@ export class SampleApi extends ExchangeApi {
       name: 'sample',
       logoUrl: 'https://sample-logo.png',
       homepage: 'https://www.sample.com/',
-      country: 'Sample country'
+      country: 'Sample country',
     };
   }
 
@@ -29,7 +29,7 @@ export class SampleApi extends ExchangeApi {
     return {
       ticker: false,
       orderbook: false,
-      chart: false
+      chart: false,
     };
   }
 

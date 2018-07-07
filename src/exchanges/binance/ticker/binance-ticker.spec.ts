@@ -13,16 +13,19 @@ describe('Test Binance ticker', function() {
 
   markets.forEach((market) => {
     it('should get ticker realtime ' + market, (done) => {
-      binanceTicker.ticker$(market).pipe(take(2)).subscribe(
-        (ticker) => {
-          checkTicker(ticker);
-        },
-        (e) => console.log('Error'),
-        () => {
-          binanceTicker.stopTicker(market);
-          done();
-        }
-      );
+      binanceTicker
+        .ticker$(market)
+        .pipe(take(2))
+        .subscribe(
+          (ticker) => {
+            checkTicker(ticker);
+          },
+          (e) => console.log('Error'),
+          () => {
+            binanceTicker.stopTicker(market);
+            done();
+          },
+        );
     });
   });
 
@@ -35,7 +38,7 @@ describe('Test Binance ticker', function() {
         (e) => console.log('Error'),
         () => {
           done();
-        }
+        },
       );
     });
   });

@@ -19,14 +19,14 @@ export class BinanceTicker {
     const originUrl = binanceTickerApiUrl(pair);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BinanceRawRestTicker>(url).pipe(map(binanceTicker => adaptBinanceRestTicker(binanceTicker, pair)));
+    return fetchRxjs<BinanceRawRestTicker>(url).pipe(map((binanceTicker) => adaptBinanceRestTicker(binanceTicker, pair)));
   }
 
   ticker$(pair: string): Observable<Ticker> {
     if (!this.pairStreamMap[pair]) {
       const channel = binanceTickerChannel(pair);
       const ws = new WebSocketRxJs<BinanceRawWsTicker>(channel);
-      this.pairStreamMap[pair] = ws.message$.pipe(map(binanceTicker => adaptBinanceWsTicker(binanceTicker, pair)));
+      this.pairStreamMap[pair] = ws.message$.pipe(map((binanceTicker) => adaptBinanceWsTicker(binanceTicker, pair)));
       this.pairSocketMap[pair] = ws;
     }
 

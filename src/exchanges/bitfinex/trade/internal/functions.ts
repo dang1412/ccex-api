@@ -26,6 +26,6 @@ export function adaptBitfinexTrade(bitfinexTrade: BitfinexRawTrade): Trade {
     timestamp: bitfinexTrade[1],
     amount: Math.abs(bitfinexTrade[2]),
     price: bitfinexTrade[3],
-    side: bitfinexTrade[2] > 0 ? 'buy' : 'sell'
+    side: bitfinexTrade[2] > 0 ? 'buy' : 'sell',
   };
 }

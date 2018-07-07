@@ -14,7 +14,7 @@ export class CoinbaseApi extends ExchangeApi {
       name: 'coinbase',
       logoUrl: 'https://coinbase-logo.png',
       homepage: 'https://www.coinbase.com/',
-      country: 'Coinbase country'
+      country: 'Coinbase country',
     };
   }
 
@@ -30,7 +30,7 @@ export class CoinbaseApi extends ExchangeApi {
     return {
       ticker: false,
       orderbook: false,
-      chart: false
+      chart: false,
     };
   }
 

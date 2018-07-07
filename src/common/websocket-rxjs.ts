@@ -17,9 +17,15 @@ export class WebSocketRxJs<T = any> {
 
   constructor(url: string) {
     this.webSocket = new WebSocket(url);
-    this.webSocket.onopen = (e) => { this.opened$.next(true); };
-    this.webSocket.onclose = (e) => { this.opened$.next(false); };
-    this.webSocket.onerror = (e) => { this.opened$.next(false); };
+    this.webSocket.onopen = (e) => {
+      this.opened$.next(true);
+    };
+    this.webSocket.onclose = (e) => {
+      this.opened$.next(false);
+    };
+    this.webSocket.onerror = (e) => {
+      this.opened$.next(false);
+    };
     this.webSocket.onmessage = (e) => {
       try {
         const data = JSON.parse(<string>e.data);
@@ -35,9 +41,14 @@ export class WebSocketRxJs<T = any> {
    */
   send(text: string) {
     // wait until socket open and send the text only once per call
-    this.opened$.pipe(take(1), filter(opened => opened)).subscribe(() => {
-      this.webSocket.send(text);
-    });
+    this.opened$
+      .pipe(
+        take(1),
+        filter((opened) => opened),
+      )
+      .subscribe(() => {
+        this.webSocket.send(text);
+      });
   }
 
   close() {

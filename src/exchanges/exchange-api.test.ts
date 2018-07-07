@@ -25,19 +25,18 @@ function testExchange(exchange: ExchangeApi, only = false): void {
   const markets = exchange.representativeMarkets;
   const supportFeatures = exchange.supportFeatures;
 
-  describeFunc(`Test ${exchange.exchangeInfo.name} functions`, function () {
+  describeFunc(`Test ${exchange.exchangeInfo.name} functions`, function() {
     // remove limited timeout
     this.timeout(0);
 
     // it test for ticker
     if (supportFeatures.ticker) {
-      markets.forEach(market => {
+      markets.forEach((market) => {
         it(`should get ticker ${market}`, (done) => {
-          exchange.ticker$(market).pipe(take(2)).subscribe(
-            ticker => checkTicker(ticker),
-            (e) => console.log('Error', e),
-            () => done()
-          );
+          exchange
+            .ticker$(market)
+            .pipe(take(2))
+            .subscribe((ticker) => checkTicker(ticker), (e) => console.log('Error', e), () => done());
         });
       });
     }

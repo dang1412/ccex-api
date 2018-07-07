@@ -7,7 +7,7 @@ import Pubnub from 'pubnub';
 export class PubnubRxJs {
   private pubnub: Pubnub;
   // use one subject for each distinct channel
-  private channelSubjectMap: {[channel: string]: ReplaySubject<any>} = {};
+  private channelSubjectMap: { [channel: string]: ReplaySubject<any> } = {};
 
   constructor(config: Pubnub.Config) {
     this.pubnub = new Pubnub(config);
@@ -19,10 +19,10 @@ export class PubnubRxJs {
    */
   subscribeChannel<T>(channel: string): Observable<T> {
     this.pubnub.subscribe({
-      channels: [channel]
+      channels: [channel],
     });
 
-    return this.getChannelSubject(channel).pipe(filter(data => !!data));
+    return this.getChannelSubject(channel).pipe(filter((data) => !!data));
   }
 
   /**
@@ -30,7 +30,7 @@ export class PubnubRxJs {
    */
   unsubscribeChannel(channel: string) {
     this.pubnub.unsubscribe({
-      channels: [channel]
+      channels: [channel],
     });
   }
 
@@ -40,14 +40,16 @@ export class PubnubRxJs {
    */
   private addEventListener() {
     this.pubnub.addListener({
-      status: function (statusEvent: any) {
-        if (statusEvent.category === 'PNConnectedCategory') {}
+      status: function(statusEvent: any) {
+        if (statusEvent.category === 'PNConnectedCategory') {
+          // pubnub connected
+        }
       },
-      message: messageEvent => {
+      message: (messageEvent) => {
         if (messageEvent && messageEvent.channel && messageEvent.message) {
           this.getChannelSubject(messageEvent.channel).next(messageEvent.message);
         }
-      }
+      },
     });
   }
 

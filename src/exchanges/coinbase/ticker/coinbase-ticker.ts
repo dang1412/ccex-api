@@ -24,7 +24,7 @@ export class CoinbaseTicker {
     const originUrl = getTickerUrl(pair);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<CoinbaseRawRestTicker>(url).pipe(map(rawRestTicker => adaptCoinbaseRawRestTicker(rawRestTicker, pair)));
+    return fetchRxjs<CoinbaseRawRestTicker>(url).pipe(map((rawRestTicker) => adaptCoinbaseRawRestTicker(rawRestTicker, pair)));
   }
 
   ticker$(pair: string): Observable<Ticker> {
@@ -32,17 +32,19 @@ export class CoinbaseTicker {
     const request: WebsocketRequest = {
       type: 'subscribe',
       channels: ['ticker'],
-      product_ids: [getProductId(pair)]
+      product_ids: [getProductId(pair)],
     };
 
-    return this.coinbaseWebsocket.subscribe<CoinbaseRawWsTicker>(request).pipe(map((rawTicker) => adaptCoinbaseRawWsTicker(rawTicker, pair)));
+    return this.coinbaseWebsocket
+      .subscribe<CoinbaseRawWsTicker>(request)
+      .pipe(map((rawTicker) => adaptCoinbaseRawWsTicker(rawTicker, pair)));
   }
 
   stopTicker(pair: string) {
     const request: WebsocketRequest = {
       type: 'unsubscribe',
       channels: ['ticker'],
-      product_ids: [getProductId(pair)]
+      product_ids: [getProductId(pair)],
     };
 
     this.coinbaseWebsocket.unsubscribe(request);

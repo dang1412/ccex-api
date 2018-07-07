@@ -20,18 +20,18 @@ export class BitfinexTicker {
     const subscribeRequest = {
       event: 'subscribe',
       channel: 'ticker',
-      symbol: getSymbol(pair)
+      symbol: getSymbol(pair),
     };
 
-    return this.bitfinexWebsocket.subscribe<BitfinexRawTicker>(subscribeRequest).pipe(
-      map(bitfinexTicker => adaptBitfinexTicker(bitfinexTicker, pair))
-    );
+    return this.bitfinexWebsocket
+      .subscribe<BitfinexRawTicker>(subscribeRequest)
+      .pipe(map((bitfinexTicker) => adaptBitfinexTicker(bitfinexTicker, pair)));
   }
 
   stopTicker(pair: string): void {
     const unsubscribeRequest = {
       channel: 'ticker',
-      symbol: getSymbol(pair)
+      symbol: getSymbol(pair),
     };
 
     this.bitfinexWebsocket.unsubscribe(unsubscribeRequest);

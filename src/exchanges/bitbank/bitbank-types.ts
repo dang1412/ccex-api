@@ -34,7 +34,7 @@ export type BitbankRawCandle = [
   string, // low
   string, // close
   string, // volume
-  number  // timestamp
+  number // timestamp
 ];
 
 export interface BitbankRawCandlesticks {

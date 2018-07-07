@@ -5,7 +5,7 @@ import { CoinbaseCandleStick } from './coinbase-candlestick';
 
 const coinbaseCandlestick = new CoinbaseCandleStick();
 
-describe('Coinbase candlestick functions', function () {
+describe('Coinbase candlestick functions', function() {
   this.timeout(0);
 
   /**

@@ -6,7 +6,7 @@ import { BitfinexCandleStick } from './bitfinex-candlestick';
 
 const bitfinexCandlestick = new BitfinexCandleStick();
 
-describe('Test bitfinex candlestick functions', function () {
+describe('Test bitfinex candlestick functions', function() {
   this.timeout(0);
 
   it('should fetch btc_usd 5min candles in time range', (done) => {
@@ -18,15 +18,18 @@ describe('Test bitfinex candlestick functions', function () {
   });
 
   it('should get btc_usd 5min last candle realtime', (done) => {
-    bitfinexCandlestick.candlestick$('btc_usd', 5).pipe(take(5)).subscribe(
-      (candle) => {
-        console.log(candle);
-      },
-      () => console.log('error'),
-      () => {
-        bitfinexCandlestick.stopCandleStick('btc_usd', 5);
-        done();
-      }
-    );
+    bitfinexCandlestick
+      .candlestick$('btc_usd', 5)
+      .pipe(take(5))
+      .subscribe(
+        (candle) => {
+          console.log(candle);
+        },
+        () => console.log('error'),
+        () => {
+          bitfinexCandlestick.stopCandleStick('btc_usd', 5);
+          done();
+        },
+      );
   });
 });

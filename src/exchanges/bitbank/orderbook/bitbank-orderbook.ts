@@ -15,15 +15,11 @@ export class BitbankOrderbook {
 
   fetchOrderbook$(pair: string): Observable<Orderbook> {
     const orderbookUrl = publicUrl + `/${pair}/depth`;
-    return fetchRxjs<RawData<Orderbook>>(orderbookUrl).pipe(
-      map(raw => raw.data)
-    );
+    return fetchRxjs<RawData<Orderbook>>(orderbookUrl).pipe(map((raw) => raw.data));
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
-    return this.fetchOrderbook$(pair).pipe(
-      concat(this.pubnubOrderbook$(pair))
-    );
+    return this.fetchOrderbook$(pair).pipe(concat(this.pubnubOrderbook$(pair)));
   }
 
   stopOrderbook(pair: string): void {
@@ -33,8 +29,6 @@ export class BitbankOrderbook {
 
   private pubnubOrderbook$(pair: string): Observable<Orderbook> {
     const channel = 'depth_' + pair;
-    return this.pubnub.subscribeChannel<RawData<Orderbook>>(channel).pipe(
-      map(raw => raw.data)
-    );
+    return this.pubnub.subscribeChannel<RawData<Orderbook>>(channel).pipe(map((raw) => raw.data));
   }
 }

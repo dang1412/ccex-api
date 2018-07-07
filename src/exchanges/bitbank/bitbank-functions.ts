@@ -10,7 +10,7 @@ export function adaptBitbankTicker(bitbankTicker: BitbankRawTicker, pair: string
     high: +bitbankTicker.high,
     last: +bitbankTicker.last,
     vol: +bitbankTicker.vol,
-    timestamp: bitbankTicker.timestamp
+    timestamp: bitbankTicker.timestamp,
   };
 }
 
@@ -43,7 +43,7 @@ export function adaptBitbankCandle(bitbankCandle: BitbankRawCandle): CandleStick
  * @param resolution
  */
 export function convertTimestampToCandleFoot(timestamp: number, minutesFoot: number): number {
-  return timestamp - timestamp % (minutesFoot * 60 * 1000);
+  return timestamp - (timestamp % (minutesFoot * 60 * 1000));
 }
 
 export function isLatestTime(timeString: string): boolean {

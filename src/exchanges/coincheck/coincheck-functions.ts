@@ -12,6 +12,6 @@ export function adaptCoincheckRawTicker(coincheckRawTicker: CoincheckRawTicker, 
     high: coincheckRawTicker.high,
     last: coincheckRawTicker.last,
     vol: coincheckRawTicker.volume,
-    timestamp: coincheckRawTicker.timestamp
+    timestamp: coincheckRawTicker.timestamp,
   };
 }

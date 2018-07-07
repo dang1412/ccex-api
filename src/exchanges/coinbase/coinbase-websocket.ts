@@ -9,12 +9,12 @@ import { websocketEndpoint } from './coinbase-common';
 const typeChannelMap = {
   snapshot: 'level2',
   l2update: 'level2',
-  match: 'matches'
+  match: 'matches',
 };
 
 export class CoinbaseWebsocket {
   private websocket: WebSocketRxJs<WebsocketMessageResponse>;
-  private keyStreamMap: {[key: string]: ReplaySubject<any>} = {};
+  private keyStreamMap: { [key: string]: ReplaySubject<any> } = {};
 
   /**
    * allow only 1 product and 1 channel for each subscribe

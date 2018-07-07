@@ -8,15 +8,15 @@ export function getSymbol(pair: string): string {
 }
 
 export function getKey(subscribeObject: WebsocketSubOrUnSubRequest | WebsocketRequestResponse): string {
-  return subscribeObject.channel
+  return (
+    subscribeObject.channel +
     // (ticker, orderbook)
-    + (subscribeObject.symbol || '')
-
+    (subscribeObject.symbol || '') +
     // (orderbook)
-    + (subscribeObject.prec || '')
-    + (subscribeObject.freq || '')
-    + (subscribeObject.len || '')
-
+    (subscribeObject.prec || '') +
+    (subscribeObject.freq || '') +
+    (subscribeObject.len || '') +
     // (candle)
-    + (subscribeObject.key || '');
+    (subscribeObject.key || '')
+  );
 }

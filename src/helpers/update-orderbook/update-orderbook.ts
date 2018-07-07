@@ -28,8 +28,7 @@ export function updateOrderbook(orderbook: Orderbook, update: Orderbook): Orderb
  */
 export function mergeBids(bids: [string, string][], newBids: [string, string][]): [string, string][] {
   return mergeOrder(bids, newBids, (bidPrice, newBidPrice) => {
-    return bidPrice > newBidPrice ? 1 :
-      bidPrice === newBidPrice ? 0 : -1;
+    return bidPrice > newBidPrice ? 1 : bidPrice === newBidPrice ? 0 : -1;
   });
 }
 
@@ -40,8 +39,7 @@ export function mergeBids(bids: [string, string][], newBids: [string, string][])
  */
 export function mergeAsks(asks: [string, string][], newAsks: [string, string][]): [string, string][] {
   return mergeOrder(asks, newAsks, (askPrice, newAskPrice) => {
-    return askPrice < newAskPrice ? 1 :
-      askPrice === newAskPrice ? 0 : -1;
+    return askPrice < newAskPrice ? 1 : askPrice === newAskPrice ? 0 : -1;
   });
 }
 
@@ -54,7 +52,7 @@ export function mergeAsks(asks: [string, string][], newAsks: [string, string][])
 function mergeOrder(
   orders: [string, string][],
   newOrders: [string, string][],
-  comparePrice: (price: number, newPrice: number) => 1 | 0 | -1
+  comparePrice: (price: number, newPrice: number) => 1 | 0 | -1,
 ): [string, string][] {
   return mergeArray<[string, string]>(orders, newOrders, (order, newOrder) => {
     if (!order) {

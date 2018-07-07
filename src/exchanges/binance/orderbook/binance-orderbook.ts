@@ -53,7 +53,11 @@ export class BinanceOrderbook {
     // orderbook (diff) realtime stream
     const update$ = ws.message$.pipe(map(adaptBinanceWsOrderbook));
     // orderbook (diff) realtime stream, buffered in time range: [fetch start => fetch done]
-    const updateBufferBeforeFetchDone$ = update$.pipe(buffer(fetchOrderbook$), take(1), mergeMap(bufferOrderbooks => from(bufferOrderbooks)));
+    const updateBufferBeforeFetchDone$ = update$.pipe(
+      buffer(fetchOrderbook$),
+      take(1),
+      mergeMap((bufferOrderbooks) => from(bufferOrderbooks)),
+    );
 
     // start these 2 streams concurrently at first, data come in order and then complete:
     //  - orderbook rest api fetch,
@@ -63,9 +67,9 @@ export class BinanceOrderbook {
 
     // after init orderbooks come, keep listening to diff orderbook stream and reflect it in current orderbook
     return concat(initOrderbook$, update$).pipe(
-      scan<Orderbook>((orderbook, update) =>
-        orderbook.lastUpdateId >= update.lastUpdateId ? orderbook : updateOrderbook(orderbook, update)
-      )
+      scan<Orderbook>(
+        (orderbook, update) => (orderbook.lastUpdateId >= update.lastUpdateId ? orderbook : updateOrderbook(orderbook, update)),
+      ),
     );
   }
 }

@@ -19,14 +19,14 @@ export class BinanceCandleStick {
     const originUrl = binanceCandleStickApiUrl(pair, minutesFoot, start, end);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BinanceRawRestCandle[]>(url).pipe(map(binanceCandles => binanceCandles.map(adaptBinanceRestCandle)));
+    return fetchRxjs<BinanceRawRestCandle[]>(url).pipe(map((binanceCandles) => binanceCandles.map(adaptBinanceRestCandle)));
   }
 
   candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {
     if (!this.pairStreamMap[pair]) {
       const channel = binanceCandleStickChannel(pair, minutesFoot);
       const ws = new WebSocketRxJs<BinanceRawWsCandle>(channel);
-      this.pairStreamMap[pair] = ws.message$.pipe(map(binanceCandle => adaptBinanceWsCandle(binanceCandle)));
+      this.pairStreamMap[pair] = ws.message$.pipe(map((binanceCandle) => adaptBinanceWsCandle(binanceCandle)));
       this.pairSocketMap[pair] = ws;
     }
 

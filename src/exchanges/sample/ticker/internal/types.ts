@@ -1,1 +1,1 @@
-export interface SampleRawTicker { }
+export interface SampleRawTicker {}

@@ -9,7 +9,12 @@ import { getProductId } from '../coinbase-common';
 import { WebsocketRequest } from '../coinbase-common.types';
 
 import { CoinbaseWsOrderbookSnapshot, CoinbaseWsOrderbookUpdate, CoinbaseRestOrderbook } from './internal/types';
-import { adaptCoinbaseWsOrderbookSnapshot, adaptCoinbaseWsOrderbookUpdate, getOrderbookUrl, adaptCoinbaseRestOrderbook } from './internal/functions';
+import {
+  adaptCoinbaseWsOrderbookSnapshot,
+  adaptCoinbaseWsOrderbookUpdate,
+  getOrderbookUrl,
+  adaptCoinbaseRestOrderbook,
+} from './internal/functions';
 
 export class CoinbaseOrderbook {
   private corsProxy: string;
@@ -40,7 +45,7 @@ export class CoinbaseOrderbook {
     const request: WebsocketRequest = {
       type: 'unsubscribe',
       channels: ['level2'],
-      product_ids: [getProductId(pair)]
+      product_ids: [getProductId(pair)],
     };
 
     this.coinbaseWebsocket.unsubscribe(request);
@@ -51,7 +56,7 @@ export class CoinbaseOrderbook {
     const request: WebsocketRequest = {
       type: 'subscribe',
       channels: ['level2'],
-      product_ids: [getProductId(pair)]
+      product_ids: [getProductId(pair)],
     };
 
     return this.coinbaseWebsocket.subscribe<CoinbaseWsOrderbookSnapshot | CoinbaseWsOrderbookUpdate>(request).pipe(
@@ -62,7 +67,7 @@ export class CoinbaseOrderbook {
           return adaptCoinbaseWsOrderbookUpdate(snapshotOrUpdate);
         }
       }),
-      scan<Orderbook>((orderbook, update) => updateOrderbook(orderbook, update))
+      scan<Orderbook>((orderbook, update) => updateOrderbook(orderbook, update)),
     );
   }
 }

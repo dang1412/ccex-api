@@ -29,16 +29,14 @@ export class BitfinexTrade {
     const originUrl = getTradesUrl(pair, start, end, limit, sort);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BitfinexRawTrade[]>(url).pipe(
-      map(trades => trades.map(adaptBitfinexTrade))
-    );
+    return fetchRxjs<BitfinexRawTrade[]>(url).pipe(map((trades) => trades.map(adaptBitfinexTrade)));
   }
 
   trade$(pair: string): Observable<Trade> {
     const subcribeRequest = getTradeSubcribeRequest(pair);
     return this.bitfinexWebsocket.subscribe<BitfinexRawTrade[] | BitfinexRawTrade>(subcribeRequest).pipe(
-      filter(tradeArrayOrTrade => tradeArrayOrTrade[0] && typeof tradeArrayOrTrade[0] === 'number'),
-      map((trade: BitfinexRawTrade) => adaptBitfinexTrade(trade))
+      filter((tradeArrayOrTrade) => tradeArrayOrTrade[0] && typeof tradeArrayOrTrade[0] === 'number'),
+      map((trade: BitfinexRawTrade) => adaptBitfinexTrade(trade)),
     );
   }
 
@@ -52,7 +50,7 @@ export class BitfinexTrade {
         }
 
         return adaptBitfinexTrade(<BitfinexRawTrade>tradeArrayOrTrade);
-      })
+      }),
     );
   }
 
@@ -68,6 +66,6 @@ function getTradeSubcribeRequest(pair: string): WebsocketSubOrUnSubRequest {
   return {
     event: 'subscribe',
     channel: 'trades',
-    symbol: getSymbol(pair)
+    symbol: getSymbol(pair),
   };
 }

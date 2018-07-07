@@ -16,15 +16,11 @@ export class BitbankTicker {
 
   fetchTicker$(pair: string): Observable<Ticker> {
     const tickerUrl = publicUrl + `/${pair}/ticker`;
-    return fetchRxjs<RawData<BitbankRawTicker>>(tickerUrl).pipe(
-      map(rawTicker => adaptBitbankTicker(rawTicker.data, pair))
-    );
+    return fetchRxjs<RawData<BitbankRawTicker>>(tickerUrl).pipe(map((rawTicker) => adaptBitbankTicker(rawTicker.data, pair)));
   }
 
   ticker$(pair: string): Observable<Ticker> {
-    return this.fetchTicker$(pair).pipe(
-      concat(this.pubnubTicker$(pair))
-    );
+    return this.fetchTicker$(pair).pipe(concat(this.pubnubTicker$(pair)));
   }
 
   stopTicker(pair: string) {
@@ -34,8 +30,8 @@ export class BitbankTicker {
 
   private pubnubTicker$(pair: string): Observable<Ticker> {
     const channel = 'ticker_' + pair;
-    return this.pubnub.subscribeChannel<RawData<BitbankRawTicker>>(channel).pipe(
-      map(bitbankPubnubTicker => adaptBitbankTicker(bitbankPubnubTicker.data, pair))
-    );
+    return this.pubnub
+      .subscribeChannel<RawData<BitbankRawTicker>>(channel)
+      .pipe(map((bitbankPubnubTicker) => adaptBitbankTicker(bitbankPubnubTicker.data, pair)));
   }
 }

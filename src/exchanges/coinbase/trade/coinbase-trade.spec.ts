@@ -6,7 +6,7 @@ import { CoinbaseTrade } from './coinbase-trade';
 
 const coinbaseTrade = new CoinbaseTrade();
 
-describe.only('Coinbase trade functions', function () {
+describe.only('Coinbase trade functions', function() {
   this.timeout(0);
 
   const markets = ['btc_usd'];
@@ -14,7 +14,7 @@ describe.only('Coinbase trade functions', function () {
   /**
    * Rest api trades
    */
-  markets.forEach(market => {
+  markets.forEach((market) => {
     it('should fetch rest api trades ' + market, (done) => {
       coinbaseTrade.fetchTrades$(market).subscribe(
         (trades) => {
@@ -23,7 +23,7 @@ describe.only('Coinbase trade functions', function () {
         (e) => console.log('Error'),
         () => {
           done();
-        }
+        },
       );
     });
   });
@@ -31,18 +31,24 @@ describe.only('Coinbase trade functions', function () {
   /**
    * Realtime trade
    */
-  markets.forEach(market => {
+  markets.forEach((market) => {
     it('should get realtime trades ' + market, (done) => {
-      coinbaseTrade.trade$(market).pipe(bufferCount(5), take(1)).subscribe(
-        (trades) => {
-          checkTrades(trades);
-        },
-        (e) => console.log('Error'),
-        () => {
-          coinbaseTrade.stopTrade(market);
-          done();
-        }
-      );
+      coinbaseTrade
+        .trade$(market)
+        .pipe(
+          bufferCount(5),
+          take(1),
+        )
+        .subscribe(
+          (trades) => {
+            checkTrades(trades);
+          },
+          (e) => console.log('Error'),
+          () => {
+            coinbaseTrade.stopTrade(market);
+            done();
+          },
+        );
     });
   });
 });

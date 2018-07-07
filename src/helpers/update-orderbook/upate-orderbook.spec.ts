@@ -44,8 +44,8 @@ const askTestCases: AskTestCase[] = [
   {
     asks: [['1000', '1'], ['1100', '1'], ['1200', '1'], ['1300', '0']],
     updateAsks: [['900', '1'], ['1100', '0']],
-    result: [['900', '1'], ['1000', '1'], ['1200', '1']]
-  }
+    result: [['900', '1'], ['1000', '1'], ['1200', '1']],
+  },
 ];
 
 describe('Test update-orderbook.ts helper functions', () => {

@@ -40,6 +40,6 @@ export function adaptBinanceWsTicker(binanceTicker: BinanceRawWsTicker, pair: st
     vol: +binanceTicker.v,
     change24: +binanceTicker.p,
     change24Perc: +binanceTicker.P / 100,
-    timestamp: new Date(binanceTicker.E).getTime()
+    timestamp: new Date(binanceTicker.E).getTime(),
   };
 }

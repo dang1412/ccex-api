@@ -20,9 +20,7 @@ export class BinanceTrade {
     const originUrl = binanceTradeApiUrl(pair, limit);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BinanceRawRestTrade[]>(url).pipe(
-      map(trades => trades.map(adaptBinanceRestTrade))
-    );
+    return fetchRxjs<BinanceRawRestTrade[]>(url).pipe(map((trades) => trades.map(adaptBinanceRestTrade)));
   }
 
   // realtime trade

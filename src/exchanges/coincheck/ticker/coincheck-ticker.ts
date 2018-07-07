@@ -9,7 +9,7 @@ import { adaptCoincheckRawTicker, publicUrl } from '../coincheck-functions';
 export class CoincheckTicker {
   fetchTicker$(pair: string): Observable<Ticker> {
     const url = publicUrl + '/api/ticker';
-    return fetchRxjs<CoincheckRawTicker>(url).pipe(map(coincheckRawTicker => adaptCoincheckRawTicker(coincheckRawTicker, pair)));
+    return fetchRxjs<CoincheckRawTicker>(url).pipe(map((coincheckRawTicker) => adaptCoincheckRawTicker(coincheckRawTicker, pair)));
   }
 
   ticker$(pair: string): Observable<Ticker> {

@@ -6,9 +6,8 @@
   "types": "index.d.ts",
   "scripts": {
     "build": "tsc",
-    "lint_spec": "tslint -c tslint.json \"spec/**/*.ts\"",
-    "lint_src": "tslint -c tslint.json \"src/**/*.ts\"",
-    "lint": "npm-run-all --parallel lint_*",
+    "format": "prettier --config .prettierrc --write src/**/*.ts",
+    "lint": "tslint -c tslint.json \"src/**/*.ts\"",
     "test": "mocha -r ts-node/register ./src/**/*.spec.ts"
   },
   "keywords": [

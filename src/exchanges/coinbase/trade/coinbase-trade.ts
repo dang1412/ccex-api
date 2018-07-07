@@ -29,14 +29,14 @@ export class CoinbaseTrade {
     const originUrl = getTradesUrl(pair);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<CoinbaseRawRestTrade[]>(url).pipe(map(rawTrades => rawTrades.map(adaptCoinbaseRawTrade)));
+    return fetchRxjs<CoinbaseRawRestTrade[]>(url).pipe(map((rawTrades) => rawTrades.map(adaptCoinbaseRawTrade)));
   }
 
   trade$(pair: string): Observable<Trade> {
     const request: WebsocketRequest = {
       type: 'subscribe',
       channels: ['matches'],
-      product_ids: [getProductId(pair)]
+      product_ids: [getProductId(pair)],
     };
 
     return this.coinbaseWebsocket.subscribe<CoinbaseRawWsTrade>(request).pipe(map(adaptCoinbaseRawTrade));
@@ -46,7 +46,7 @@ export class CoinbaseTrade {
     const request: WebsocketRequest = {
       type: 'unsubscribe',
       channels: ['matches'],
-      product_ids: [getProductId(pair)]
+      product_ids: [getProductId(pair)],
     };
 
     this.coinbaseWebsocket.unsubscribe(request);

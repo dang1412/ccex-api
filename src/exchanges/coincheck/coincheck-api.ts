@@ -12,7 +12,7 @@ export class CoincheckApi extends ExchangeApi {
       name: 'coincheck',
       logoUrl: 'https://coincheck-logo.png',
       homepage: 'https://www.coincheck.com/',
-      country: 'Coincheck country'
+      country: 'Coincheck country',
     };
   }
 
@@ -28,7 +28,7 @@ export class CoincheckApi extends ExchangeApi {
     return {
       ticker: false,
       orderbook: false,
-      chart: false
+      chart: false,
     };
   }
 

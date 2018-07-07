@@ -36,7 +36,7 @@ export class BitfinexCandleStick {
     const originUrl = getCandleStickUrl(pair, minutesFoot, start, end);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BitfinexRawCandleStick[]>(url).pipe(map(bitfinexCandles => bitfinexCandles.map(adaptBitfinexRawCandleStick)));
+    return fetchRxjs<BitfinexRawCandleStick[]>(url).pipe(map((bitfinexCandles) => bitfinexCandles.map(adaptBitfinexRawCandleStick)));
   }
 
   /**
@@ -49,8 +49,8 @@ export class BitfinexCandleStick {
 
     return this.bitfinexWebsocket.subscribe<BitfinexRawCandleStick[] | BitfinexRawCandleStick>(subscribeRequest).pipe(
       // filter the first initial history data
-      filter(candleArrayOrCandle => candleArrayOrCandle[0] && typeof candleArrayOrCandle[0] === 'number'),
-      map((candle: BitfinexRawCandleStick) => adaptBitfinexRawCandleStick(candle))
+      filter((candleArrayOrCandle) => candleArrayOrCandle[0] && typeof candleArrayOrCandle[0] === 'number'),
+      map((candle: BitfinexRawCandleStick) => adaptBitfinexRawCandleStick(candle)),
     );
   }
 
@@ -70,7 +70,7 @@ export class BitfinexCandleStick {
         }
 
         return adaptBitfinexRawCandleStick(<BitfinexRawCandleStick>candleArrayOrCandle);
-      })
+      }),
     );
   }
 
@@ -96,6 +96,6 @@ function getCandleSubcribeRequest(pair: string, minutesFoot: number): WebsocketS
   return {
     event: 'subscribe',
     channel: 'candles',
-    key: `trade:${timeFrame}:${symbol}`
+    key: `trade:${timeFrame}:${symbol}`,
   };
 }

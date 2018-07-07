@@ -12,5 +12,5 @@ export type BitfinexRawTicker = [
   number, // last price 8219.8,
   number, // volume 32325.84881438,
   number, // high 8278.7,
-  number  // low 8073.6
+  number // low 8073.6
 ];

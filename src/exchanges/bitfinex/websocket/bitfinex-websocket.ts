@@ -8,7 +8,7 @@ type WsResponse = WebsocketRequestResponse | WebsocketMessageResponse<any>;
 
 export class BitfinexWebsocket {
   private ws: WebSocketRxJs<WsResponse>;
-  private keyStreamMap: {[key: string]: ReplaySubject<any>} = {};
+  private keyStreamMap: { [key: string]: ReplaySubject<any> } = {};
   private chanIdKeyMap: { [chanId: number]: string } = {};
   private unsubscribeSuccess$ = new ReplaySubject<string>(1);
 
@@ -63,10 +63,12 @@ export class BitfinexWebsocket {
     }
 
     // send unsubscribe request using chanId
-    this.ws.send(JSON.stringify({
-      event: 'unsubscribe',
-      chanId
-    }));
+    this.ws.send(
+      JSON.stringify({
+        event: 'unsubscribe',
+        chanId,
+      }),
+    );
   }
 
   destroy(): void {
@@ -118,6 +120,6 @@ export class BitfinexWebsocket {
   }
 }
 
-function getKeyByValue(object: {[key: number]: string}, value: string): number {
-  return +Object.keys(object).find(key => object[key] === value);
+function getKeyByValue(object: { [key: number]: string }, value: string): number {
+  return +Object.keys(object).find((key) => object[key] === value);
 }

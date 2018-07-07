@@ -5,9 +5,9 @@ import { CoincheckTicker } from './coincheck-ticker';
 
 const coincheckTicker = new CoincheckTicker();
 
-describe('Test Coincheck ticker', function () {
+describe('Test Coincheck ticker', function() {
   const markets = ['btc_jpy'];
-  markets.forEach(market => {
+  markets.forEach((market) => {
     it('should fetch ticker ' + market, (done) => {
       coincheckTicker.fetchTicker$(market).subscribe((ticker) => {
         console.log(ticker.pair, ticker.last);

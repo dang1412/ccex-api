@@ -29,8 +29,14 @@ export function checkOrderbook(orderbook: Orderbook): void {
   assert(+orderbook.bids[0][0] < +orderbook.asks[0][0]);
 
   // check order bids: DESC, asks: ASC
-  assert(checkOrder<[string, string]>(orderbook.bids, (prevBid, curBid) => +prevBid[0] > +curBid[0]), 'bids should have DESC order in price');
-  assert(checkOrder<[string, string]>(orderbook.asks, (prevAsk, curAsk) => +prevAsk[0] < +curAsk[0]), 'asks should have ASC order in price');
+  assert(
+    checkOrder<[string, string]>(orderbook.bids, (prevBid, curBid) => +prevBid[0] > +curBid[0]),
+    'bids should have DESC order in price',
+  );
+  assert(
+    checkOrder<[string, string]>(orderbook.asks, (prevAsk, curAsk) => +prevAsk[0] < +curAsk[0]),
+    'asks should have ASC order in price',
+  );
 }
 
 export function checkTrades(trades: Trade[], increaseTimestamp = true): void {
@@ -62,7 +68,7 @@ function checkOrder<T>(tArray: T[], check: (prevT: T, curT: T) => boolean): bool
   }
 
   let prevT = tArray[0];
-  for (let i = 1; i < tArray.length; i ++) {
+  for (let i = 1; i < tArray.length; i++) {
     if (!check(prevT, tArray[i])) {
       return false;
     }

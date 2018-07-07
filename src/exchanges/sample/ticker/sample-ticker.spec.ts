@@ -5,9 +5,9 @@ import { SampleTicker } from './sample-ticker';
 
 const sampleTicker = new SampleTicker();
 
-describe('Test Sample ticker', function () {
+describe('Test Sample ticker', function() {
   const markets = [];
-  markets.forEach(market => {
+  markets.forEach((market) => {
     it('should fetch ticker ' + market, (done) => {
       sampleTicker.fetchTicker$(market).subscribe((ticker) => {
         console.log(ticker.pair, ticker.last);

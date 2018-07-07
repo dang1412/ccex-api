@@ -30,36 +30,24 @@ export class BitbankApi extends ExchangeApi {
   }
 
   get markets(): string[] {
-    return [
-      'btc_jpy',
-      'xrp_jpy',
-      'eth_btc',
-      'ltc_btc',
-      'mona_jpy',
-      'mona_btc',
-      'bcc_jpy',
-      'bcc_btc',
-    ];
+    return ['btc_jpy', 'xrp_jpy', 'eth_btc', 'ltc_btc', 'mona_jpy', 'mona_btc', 'bcc_jpy', 'bcc_btc'];
   }
 
   get representativeMarkets(): string[] {
-    return [
-      'btc_jpy',
-      'xrp_jpy',
-    ];
+    return ['btc_jpy', 'xrp_jpy'];
   }
 
   get supportFeatures(): SupportFeatures {
     return {
       ticker: true,
       orderbook: true,
-      chart: true
+      chart: true,
     };
   }
 
   constructor() {
     super();
-    this.pubnub = new PubnubRxJs({subscribeKey});
+    this.pubnub = new PubnubRxJs({ subscribeKey });
     this.bitbankCandlestick = new BitbankCandlestick();
     this.bitbankTicker = new BitbankTicker(this.pubnub);
     this.bitbankOrderbook = new BitbankOrderbook(this.pubnub);
