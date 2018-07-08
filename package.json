@@ -1,6 +1,6 @@
 {
   "name": "ccex-api",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Crypto currencies exchanges api implementation (include realtime api)",
   "main": "index.js",
   "types": "index.d.ts",
@@ -12,8 +12,14 @@
   },
   "keywords": [
     "crypto",
+    "crypto currency",
+    "cryptocurrency",
     "cryptocurrencies",
-    "exchange"
+    "exchange",
+    "realtime api",
+    "websocket api",
+    "websocket",
+    "pubnub"
   ],
   "repository": "git@github.com:dang1412/ccex-api.git",
   "author": "Dang Thanh Tung",

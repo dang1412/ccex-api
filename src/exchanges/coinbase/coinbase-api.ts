@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
-import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick, ExchangeOptions } from '../exchange-types';
 import { CoinbaseWebsocket } from './coinbase-websocket';
 import { CoinbaseTicker } from './ticker';
 import { CoinbaseCandleStick } from './candlestick';
@@ -40,8 +40,10 @@ export class CoinbaseApi extends ExchangeApi {
     };
   }
 
-  constructor(corsProxy?: string) {
-    super();
+  constructor(options?: ExchangeOptions) {
+    super(options);
+    const corsProxy = this.options.corsProxy;
+
     this.coinbaseWebsocket = new CoinbaseWebsocket();
     this.coinbaseTicker = new CoinbaseTicker(corsProxy, this.coinbaseWebsocket);
     this.coinbaseCandleStick = new CoinbaseCandleStick(corsProxy);

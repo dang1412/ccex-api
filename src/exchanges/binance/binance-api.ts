@@ -2,14 +2,12 @@ import { Observable } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick, ExchangeOptions } from '../exchange-types';
-import { defaultOptions } from '../exchange-default.options';
 import { BinanceTicker } from './ticker';
 import { BinanceOrderbook } from './orderbook';
 import { BinanceTrade } from './trade';
 import { BinanceCandleStick } from './candlestick';
 
 export class BinanceApi extends ExchangeApi {
-  private options: ExchangeOptions;
   private binanceTicker: BinanceTicker;
   private binanceOrderbook: BinanceOrderbook;
   private binanceTrade: BinanceTrade;
@@ -41,9 +39,7 @@ export class BinanceApi extends ExchangeApi {
   }
 
   constructor(options?: ExchangeOptions) {
-    super();
-
-    this.options = Object.assign({}, defaultOptions, options);
+    super(options);
     const corsProxy = this.options.corsProxy;
 
     this.binanceTicker = new BinanceTicker(corsProxy);

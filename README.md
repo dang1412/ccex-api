@@ -1,4 +1,3 @@
-# -----This is currently under development-----
 # ccex-api
 cryptocurrency exchanges client api wrapper
 
@@ -19,10 +18,20 @@ This sample of one way dependencies diagram demonstrates how modules are structu
 When you include a module you also include all of its dependencies
 
 # Supported Exchanges
-Bitbank, Binance, Bitfinex, Coinbase (Gdax), Coincheck...
+Binance, Bitbank, Bitfinex, Coinbase (Gdax)
+
+|                                                                                                                           | id                 | name                                                                         | ver | doc                                                                                          | countries                               |
+|---------------------------------------------------------------------------------------------------------------------------|--------------------|------------------------------------------------------------------------------|:---:|:--------------------------------------------------------------------------------------------:|-----------------------------------------|
+|![Binance](https://user-images.githubusercontent.com/1294454/29604020-d5483cdc-87ee-11e7-94c7-d1a8d9169293.jpg)            | binance            | [Binance](https://www.binance.com)                                           | *   | [API](https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md) | Japan                                   |
+|![Bitbank](https://user-images.githubusercontent.com/1294454/37808081-b87f2d9c-2e59-11e8-894d-c1900b7584fe.jpg)            | bitbank            | [Bitbank](https://bitbank.cc/)                                               | 1   | [API](https://docs.bitbank.cc/)                                                              | Japan                                   |
+|![Bitfinex](https://user-images.githubusercontent.com/1294454/27766244-e328a50c-5ed2-11e7-947b-041416579bb3.jpg)           | bitfinex           | [Bitfinex v2](https://www.bitfinex.com)                                      | 2   | [API](https://bitfinex.readme.io/v2/docs)                                                    | British Virgin Islands                  |
+|![Coinbase](https://user-images.githubusercontent.com/1294454/27766527-b1be41c6-5edb-11e7-95f6-5b496c469e2c.jpg)           | coinbase           | [Coinbase](https://pro.coinbase.com/)                                        | *   | [API](https://docs.pro.coinbase.com/)                                                        | US                                      |
 
 # Usage
-This library is designed to be usable in both nodejs and browser (with frontend framework like Angular, React, Vue,... The umd javascript file coming later) environments. When used in browser environment, the browser must support for native [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) and [websocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
+This library is designed to be usable in both nodejs and browser (with frontend framework like Angular, React, Vue,... The umd javascript file coming later) environments. When used in browser environment, the browser must support for native
+ - [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+ - [websocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
+
 ## Installation
 ```
 npm i --save ccex-api
@@ -48,7 +57,7 @@ bitbankCandlestick.getApproximateHistoryPrice('btc_jpy', 1526917534904, 1).subsc
 ```
 
 # Api
-Basically all exchanges have these following api implemented.
+Basically all exchanges have these following unified, generalized api implemented.
 
 |api|params|return value | desctiption |
 ---|---|---|---
@@ -68,7 +77,7 @@ stopOrderbook| | | stop realtime orderbook stream |
 fetchCandleStickRange$| pair: `string` <br> minutesFoot: `number` <br> start: `number` <br> end: `number`| Observable<CandleStick[]> | api request for candlestick |
 lastCandle$| pair: `string` <br> minutesFoot: `number` <br> lastCandle: `CandleStick` | Observable\<CandleStick> | Realtime candlestick stream, calculated from an initial lastCandle and realtime trade stream. <br> This function is useful in implementing Tradingview datafeed |
 
-Besides, an exchange may have more specific functions. It depends on exchange provided features and implementation.
+Besides, an exchange may have more specific functions, it depends on exchange provided features and implementation.
 In that case, it is good to have specific guide for that exchange located at `exchanges/{exchange}/README.md`
 
 # Contributor guide

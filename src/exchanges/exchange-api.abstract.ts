@@ -1,14 +1,20 @@
 import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
 
-import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from './exchange-types';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick, ExchangeOptions } from './exchange-types';
 import { updateLastCandleWithNewTrade } from './helper.functions';
+import { defaultOptions } from './exchange-default.options';
 
 export abstract class ExchangeApi {
+  protected options: ExchangeOptions;
   abstract get exchangeInfo(): ExchangeInfo;
   abstract get markets(): string[];
   abstract get representativeMarkets(): string[];
   abstract get supportFeatures(): SupportFeatures;
+
+  constructor(options?: ExchangeOptions) {
+    this.options = Object.assign({}, defaultOptions, options);
+  }
 
   // request ticker
   abstract fetchTicker$(pair: string): Observable<Ticker>;
@@ -35,9 +41,9 @@ export abstract class ExchangeApi {
   abstract fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]>;
 
   // realtime last candlestick using initial last candle and realtime trade (used for tradingview datafeed)
-  lastCandle$(pair: string, lastCandle: CandleStick, minutesFoot: number): Observable<CandleStick> {
+  lastCandle$(pair: string, initialLastCandle: CandleStick, minutesFoot: number): Observable<CandleStick> {
     return this.trade$(pair).pipe(
-      scan((candle: CandleStick, trade: Trade) => updateLastCandleWithNewTrade(candle, trade, minutesFoot), lastCandle),
+      scan((candle: CandleStick, trade: Trade) => updateLastCandleWithNewTrade(candle, trade, minutesFoot), initialLastCandle),
     );
   }
 
