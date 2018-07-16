@@ -81,11 +81,11 @@ function mergeOrder(
  * @param compareStep
  */
 function mergeArray<T>(originArr: T[], updateArr: T[], compareStep: (origin: T, update: T) => [T, number, number]): T[] {
-  if (!originArr) {
+  if (!originArr || !originArr.length) {
     return updateArr;
   }
 
-  if (!updateArr) {
+  if (!updateArr || !updateArr.length) {
     return originArr;
   }
 

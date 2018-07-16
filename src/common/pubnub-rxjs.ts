@@ -9,7 +9,7 @@ export class PubnubRxJs {
   // use one subject for each distinct channel
   private channelSubjectMap: { [channel: string]: ReplaySubject<any> } = {};
 
-  constructor(config: Pubnub.Config) {
+  constructor(config: Pubnub.PubnubConfig) {
     this.pubnub = new Pubnub(config);
     this.addEventListener();
   }

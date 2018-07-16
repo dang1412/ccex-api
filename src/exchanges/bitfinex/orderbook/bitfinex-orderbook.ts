@@ -1,5 +1,5 @@
 import { Observable, concat } from 'rxjs';
-import { map, take, filter, bufferTime, scan } from 'rxjs/operators';
+import { map, take, filter, scan } from 'rxjs/operators';
 
 import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
@@ -7,7 +7,7 @@ import { WebsocketSubOrUnSubRequest } from '../bitfinex-common.types';
 import { getSymbol, getKey } from '../bitfinex-common';
 import { BitfinexWebsocket } from '../websocket';
 
-import { adaptBitfinexOrderbook, arrangeBitfinexOrderbookItems } from './internal/functions';
+import { adaptBitfinexOrderbook } from './internal/functions';
 import { BitfinexOrderbookSingleItem } from './internal/types';
 
 export class BitfinexOrderbook {
@@ -79,11 +79,15 @@ export class BitfinexOrderbook {
     // orderbook updates, buffer some changes in 1 second into 1 to improve performance
     const orderbookUpdate$ = orderbookSnapshotAndUpdate$.pipe(
       filter((orderbookItem) => orderbookItem && orderbookItem.length && typeof orderbookItem[0] === 'number'),
-      bufferTime(1000),
-      map((orderbookItems: BitfinexOrderbookSingleItem[]) => arrangeBitfinexOrderbookItems(orderbookItems)),
+      // bufferTime(0),
+      // map((orderbookItems: BitfinexOrderbookSingleItem[]) => arrangeBitfinexOrderbookItems(orderbookItems)),
+      map((orderbookItem: BitfinexOrderbookSingleItem) => [orderbookItem]),
       map(adaptBitfinexOrderbook),
     );
 
-    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(scan((orderbook, update) => updateOrderbook(orderbook, update)));
+    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(scan((orderbook, update) => {
+      console.log('update bitfinex orderbook', update);
+      return updateOrderbook(orderbook, update);
+    }));
   }
 }

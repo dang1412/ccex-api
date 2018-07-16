@@ -23,9 +23,9 @@ export function adaptBitfinexOrderbook(bitfinexOrderbook: BitfinexOrderbookSingl
 }
 
 // arrange bids and asks in the right order (bids: DESC, asks: ASC)
-export function arrangeBitfinexOrderbookItems(bitfinexOrderbook: BitfinexOrderbookSingleItem[]): BitfinexOrderbookSingleItem[] {
-  const bids = bitfinexOrderbook.filter((item) => item[2] > 0).sort((i1, i2) => i2[0] - i1[0]);
-  const asks = bitfinexOrderbook.filter((item) => item[2] < 0).sort((i1, i2) => i1[0] - i2[0]);
+// export function arrangeBitfinexOrderbookItems(bitfinexOrderbook: BitfinexOrderbookSingleItem[]): BitfinexOrderbookSingleItem[] {
+//   const bids = bitfinexOrderbook.filter((item) => item[2] > 0).sort((i1, i2) => i2[0] - i1[0]);
+//   const asks = bitfinexOrderbook.filter((item) => item[2] < 0).sort((i1, i2) => i1[0] - i2[0]);
 
-  return bids.concat(asks);
-}
+//   return bids.concat(asks);
+// }
