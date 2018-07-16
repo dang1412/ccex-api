@@ -6,9 +6,9 @@ These features are supported with all major exchanges
 - Public realtime api
 - Public rest api
 - Support for both Nodejs and Browser environments
-- Modular structure make sure you include minimum code as you need (exspecially for client side application)
+- Modular structure make sure you include minimum code as you need (especially for client side application)
 - Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere)
-- More to come: Tradingview datafeed, private rest api with api key...
+- More to come: Tradingview datafeed, private rest api with api/secret key...
 
 # Modular structure
 This sample of one way dependencies diagram demonstrates how modules are structured and combined. This may different from one another.
@@ -39,13 +39,13 @@ npm i --save ccex-api
 
 ## Simple use
 ```
-import { BitbankApi } from 'ccex-api/exchanges/bitbank;
+import { BinanceApi } from 'ccex-api/exchanges/binance;
 
-const bitbankApi = new BitbankApi();
+const binanceApi = new BinanceApi();
 
-bitbankApi.fetchTicker$('btc_jpy').subscribe(ticker => console.log(ticker));
-bitbankApi.ticker$('btc_jpy').subscribe(ticker => console.log(ticker));
-setTimeout(() => { bitbankApi.stopTicker('btc_jpy') }, 5000);
+binanceApi.fetchTicker$('btc_usdt').subscribe(ticker => console.log(ticker));
+binanceApi.ticker$('btc_usdt').subscribe(ticker => console.log(ticker));
+setTimeout(() => { binanceApi.stopTicker('btc_usdt') }, 5000);
 ```
 
 Or you can include only the part that you need
@@ -56,14 +56,17 @@ const bitbankCandlestick = new BitbankCandlestick();
 bitbankCandlestick.getApproximateHistoryPrice('btc_jpy', 1526917534904, 1).subscribe(price => console.log(price));
 ```
 
+# Terminology
+ - Pair (market/symbol): used a lot as function's parameter, must be referred with the following format `btc_usd` (lowercase with underscore between 2 asset)
+
 # Api
 Basically all exchanges have these following unified, generalized api implemented.
 
 |api|params|return value | desctiption |
 ---|---|---|---
 exchangeInfo| | ExchangeInfo | |
-markets| | string[] | |
-representativeMarkets| | string[] | |
+markets| | string[] | All supported markets (pair) |
+representativeMarkets| | string[] | Major supported markets (used for test purpose) |
 supportFeatures| | SupportFeatures | |
 fetchTicker$| pair: `string` | Observable\<Ticker> | api request for ticker |
 ticker$| pair: `string` | Observable\<Ticker> | realtime ticker stream |
@@ -78,18 +81,20 @@ fetchCandleStickRange$| pair: `string` <br> minutesFoot: `number` <br> start: `n
 lastCandle$| pair: `string` <br> minutesFoot: `number` <br> lastCandle: `CandleStick` | Observable\<CandleStick> | Realtime candlestick stream, calculated from an initial lastCandle and realtime trade stream. <br> This function is useful in implementing Tradingview datafeed |
 
 Besides, an exchange may have more specific functions, it depends on exchange provided features and implementation.
-In that case, it is good to have specific guide for that exchange located at `exchanges/{exchange}/README.md`
+In that case, specific guide for that exchange will be located at `exchanges/{exchange}/README.md` (`future`)
 
 # Contributor guide
-In order to add a new exchange, simply clone folder `src/exchanges/sample`, rename, implement functions and include appropiate tests for sub-modules (ticker, orderbook...) and some internal functions
+In order to add a new exchange, simply clone folder `src/exchanges/sample`, rename, implement functions and include appropiate tests for sub-modules (ticker, orderbook...) and some internal functions (`future`)
 
-Finally make sure the exchange `sample` pass our predefined test by running
+Finally make sure the exchange `sample` pass predefined test by running (`future`)
 
 ```
 npm run main-test --exchange sample
 ```
 
-# Test
+If you find a bug or anything should be added to fit your need, please create issue. This is still in very early stage so any feedback would have great impact on me and I will try harder to serve community better
+
+# Test (`future`)
 main test: test for main module which implement the above interface directly
 ```
 npm run main-test
