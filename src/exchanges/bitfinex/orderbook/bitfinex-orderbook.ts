@@ -1,21 +1,35 @@
 import { Observable, concat } from 'rxjs';
 import { map, take, filter, scan } from 'rxjs/operators';
 
+import { fetchRxjs } from '../../../common';
 import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
 import { WebsocketSubOrUnSubRequest } from '../bitfinex-common.types';
 import { getSymbol, getKey } from '../bitfinex-common';
 import { BitfinexWebsocket } from '../websocket';
 
-import { adaptBitfinexOrderbook } from './internal/functions';
+import { adaptBitfinexOrderbook, getOrderbookApiUrl } from './internal/functions';
 import { BitfinexOrderbookSingleItem } from './internal/types';
 
 export class BitfinexOrderbook {
-  private bitfinexWebsocket: BitfinexWebsocket;
   private keyOderbookStreamMap: { [key: string]: Observable<Orderbook> } = {};
+  private corsProxy: string;
+  private bitfinexWebsocket: BitfinexWebsocket;
 
-  constructor(bitfinexWebsocket?: BitfinexWebsocket) {
+  /**
+   * @param corsProxy
+   * @param bitfinexWebsocket
+   */
+  constructor(corsProxy?: string, bitfinexWebsocket?: BitfinexWebsocket) {
+    this.corsProxy = corsProxy;
     this.bitfinexWebsocket = bitfinexWebsocket || new BitfinexWebsocket();
+  }
+
+  fetchOrderbook$(pair: string, prec = 'P0'): Observable<Orderbook> {
+    const originUrl = getOrderbookApiUrl(pair, prec);
+    const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
+
+    return fetchRxjs<BitfinexOrderbookSingleItem[]>(url).pipe(map(adaptBitfinexOrderbook));
   }
 
   orderbook$(pair: string, prec = 'P0', freq = 'F0', len = '25'): Observable<Orderbook> {
@@ -79,15 +93,9 @@ export class BitfinexOrderbook {
     // orderbook updates, buffer some changes in 1 second into 1 to improve performance
     const orderbookUpdate$ = orderbookSnapshotAndUpdate$.pipe(
       filter((orderbookItem) => orderbookItem && orderbookItem.length && typeof orderbookItem[0] === 'number'),
-      // bufferTime(0),
-      // map((orderbookItems: BitfinexOrderbookSingleItem[]) => arrangeBitfinexOrderbookItems(orderbookItems)),
-      map((orderbookItem: BitfinexOrderbookSingleItem) => [orderbookItem]),
-      map(adaptBitfinexOrderbook),
+      map((orderbookItem: BitfinexOrderbookSingleItem) => adaptBitfinexOrderbook([orderbookItem])),
     );
 
-    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(scan((orderbook, update) => {
-      console.log('update bitfinex orderbook', update);
-      return updateOrderbook(orderbook, update);
-    }));
+    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(scan((orderbook, update) => updateOrderbook(orderbook, update)));
   }
 }

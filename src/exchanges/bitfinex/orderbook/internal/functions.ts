@@ -1,5 +1,15 @@
 import { Orderbook } from '../../../exchange-types';
+import { getSymbol, apiEndpoint } from '../../bitfinex-common';
 import { BitfinexOrderbookSingleItem } from './types';
+
+export function getOrderbookApiUrl(pair: string, prec = 'P0'): string {
+  // https://api.bitfinex.com/v:version/book/:Symbol/:Precision
+  // https://api.bitfinex.com/v2/book/tBTCUSD/P0
+  const symbol = getSymbol(pair);
+  let url = `${apiEndpoint}/book/${symbol}/${prec}`;
+
+  return url;
+}
 
 // assuming that all bids and asks are in the right order (bids: DESC, asks: ASC)
 export function adaptBitfinexOrderbook(bitfinexOrderbook: BitfinexOrderbookSingleItem[]): Orderbook {
@@ -9,7 +19,7 @@ export function adaptBitfinexOrderbook(bitfinexOrderbook: BitfinexOrderbookSingl
   };
 
   bitfinexOrderbook.forEach((orderbookItem) => {
-    // if count === 0 set amoumt 0
+    // if count === 0 set amount 0
     const amount = (orderbookItem[1] > 0 ? Math.abs(orderbookItem[2]) : 0) + '';
     const price = orderbookItem[0] + '';
     if (orderbookItem[2] > 0) {
@@ -21,11 +31,3 @@ export function adaptBitfinexOrderbook(bitfinexOrderbook: BitfinexOrderbookSingl
 
   return orderbook;
 }
-
-// arrange bids and asks in the right order (bids: DESC, asks: ASC)
-// export function arrangeBitfinexOrderbookItems(bitfinexOrderbook: BitfinexOrderbookSingleItem[]): BitfinexOrderbookSingleItem[] {
-//   const bids = bitfinexOrderbook.filter((item) => item[2] > 0).sort((i1, i2) => i2[0] - i1[0]);
-//   const asks = bitfinexOrderbook.filter((item) => item[2] < 0).sort((i1, i2) => i1[0] - i2[0]);
-
-//   return bids.concat(asks);
-// }

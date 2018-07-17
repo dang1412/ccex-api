@@ -1,5 +1,14 @@
 import { Ticker } from '../../../exchange-types';
+import { getSymbol, apiEndpoint } from '../../bitfinex-common';
 import { BitfinexRawTicker } from './types';
+
+export function getTickerApiUrl(pair: string): string {
+  // https://api.bitfinex.com/v2/ticker/tBTCUSD
+  const symbol = getSymbol(pair);
+  let url = `${apiEndpoint}/ticker/${symbol}`;
+
+  return url;
+}
 
 export function adaptBitfinexTicker(bitfinexTicker: BitfinexRawTicker, pair: string): Ticker {
   return {

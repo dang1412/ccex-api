@@ -1,4 +1,4 @@
-import { Observable, empty } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick, ExchangeOptions } from '../exchange-types';
@@ -45,14 +45,14 @@ export class BitfinexApi extends ExchangeApi {
     const corsProxy = this.options.corsProxy;
 
     this.bitfinexWebsocket = new BitfinexWebsocket();
-    this.bitfinexTicker = new BitfinexTicker(this.bitfinexWebsocket);
-    this.bitfinexOrderbook = new BitfinexOrderbook(this.bitfinexWebsocket);
+    this.bitfinexTicker = new BitfinexTicker(corsProxy, this.bitfinexWebsocket);
+    this.bitfinexOrderbook = new BitfinexOrderbook(corsProxy, this.bitfinexWebsocket);
     this.bitfinexCandleStick = new BitfinexCandleStick(corsProxy, this.bitfinexWebsocket);
     this.bitfinexTrade = new BitfinexTrade(corsProxy, this.bitfinexWebsocket);
   }
 
   fetchTicker$(pair: string): Observable<Ticker> {
-    return empty();
+    return this.bitfinexTicker.fetchTicker$(pair);
   }
 
   ticker$(pair: string): Observable<Ticker> {
@@ -64,7 +64,7 @@ export class BitfinexApi extends ExchangeApi {
   }
 
   fetchOrderbook$(pair: string): Observable<Orderbook> {
-    return empty();
+    return this.bitfinexOrderbook.fetchOrderbook$(pair);
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
