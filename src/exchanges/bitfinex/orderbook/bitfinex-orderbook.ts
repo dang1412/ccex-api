@@ -1,4 +1,4 @@
-import { Observable, concat } from 'rxjs';
+import { Observable, concat, ReplaySubject } from 'rxjs';
 import { map, take, filter, scan } from 'rxjs/operators';
 
 import { fetchRxjs } from '../../../common';
@@ -12,7 +12,7 @@ import { adaptBitfinexOrderbook, getOrderbookApiUrl } from './internal/functions
 import { BitfinexOrderbookSingleItem } from './internal/types';
 
 export class BitfinexOrderbook {
-  private keyOderbookStreamMap: { [key: string]: Observable<Orderbook> } = {};
+  private keyOderbookStreamMap: { [key: string]: ReplaySubject<Orderbook> } = {};
   private corsProxy: string;
   private bitfinexWebsocket: BitfinexWebsocket;
 
@@ -44,10 +44,11 @@ export class BitfinexOrderbook {
 
     const key = getKey(subscribeRequest);
     if (!this.keyOderbookStreamMap[key]) {
-      this.keyOderbookStreamMap[key] = this.startOrderbook$(subscribeRequest);
+      this.keyOderbookStreamMap[key] = new ReplaySubject<Orderbook>(1);
+      this.startOrderbook$(subscribeRequest).subscribe(orderbook => this.keyOderbookStreamMap[key].next(orderbook));
     }
 
-    return this.keyOderbookStreamMap[key];
+    return this.keyOderbookStreamMap[key].asObservable();
   }
 
   stopOrderbook(pair: string, prec = 'P0', freq = 'F0', len = '25'): void {
@@ -60,7 +61,12 @@ export class BitfinexOrderbook {
     };
 
     const key = getKey(unsubscribeRequest);
-    delete this.keyOderbookStreamMap[key];
+    const subject = this.keyOderbookStreamMap[key];
+    // complete and delete subject
+    if (subject) {
+      subject.complete();
+      delete this.keyOderbookStreamMap[key];
+    }
     this.bitfinexWebsocket.unsubscribe(unsubscribeRequest);
   }
 
@@ -84,6 +90,8 @@ export class BitfinexOrderbook {
           snapshot = [snapshot];
         }
 
+        console.log('[dev] snapshot', snapshot);
+
         return <BitfinexOrderbookSingleItem[]>snapshot;
       }),
       map(adaptBitfinexOrderbook),
@@ -96,6 +104,10 @@ export class BitfinexOrderbook {
       map((orderbookItem: BitfinexOrderbookSingleItem) => adaptBitfinexOrderbook([orderbookItem])),
     );
 
-    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(scan((orderbook, update) => updateOrderbook(orderbook, update)));
+    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(scan((orderbook, update) => {
+      const updated = updateOrderbook(orderbook, update);
+      console.log('[dev] updated', updated.asks.length, updated.bids.length);
+      return updated;
+    }));
   }
 }

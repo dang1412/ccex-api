@@ -1,4 +1,4 @@
-import { Observable, concat, from, merge } from 'rxjs';
+import { Observable, concat, from, merge, ReplaySubject } from 'rxjs';
 import { map, scan, buffer, take, mergeMap } from 'rxjs/operators';
 
 import { WebSocketRxJs, fetchRxjs } from '../../../common';
@@ -8,7 +8,7 @@ import { BinanceRawOrderbook, BinanceRawWsOrderbook } from './internal/types';
 import { binanceOrderbookApiUrl, binanceOrderbookChannel, adaptBinanceWsOrderbook } from './internal/functions';
 
 export class BinanceOrderbook {
-  private pairStreamMap: { [pair: string]: Observable<Orderbook> } = {};
+  private pairStreamMap: { [pair: string]: ReplaySubject<Orderbook> } = {};
   private pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
   private corsProxy = '';
 
@@ -25,10 +25,11 @@ export class BinanceOrderbook {
 
   orderbook$(pair: string): Observable<Orderbook> {
     if (!this.pairStreamMap[pair]) {
-      this.pairStreamMap[pair] = this.startOrderbook$(pair);
+      this.pairStreamMap[pair] = new ReplaySubject<Orderbook>(1);
+      this.startOrderbook$(pair).subscribe(orderbook => this.pairStreamMap[pair].next(orderbook));
     }
 
-    return this.pairStreamMap[pair];
+    return this.pairStreamMap[pair].asObservable();
   }
 
   stopOrderbook(pair: string): void {
@@ -39,6 +40,7 @@ export class BinanceOrderbook {
     }
 
     if (this.pairStreamMap[pair]) {
+      this.pairStreamMap[pair].complete();
       delete this.pairStreamMap[pair];
     }
   }

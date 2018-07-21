@@ -16,8 +16,8 @@ export function adaptCoinbaseRestOrderbook(restOrderbook: CoinbaseRestOrderbook)
 
 export function adaptCoinbaseWsOrderbookSnapshot(snapshot: CoinbaseWsOrderbookSnapshot): Orderbook {
   return {
-    bids: snapshot.bids,
-    asks: snapshot.asks,
+    bids: snapshot.bids.slice(0, 50),
+    asks: snapshot.asks.slice(0, 50),
   };
 }
 
