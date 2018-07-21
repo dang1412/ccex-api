@@ -84,13 +84,11 @@ export class BitfinexOrderbook {
       filter((snapshot) => !!snapshot && !!snapshot.length),
       map((snapshot: any) => {
         // this case is not expected (1 item come instead of array),
-        // happen when the stream is hot (ws channel already subscribed before),
-        // make snapshot the array of items
+        // this happens when the stream is hot because ws channel already subscribed before so only update come,
+        // in that case consider single updating item as snapshot
         if (typeof snapshot[0] === 'number') {
           snapshot = [snapshot];
         }
-
-        console.log('[dev] snapshot', snapshot);
 
         return <BitfinexOrderbookSingleItem[]>snapshot;
       }),
@@ -98,16 +96,13 @@ export class BitfinexOrderbook {
       take(1),
     );
 
-    // orderbook updates, buffer some changes in 1 second into 1 to improve performance
+    // orderbook updates,
+    // TODO buffer some changes in 1 second into 1 to improve performance ?
     const orderbookUpdate$ = orderbookSnapshotAndUpdate$.pipe(
       filter((orderbookItem) => orderbookItem && orderbookItem.length && typeof orderbookItem[0] === 'number'),
       map((orderbookItem: BitfinexOrderbookSingleItem) => adaptBitfinexOrderbook([orderbookItem])),
     );
 
-    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(scan((orderbook, update) => {
-      const updated = updateOrderbook(orderbook, update);
-      console.log('[dev] updated', updated.asks.length, updated.bids.length);
-      return updated;
-    }));
+    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(scan((orderbook, update) => updateOrderbook(orderbook, update)));
   }
 }
