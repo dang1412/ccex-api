@@ -10,22 +10,24 @@ import { CandleStick, Trade } from './exchange-types';
  * @param minutesFoot
  */
 export function updateLastCandleWithNewTrade(candle: CandleStick, trade: Trade, minutesFoot: number): CandleStick {
-  const candleEndTimestamp = candle.timestamp + minutesFoot * 60000;
-  // ignore the trade if its timestamp is old
-  if (trade.timestamp < candle.timestamp) {
-    return candle;
-  }
+  if (candle) {
+    const candleEndTimestamp = candle.timestamp + minutesFoot * 60000;
+    // ignore the trade if its timestamp is old
+    if (trade.timestamp < candle.timestamp) {
+      return candle;
+    }
 
-  // update the candle with new trade
-  if (trade.timestamp <= candleEndTimestamp) {
-    return {
-      open: candle.open,
-      high: Math.max(candle.high, trade.price),
-      low: Math.min(candle.low, trade.price),
-      close: trade.price,
-      volume: candle.volume + trade.amount,
-      timestamp: candle.timestamp,
-    };
+    // update the candle with new trade
+    if (trade.timestamp <= candleEndTimestamp) {
+      return {
+        open: candle.open,
+        high: Math.max(candle.high, trade.price),
+        low: Math.min(candle.low, trade.price),
+        close: trade.price,
+        volume: candle.volume + trade.amount,
+        timestamp: candle.timestamp,
+      };
+    }
   }
 
   // create new candle with only 1 trade

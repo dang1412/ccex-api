@@ -34,7 +34,7 @@ export function adaptBinanceRestCandle(binanceCandle: BinanceRawRestCandle): Can
     low: +binanceCandle[3],
     close: +binanceCandle[4],
     volume: +binanceCandle[5],
-    timestamp: binanceCandle[6],
+    timestamp: binanceCandle[0],
   };
 }
 
