@@ -2,12 +2,18 @@ import { CandleStick } from '../../../exchange-types';
 import { getSymbol, apiEndpoint } from '../../bitfinex-common';
 import { BitfinexRawCandleStick } from './types';
 
-export function getCandleStickUrl(pair: string, minutesFoot: number, start?: number, end?: number, limit?: number, sort = 1): string {
+export function getCandleStickUrl(pair: string, minutesFoot: number, start?: number, end?: number, limit?: number, sort = -1): string {
   // https://api.bitfinex.com/v2/candles/trade::TimeFrame::Symbol/Section
   // `${url}/candles/trade:1m:tBTCUSD/hist`,
   const symbol = getSymbol(pair);
   const timeFrame = getCandleTimeFrame(minutesFoot);
   let url = `${apiEndpoint}/candles/trade:${timeFrame}:${symbol}/hist?sort=${sort}`;
+
+  // if 'start' provided and no 'limit', calculate to use 'limit' and drop 'start'
+  if (start && end && !limit) {
+    limit = Math.min(Math.round((end - start) / (minutesFoot * 60 * 1000)) + 1, 1000);
+    start = 0;
+  }
 
   if (start) {
     url += `&start=${start}`;
@@ -22,12 +28,20 @@ export function getCandleStickUrl(pair: string, minutesFoot: number, start?: num
   return url;
 }
 
+// [
+//   MTS,
+//   OPEN,
+//   CLOSE,
+//   HIGH,
+//   LOW,
+//   VOLUME
+// ]
 export function adaptBitfinexRawCandleStick(bitfinexCandle: BitfinexRawCandleStick): CandleStick {
   return {
     open: +bitfinexCandle[1],
-    high: +bitfinexCandle[2],
-    low: +bitfinexCandle[3],
-    close: +bitfinexCandle[4],
+    close: +bitfinexCandle[2],
+    high: +bitfinexCandle[3],
+    low: +bitfinexCandle[4],
     volume: +bitfinexCandle[5],
     timestamp: bitfinexCandle[0],
   };

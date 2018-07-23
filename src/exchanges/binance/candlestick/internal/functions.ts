@@ -8,6 +8,12 @@ export function binanceCandleStickApiUrl(pair: string, minutesFoot: number, star
   const interval = getCandleInterval(minutesFoot);
   let url = apiEndPoint + `/api/v1/klines?symbol=${symbol}&interval=${interval}`;
 
+  // if startTime provided and no limit, calculate to use limit and drop startTime
+  if (startTime && endTime && !limit) {
+    limit = Math.round((endTime - startTime) / (minutesFoot * 60 * 1000)) + 1;
+    startTime = 0;
+  }
+
   if (startTime) {
     url += `&startTime=${startTime}`;
   }
