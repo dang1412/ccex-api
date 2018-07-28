@@ -1,6 +1,6 @@
 {
   "name": "ccex-api",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Crypto currencies exchanges api implementation using typescript and rxjs",
   "main": "index.js",
   "types": "index.d.ts",

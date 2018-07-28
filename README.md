@@ -10,13 +10,6 @@ These features are supported with all major exchanges
 - Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere)
 - More to come: Tradingview datafeed, private rest api with api/secret key...
 
-# Modular structure
-This sample of one way dependencies diagram demonstrates how modules are structured and combined. This may different from one another.
-
-<p align="center"><img src="assets/ccex-api-sample-structure.png"></p>
-
-When you include a module you also include all of its dependencies
-
 # Supported Exchanges
 Binance, Bitbank, Bitfinex, Coinbase (Gdax)
 
@@ -27,6 +20,12 @@ Binance, Bitbank, Bitfinex, Coinbase (Gdax)
 |![Bitfinex](https://user-images.githubusercontent.com/1294454/27766244-e328a50c-5ed2-11e7-947b-041416579bb3.jpg)           | bitfinex           | [Bitfinex v2](https://www.bitfinex.com)                                      | 2   | [API](https://bitfinex.readme.io/v2/docs)                                                    | British Virgin Islands                  |
 |![Coinbase](https://user-images.githubusercontent.com/1294454/27766527-b1be41c6-5edb-11e7-95f6-5b496c469e2c.jpg)           | coinbase           | [Coinbase](https://pro.coinbase.com/)                                        | *   | [API](https://docs.pro.coinbase.com/)                                                        | US                                      |
 
+# Modular structure
+This sample of one way dependencies diagram demonstrates how modules are structured and combined. This may different from one another.
+
+<p align="center"><img src="assets/ccex-api-sample-structure.png"></p>
+
+When you include a module you also include all of its dependencies
 # Usage
 This library is designed to be usable in both nodejs and browser (with frontend framework like Angular, React, Vue,... The umd javascript file coming later) environments. When used in browser environment, the browser must support for native
  - [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
