@@ -3,9 +3,9 @@ import { map, concatMap } from 'rxjs/operators';
 import { PubnubRxJs, fetchRxjs } from '../../../common';
 
 import { Trade } from '../../exchange-types';
-import { RawData, BitbankRawTrade } from '../bitbank-types';
-import { adaptBitbankTrade } from '../bitbank-functions';
-import { publicUrl, subscribeKey } from '../bitbank-common';
+import { publicUrl, subscribeKey, RawData } from '../bitbank-common';
+import { BitbankRawTrade } from './internal/types';
+import { adaptBitbankTrade } from './internal/functions';
 
 interface BitbankRawTrades {
   transactions: BitbankRawTrade[];
