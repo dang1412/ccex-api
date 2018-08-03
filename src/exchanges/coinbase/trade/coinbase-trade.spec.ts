@@ -6,7 +6,7 @@ import { CoinbaseTrade } from './coinbase-trade';
 
 const coinbaseTrade = new CoinbaseTrade();
 
-describe.only('Coinbase trade functions', function() {
+describe('Coinbase trade functions', function() {
   this.timeout(0);
 
   const markets = ['btc_usd'];

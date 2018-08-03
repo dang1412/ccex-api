@@ -1,11 +1,11 @@
-import { Observable } from 'rxjs';
-import { map, concat } from 'rxjs/operators';
+import { Observable, concat } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { PubnubRxJs, fetchRxjs } from '../../../common';
 import { Ticker } from '../../exchange-types';
-import { RawData, BitbankRawTicker } from '../bitbank-types';
-import { adaptBitbankTicker } from '../bitbank-functions';
-import { publicUrl, subscribeKey } from '../bitbank-common';
+import { publicUrl, subscribeKey, RawData } from '../bitbank-common';
+import { BitbankRawTicker } from './internal/types';
+import { adaptBitbankTicker } from './internal/functions';
 
 export class BitbankTicker {
   private pubnub: PubnubRxJs;
@@ -20,7 +20,7 @@ export class BitbankTicker {
   }
 
   ticker$(pair: string): Observable<Ticker> {
-    return this.fetchTicker$(pair).pipe(concat(this.pubnubTicker$(pair)));
+    return concat(this.fetchTicker$(pair), this.pubnubTicker$(pair));
   }
 
   stopTicker(pair: string) {

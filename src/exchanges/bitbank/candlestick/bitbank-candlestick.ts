@@ -3,10 +3,10 @@ import { map, tap } from 'rxjs/operators';
 
 import { fetchRxjs } from '../../../common';
 import { CandleStick } from '../../exchange-types';
+import { publicUrl, RawData } from '../bitbank-common';
 
-import { publicUrl } from '../bitbank-common';
-import { RawData, BitbankRawCandlesticks } from '../bitbank-types';
-import { adaptBitbankCandle, convertTimestampToCandleFoot, getTimeStrArrayFromRange, isLatestTime } from '../bitbank-functions';
+import { adaptBitbankCandle, convertTimestampToCandleFoot, getTimestringArrayFromRange, isLatestTimestring } from './internal/functions';
+import { BitbankRawCandlesticks } from './internal/types';
 
 const candleFileCaches: { [key: string]: CandleStick[] } = {};
 
@@ -44,7 +44,7 @@ export class BitbankCandlestick {
     };
     end = end || Date.now();
     const resolution = minutesToResolution[minutesFoot] || '1hour';
-    const timestrArray = getTimeStrArrayFromRange(resolution, start, end);
+    const timestrArray = getTimestringArrayFromRange(resolution, start, end);
 
     const requestArray = timestrArray.map((timestr) => this.fetchAndCacheCandleStick$(pair, resolution, timestr));
     return forkJoin(...requestArray).pipe(map((results) => Array.prototype.concat.apply([], results)));
@@ -65,7 +65,7 @@ export class BitbankCandlestick {
     return this.fetchCandleStickFile$(pair, resolution, timeString).pipe(
       tap((candles) => {
         // cache file request result if it is not newest file
-        if (candles && candles.length && !isLatestTime(timeString)) {
+        if (candles && candles.length && !isLatestTimestring(timeString)) {
           candleFileCaches[key] = candles;
         }
       }),
