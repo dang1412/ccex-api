@@ -1,14 +1,19 @@
 # ccex-api
-cryptocurrency exchanges client api wrapper
+cryptocurrency exchanges client api wrapper.
 
 # Features
 These features are supported with all major exchanges
-- Public realtime api
-- Public rest api
-- Support for both Nodejs and Browser environments
-- Modular structure make sure you include minimum code as you need (especially for client side application)
-- Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere)
+- Public realtime api.
+- Public rest api.
+- Support for both Nodejs and Browser environments.
+- Modular structure make sure you include minimum code as you need (especially for client side application).
+- Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere).
 - More to come: Tradingview datafeed, private rest api with api/secret key...
+
+# Sample
+ - [Angular sample](https://github.com/dang1412/angular-practice-starter/tree/feature/ccex-api)
+ - Webpack typescript (future)
+ - Rollup typescript (future)
 
 # Supported Exchanges
 Binance, Bitbank, Bitfinex, Coinbase (Gdax)
@@ -21,13 +26,12 @@ Binance, Bitbank, Bitfinex, Coinbase (Gdax)
 |![Coinbase](https://user-images.githubusercontent.com/1294454/27766527-b1be41c6-5edb-11e7-95f6-5b496c469e2c.jpg)           | coinbase           | [Coinbase](https://pro.coinbase.com/)                                        | *   | [API](https://docs.pro.coinbase.com/)                                                        | US                                      |
 
 # Modular structure
-This sample of one way dependencies diagram demonstrates how modules are structured and combined. This may different from one another.
-
-<p align="center"><img src="assets/ccex-api-sample-structure.png"></p>
-
 When you include a module you also include all of its dependencies
+
 # Usage
-This library is designed to be usable in both nodejs and browser (with frontend framework like Angular, React, Vue,... The umd javascript file coming later) environments. When used in browser environment, the browser must support for native
+This library is designed to be usable in both nodejs and browser (with frontend framework like Angular, React, Vue..., with bundle tools like Webpack or Rollup having typescript configured, the umd javascript file coming later) environments.
+
+When used in browser environment, the browser must support for native
  - [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
  - [websocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
 
@@ -56,7 +60,7 @@ bitbankCandlestick.getApproximateHistoryPrice('btc_jpy', 1526917534904, 1).subsc
 ```
 
 # Terminology
- - Pair (market/symbol): used a lot as function's parameter, must be referred with the following format `btc_usd` (lowercase with underscore between 2 asset)
+ - Pair (market/symbol): must have the following format `btc_usd` (lowercase with underscore between 2 asset)
 
 # Api
 Basically all exchanges have these following unified, generalized api implemented.
@@ -91,7 +95,7 @@ Finally make sure the exchange `sample` pass predefined test by running (`future
 npm run main-test --exchange sample
 ```
 
-If you find a bug or anything should be added to fit your need, please create issue. This is still in very early stage so any feedback would have great impact on me and I will try harder to serve community better
+If you find a bug or anything should be added to fit your need, please create issue. This is still in very early stage so any feedback would be much appreciated.
 
 # Test (`future`)
 main test: test for main module which implement the above interface directly
