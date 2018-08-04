@@ -1,7 +1,8 @@
 import { assert } from 'chai';
 
-import { Ticker, Orderbook, Trade } from './exchange-types';
+import { Ticker, Orderbook, Trade, CandleStick } from './exchange-types';
 
+// check ticker
 export function checkTicker(ticker: Ticker): void {
   assert(ticker);
   assert(ticker.bid);
@@ -16,6 +17,7 @@ export function checkTicker(ticker: Ticker): void {
   assert.typeOf(ticker.vol, 'number');
 }
 
+// check orderbook
 export function checkOrderbook(orderbook: Orderbook): void {
   assert(orderbook);
   assert(orderbook.asks);
@@ -31,14 +33,15 @@ export function checkOrderbook(orderbook: Orderbook): void {
   // check order bids: DESC, asks: ASC
   assert(
     checkOrder<[string, string]>(orderbook.bids, (prevBid, curBid) => +prevBid[0] > +curBid[0]),
-    'bids should have DESC order in price',
+    'bids should have price in DESC order',
   );
   assert(
     checkOrder<[string, string]>(orderbook.asks, (prevAsk, curAsk) => +prevAsk[0] < +curAsk[0]),
-    'asks should have ASC order in price',
+    'asks should have price in ASC order',
   );
 }
 
+// check trades
 export function checkTrades(trades: Trade[], increaseTimestamp = true): void {
   assert(trades);
   assert(trades.length >= 0);
@@ -59,6 +62,21 @@ export function checkTrades(trades: Trade[], increaseTimestamp = true): void {
     // update last timestamp
     lastTradeTime = trade.timestamp;
   });
+}
+
+// check candlestick
+export function checkCandleStick(candle: CandleStick): void {
+  assert(candle);
+  assert(candle.open);
+  assert(candle.high);
+  assert(candle.low);
+  assert(candle.close);
+  // assert(candle.volume);
+  assert.typeOf(candle.open, 'number');
+  assert.typeOf(candle.high, 'number');
+  assert.typeOf(candle.low, 'number');
+  assert.typeOf(candle.close, 'number');
+  assert.typeOf(candle.volume, 'number');
 }
 
 // used to check orderbook bids, asks order
