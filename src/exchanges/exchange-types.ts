@@ -29,6 +29,8 @@ export interface Ticker {
   change24?: number;
   change24Perc?: number;
   isRequest?: boolean;
+  open?: number;
+  prevClose?: number;
 }
 
 /*
