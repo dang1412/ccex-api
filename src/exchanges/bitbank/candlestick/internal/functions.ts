@@ -17,8 +17,14 @@ export function adaptBitbankCandle(bitbankCandle: BitbankRawCandle): CandleStick
 
 export function eliminateRedundantCandles(candles: CandleStick[], start: number, end?: number): CandleStick[] {
   candles = candles || [];
-  const index = candles.findIndex((candle) => candle.timestamp >= start) || 0;
-  const rearIndex = (end ? candles.findIndex((candle) => candle.timestamp > end) || candles.length : candles.length) + 1;
+
+  let index = candles.findIndex((candle) => candle.timestamp >= start);
+  // not found
+  index = index === -1 ? 0 : index;
+
+  let rearIndex = (end ? candles.findIndex((candle) => candle.timestamp > end) : candles.length) + 1;
+  // not found
+  rearIndex = rearIndex || candles.length;
 
   return candles.slice(index, rearIndex);
 }
