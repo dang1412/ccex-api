@@ -73,13 +73,13 @@ representativeMarkets| | string[] | Major supported markets (used for test purpo
 supportFeatures| | SupportFeatures | |
 fetchTicker$| pair: `string` | Observable\<Ticker> | api request for ticker |
 ticker$| pair: `string` | Observable\<Ticker> | realtime ticker stream |
-stopTicker| | | stop realtime ticker stream |
+stopTicker| pair: `string` | | stop realtime ticker stream |
 fetchTrades$| pair: `string` | Observable\<Trade> | api request for trade |
 trade$| pair: `string` | Observable\<Trade> | realtime trade stream |
-stopTrade| | | stop realtime trade stream |
+stopTrade| pair: `string` | | stop realtime trade stream |
 fetchOrderbook$| pair: `string` | Observable\<Orderbook> | api request for orderbook |
 orderbook$| pair: `string` | Observable\<Orderbook> | realtime orderbook stream |
-stopOrderbook| | | stop realtime orderbook stream |
+stopOrderbook| pair: `string` | | stop realtime orderbook stream |
 fetchCandleStickRange$| pair: `string` <br> minutesFoot: `number` <br> start: `number` <br> end: `number`| Observable<CandleStick[]> | api request for candlestick |
 lastCandle$| pair: `string` <br> minutesFoot: `number` <br> lastCandle: `CandleStick` | Observable\<CandleStick> | Realtime candlestick stream, calculated from an initial lastCandle and realtime trade stream. <br> This function is useful in implementing Tradingview datafeed |
 
