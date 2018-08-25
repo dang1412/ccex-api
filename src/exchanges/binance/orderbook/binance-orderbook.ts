@@ -26,7 +26,7 @@ export class BinanceOrderbook {
   orderbook$(pair: string): Observable<Orderbook> {
     if (!this.pairStreamMap[pair]) {
       this.pairStreamMap[pair] = new ReplaySubject<Orderbook>(1);
-      this.startOrderbook$(pair).subscribe(orderbook => this.pairStreamMap[pair].next(orderbook));
+      this.startOrderbook$(pair).subscribe((orderbook) => this.pairStreamMap[pair].next(orderbook));
     }
 
     return this.pairStreamMap[pair].asObservable();

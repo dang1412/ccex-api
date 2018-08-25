@@ -26,7 +26,7 @@ export function adaptBinanceRestTicker(binanceTicker: BinanceRawRestTicker, pair
     change24Perc: +binanceTicker.priceChangePercent / 100,
     timestamp: +binanceTicker.closeTime,
     open: +binanceTicker.openPrice,
-    prevClose: +binanceTicker.prevClosePrice
+    prevClose: +binanceTicker.prevClosePrice,
   };
 }
 
@@ -44,6 +44,6 @@ export function adaptBinanceWsTicker(binanceTicker: BinanceRawWsTicker, pair: st
     change24Perc: +binanceTicker.P / 100,
     timestamp: new Date(binanceTicker.E).getTime(),
     open: +binanceTicker.o,
-    prevClose: +binanceTicker.x
+    prevClose: +binanceTicker.x,
   };
 }

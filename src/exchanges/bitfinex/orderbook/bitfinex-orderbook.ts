@@ -45,7 +45,7 @@ export class BitfinexOrderbook {
     const key = getKey(subscribeRequest);
     if (!this.keyOderbookStreamMap[key]) {
       this.keyOderbookStreamMap[key] = new ReplaySubject<Orderbook>(1);
-      this.startOrderbook$(subscribeRequest).subscribe(orderbook => this.keyOderbookStreamMap[key].next(orderbook));
+      this.startOrderbook$(subscribeRequest).subscribe((orderbook) => this.keyOderbookStreamMap[key].next(orderbook));
     }
 
     return this.keyOderbookStreamMap[key].asObservable();

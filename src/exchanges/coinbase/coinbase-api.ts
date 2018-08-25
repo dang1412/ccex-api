@@ -25,24 +25,11 @@ export class CoinbaseApi extends ExchangeApi {
   }
 
   get markets(): string[] {
-    return [
-      'btc_usd',
-      'bcc_usd',
-      'eth_usd',
-      'etc_usd',
-      'ltc_usd',
-      'eth_btc',
-      'etc_btc',
-      'ltc_btc',
-    ];
+    return ['btc_usd', 'bcc_usd', 'eth_usd', 'etc_usd', 'ltc_usd', 'eth_btc', 'etc_btc', 'ltc_btc'];
   }
 
   get representativeMarkets(): string[] {
-    return [
-      'btc_usd',
-      'eth_btc',
-      'ltc_btc',
-    ];
+    return ['btc_usd', 'eth_btc', 'ltc_btc'];
   }
 
   get supportFeatures(): SupportFeatures {
