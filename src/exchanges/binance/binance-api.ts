@@ -103,4 +103,8 @@ export class BinanceApi extends ExchangeApi {
   candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {
     return this.binanceCandleStick.candlestick$(pair, minutesFoot);
   }
+
+  stopCandleStick(pair: string, minutesFoot: number): void {
+    this.binanceCandleStick.stopCandleStick(pair, minutesFoot);
+  }
 }

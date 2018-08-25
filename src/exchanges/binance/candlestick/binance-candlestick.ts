@@ -23,24 +23,31 @@ export class BinanceCandleStick {
   }
 
   candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {
-    if (!this.pairStreamMap[pair]) {
+    const key = getKey(pair, minutesFoot);
+    if (!this.pairStreamMap[key]) {
       const channel = binanceCandleStickChannel(pair, minutesFoot);
       const ws = new WebSocketRxJs<BinanceRawWsCandle>(channel);
-      this.pairStreamMap[pair] = ws.message$.pipe(map((binanceCandle) => adaptBinanceWsCandle(binanceCandle)));
-      this.pairSocketMap[pair] = ws;
+      this.pairStreamMap[key] = ws.message$.pipe(map((binanceCandle) => adaptBinanceWsCandle(binanceCandle)));
+      this.pairSocketMap[key] = ws;
     }
 
-    return this.pairStreamMap[pair];
+    return this.pairStreamMap[key];
   }
 
-  stopCandleStick(pair: string): void {
-    if (this.pairSocketMap[pair]) {
-      this.pairSocketMap[pair].close();
-      delete this.pairSocketMap[pair];
+  stopCandleStick(pair: string, minutesFoot: number): void {
+    const key = getKey(pair, minutesFoot);
+    if (this.pairSocketMap[key]) {
+      // stream associates with this socket also complete
+      this.pairSocketMap[key].close();
+      delete this.pairSocketMap[key];
     }
 
-    if (this.pairStreamMap[pair]) {
-      delete this.pairStreamMap[pair];
+    if (this.pairStreamMap[key]) {
+      delete this.pairStreamMap[key];
     }
   }
+}
+
+function getKey(pair: string, minutesFoot: number): string {
+  return pair + minutesFoot;
 }

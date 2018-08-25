@@ -1,11 +1,11 @@
 {
   "name": "ccex-api",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "Crypto currencies exchanges api implementation using typescript and rxjs",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "gulp build",
     "format": "prettier --config .prettierrc --write src/**/*.ts",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\"",
     "test": "mocha -r ts-node/register ./src/**/*.spec.ts"

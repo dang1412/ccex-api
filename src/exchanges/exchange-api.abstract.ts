@@ -51,4 +51,14 @@ export abstract class ExchangeApi {
     // stop listening to realtime trades
     this.stopTrade(pair);
   }
+
+  /**
+   * Private api
+   */
+
+  // abstract spotOrder(pair: string, side: 'buy' | 'sell', price: string, amount: string): Observable<SpotOrderResponse>;
+  // abstract cancelOrder(orderId: string): Observable<CancelOrderResponse>;
+  // abstract activeOrder(pair?: string): Observable<ActiveOrderResponse>;
+  // abstract orderHistory(pair?: string): Observable<OrderHistoryResponse>;
+  // abstract tradeHistory(pair?: string): Observable<TradeHistoryResponse>;
 }
