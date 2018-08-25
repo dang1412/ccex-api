@@ -9,8 +9,8 @@ describe('Test bitbank-candlestick functions', () => {
   it('should get btc_jpy 5min candles', (done) => {
     bitbankCandlestick.fetchCandleStickRange$('btc_jpy', 5, 1526917534904, 1526917534904).subscribe((candles) => {
       console.log(candles.length, candles[0]);
-      assert(candles.length === 288);
-      assert(candles[0].close);
+      assert(candles.length === 1);
+      assert(candles[0].close === 937642);
       done();
     });
   });

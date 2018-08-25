@@ -5,7 +5,13 @@ import { fetchRxjs } from '../../../common';
 import { CandleStick } from '../../exchange-types';
 import { publicUrl, RawData } from '../bitbank-common';
 
-import { adaptBitbankCandle, convertTimestampToCandleFoot, getTimestringArrayFromRange, isLatestTimestring } from './internal/functions';
+import {
+  adaptBitbankCandle,
+  convertTimestampToCandleFoot,
+  getTimestringArrayFromRange,
+  isLatestTimestring,
+  eliminateRedundantCandles,
+} from './internal/functions';
 import { BitbankRawCandlesticks } from './internal/types';
 
 const candleFileCaches: { [key: string]: CandleStick[] } = {};
@@ -47,7 +53,10 @@ export class BitbankCandlestick {
     const timestrArray = getTimestringArrayFromRange(resolution, start, end);
 
     const requestArray = timestrArray.map((timestr) => this.fetchAndCacheCandleStick$(pair, resolution, timestr));
-    return forkJoin(...requestArray).pipe(map((results) => Array.prototype.concat.apply([], results)));
+    return forkJoin(...requestArray).pipe(
+      map((results) => Array.prototype.concat.apply([], results)),
+      map((candles) => eliminateRedundantCandles(candles, start, end)),
+    );
   }
 
   /**
