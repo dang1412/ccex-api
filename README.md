@@ -10,10 +10,14 @@ These features are supported with all major exchanges
 - Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere).
 - More to come: Tradingview datafeed, private rest api with api/secret key...
 
+# Prequisite
+This library is built on top of typescript and rxjs(v6).
+All reactive function will return an `observable` stream so familiar with rxjs would definitely be an advantage but basically using stream `.subscribe()` method should be sufficient. Or you can easily turn an one-time-complete observable into promise using `.toPromise()` to be used with async await.
+
 # Sample
  - [Angular sample](https://github.com/dang1412/angular-practice-starter/tree/feature/ccex-api)
- - Webpack typescript (future)
- - Rollup typescript (future)
+ - Webpack typescript (TODO)
+ - Rollup typescript (TODO)
 
 # Supported Exchanges
 Binance, Bitbank, Bitfinex, Coinbase (Gdax)
@@ -84,12 +88,12 @@ fetchCandleStickRange$| pair: `string` <br> minutesFoot: `number` <br> start: `n
 lastCandle$| pair: `string` <br> minutesFoot: `number` <br> lastCandle: `CandleStick` | Observable\<CandleStick> | Realtime candlestick stream, calculated from an initial lastCandle and realtime trade stream. <br> This function is useful in implementing Tradingview datafeed |
 
 Besides, an exchange may have more specific functions, it depends on exchange provided features and implementation.
-In that case, specific guide for that exchange will be located at `exchanges/{exchange}/README.md` (`future`)
+In that case, specific guide for that exchange will be located at `exchanges/{exchange}/README.md` (TODO)
 
 # Contributor guide
-In order to add a new exchange, simply clone folder `src/exchanges/sample`, rename, implement functions and include appropiate tests for sub-modules (ticker, orderbook...) and some internal functions (`future`)
+In order to add a new exchange, simply clone folder `src/exchanges/sample`, rename, implement functions and include appropiate tests for sub-modules (ticker, orderbook...) and some internal functions (TODO)
 
-Finally make sure the exchange `sample` pass predefined test by running (`future`)
+Finally make sure the exchange `sample` pass predefined test by running (TODO)
 
 ```
 npm run main-test --exchange sample
@@ -97,7 +101,7 @@ npm run main-test --exchange sample
 
 If you find a bug or anything should be added to fit your need, please create issue. This is still in very early stage so any feedback would be much appreciated.
 
-# Test (`future`)
+# Test (TODO)
 main test: test for main module which implement the above interface directly
 ```
 npm run main-test
@@ -109,8 +113,7 @@ npm run sub-test
 ```
 
 # Dependencies
-This library is built strongly on top of Rxjs (v6 or above)
-- [Rxjs](https://github.com/ReactiveX/rxjs)
+- [Rxjs](https://github.com/ReactiveX/rxjs) (v6 or above)
 - [pubnub](https://www.pubnub.com/)
 - [node-fetch](https://github.com/bitinn/node-fetch) (nodejs only)
 - [ws](https://github.com/websockets/ws) (nodejs only)
