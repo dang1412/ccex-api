@@ -22,6 +22,9 @@ export class CoinbaseCandleStick {
     const originUrl = getCandleStickUrl(pair, minutesFoot, start, end);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<CoinbaseRawCandleStick[]>(url).pipe(map((coinbaseCandles) => coinbaseCandles.map(adaptCoinbaseCandleStick)));
+    return fetchRxjs<CoinbaseRawCandleStick[]>(url).pipe(
+      map((coinbaseCandles) => coinbaseCandles.map(adaptCoinbaseCandleStick)),
+      map(candles => candles.sort((c1, c2) => c1.timestamp - c2.timestamp))
+    );
   }
 }
