@@ -9,3 +9,4 @@ cache:
 
 script:
     - npm run build
+    - npm test
