@@ -1,3 +1,6 @@
+[![CircleCI](https://circleci.com/gh/dang1412/ccex-api/tree/master.svg?style=svg)](https://circleci.com/gh/dang1412/ccex-api/tree/master)
+[![Build Status](https://travis-ci.com/dang1412/ccex-api.svg?branch=master)](https://travis-ci.com/dang1412/ccex-api)
+
 # ccex-api
 cryptocurrency exchanges client api wrapper.
 
