@@ -9,7 +9,9 @@
     "build:publish": "npm run build && npm publish dist",
     "format": "prettier --config .prettierrc --write src/**/*.ts",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\"",
-    "test": "mocha -r ts-node/register ./src/**/*.spec.ts"
+    "test-mocha": "mocha -r ts-node/register ./src/**/*.spec.ts",
+    "test": "jest --config=jest.json --runInBand --detectOpenHandles",
+    "test-w": "npm test -- --watch"
   },
   "keywords": [
     "crypto",
@@ -37,18 +39,17 @@
     "ws": "^5.2.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.3",
     "@types/gulp": "^4.0.5",
-    "@types/mocha": "^5.2.0",
+    "@types/jest": "^23.3.1",
     "@types/node": "^10.1.2",
     "@types/node-fetch": "^1.6.9",
     "@types/pubnub": "^4.0.2",
     "@types/ws": "^5.1.1",
-    "chai": "^4.1.2",
     "gulp": "^4.0.0",
     "gulp-typescript": "^5.0.0-alpha.3",
-    "mocha": "^5.2.0",
+    "jest": "^23.5.0",
     "prettier": "1.13.7",
+    "ts-jest": "^23.1.4",
     "ts-node": "^6.0.3",
     "tslint": "^5.10.0",
     "tslint-no-unused-expression-chai": "^0.1.3",

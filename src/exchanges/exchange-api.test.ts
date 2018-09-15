@@ -41,9 +41,9 @@ function testExchange(exchange: ExchangeApi, only = false): void {
       });
     }
 
-    // it test for depth
+    // it test for orderbook
     if (supportFeatures.orderbook) {
-      it('should get depths realtime for all pairs');
+      it('should get depths realtime for all pairs', () => {/* test orderbook */});
     }
   });
 }
