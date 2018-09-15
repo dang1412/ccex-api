@@ -1,4 +1,3 @@
-import 'mocha';
 import { take, bufferCount } from 'rxjs/operators';
 
 import { checkTrades } from '../../exchange-test.functions';
@@ -7,7 +6,7 @@ import { BinanceTrade } from './binance-trade';
 const binanceTrade = new BinanceTrade();
 
 describe('Test Binance trades', function() {
-  this.timeout(0);
+  jest.setTimeout(10000);
 
   const markets = ['btc_usdt', 'eth_btc'];
 
@@ -23,7 +22,7 @@ describe('Test Binance trades', function() {
           (trades) => {
             checkTrades(trades);
           },
-          (e) => console.log('Error'),
+          () => {/* error */},
           () => {
             binanceTrade.stopTrade(market);
             done();
@@ -38,7 +37,7 @@ describe('Test Binance trades', function() {
         (trades) => {
           checkTrades(trades);
         },
-        (e) => console.log('Error'),
+        () => {/* error */},
         () => {
           done();
         },

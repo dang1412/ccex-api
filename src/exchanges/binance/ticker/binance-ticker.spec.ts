@@ -1,4 +1,3 @@
-import 'mocha';
 import { take } from 'rxjs/operators';
 
 import { checkTicker } from '../../exchange-test.functions';
@@ -7,7 +6,7 @@ import { BinanceTicker } from './binance-ticker';
 const binanceTicker = new BinanceTicker();
 
 describe('Test Binance ticker', function() {
-  this.timeout(0);
+  jest.setTimeout(10000);
 
   const markets = ['btc_usdt', 'eos_btc', 'eos_usdt'];
 
@@ -20,7 +19,7 @@ describe('Test Binance ticker', function() {
           (ticker) => {
             checkTicker(ticker);
           },
-          (e) => console.log('Error'),
+          () => {/* error */},
           () => {
             binanceTicker.stopTicker(market);
             done();
@@ -35,7 +34,7 @@ describe('Test Binance ticker', function() {
         (ticker) => {
           checkTicker(ticker);
         },
-        (e) => console.log('Error'),
+        () => {/* error */},
         () => {
           done();
         },

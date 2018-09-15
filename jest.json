@@ -1,0 +1,23 @@
+{
+  "moduleFileExtensions": [
+    "ts",
+    "tsx",
+    "js",
+    "json"
+  ],
+  "transform": {
+    "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+  },
+  "testRegex": "/src/.*binance/trade.*\\.(test|spec).(ts)$",
+  "testURL": "http://localhost/",
+  "collectCoverageFrom": [
+    "src/**/*.{ts}",
+    "!**/node_modules/**",
+    "!**/vendor/**"
+  ],
+  "coverageReporters": [
+    "json",
+    "lcov"
+  ],
+  "verbose": true
+}
