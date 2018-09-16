@@ -33,8 +33,10 @@
   "author": "Dang Thanh Tung",
   "license": "MIT",
   "dependencies": {
+    "crypto": "^1.0.1",
     "node-fetch": "^2.1.2",
     "pubnub": "^4.20.3",
+    "querystring": "^0.2.0",
     "rxjs": "^6.0.0",
     "ws": "^5.2.0"
   },
