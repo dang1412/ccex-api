@@ -16,7 +16,7 @@ export class BinanceApiPrivate {
     this.key = key;
   }
 
-  getUserStreamListenKey(): Observable<string> {
+  getUserStreamListenKey$(): Observable<string> {
     const url = `${apiEndPoint}/${PrivateUrl.userStream}`;
     const fetchOptions = {
       method: 'POST',
