@@ -1,48 +1,30 @@
-import * as qs from 'querystring';
-import * as crypto from 'crypto';
 import { Observable } from 'rxjs';
 
 import { fetchRxjs } from '../../../common';
 import { apiEndPoint } from '../binance-common';
-import { BinanceAccountInformation } from './internal/types';
+import { BinanceUserStreamPostResponse } from './internal/types';
+import { map } from 'rxjs/operators';
 
 enum PrivateUrl {
-  account = 'api/v3/account',
+  userStream = 'api/v1/userDataStream'
 }
 
 export class BinanceApiPrivate {
   private key: string;
-  private secret: string;
 
-  constructor(key: string, secret: string) {
+  constructor(key: string) {
     this.key = key;
-    this.secret = secret;
   }
 
-  getAccountInformation(): Observable<BinanceAccountInformation> {
-    const params = {
-      timestamp: Date.now()
-    };
-
-    const queryString = qs.stringify(params);
-    const url = `${apiEndPoint}/${PrivateUrl.account}?${queryString}&signature=${this.sign(queryString)}`;
-
+  getUserStreamListenKey(): Observable<string> {
+    const url = `${apiEndPoint}/${PrivateUrl.userStream}`;
     const fetchOptions = {
-      method: 'GET', // *GET, POST, PUT, DELETE, etc.
+      method: 'POST',
       headers: {
         'X-MBX-APIKEY': this.key,
       },
-      // redirect: 'follow', // manual, *follow, error
-      // referrer: 'no-referrer', // no-referrer, *client
-      // body: JSON.stringify(data), // body data type must match 'Content-Type' header
     };
 
-    return fetchRxjs<BinanceAccountInformation>(url, fetchOptions);
-  }
-
-  private sign(queryString: string): string {
-    return crypto.createHmac('sha256', this.secret)
-      .update(queryString)
-      .digest('hex');
+    return fetchRxjs<BinanceUserStreamPostResponse>(url, fetchOptions).pipe(map(res => res.listenKey));
   }
 }
