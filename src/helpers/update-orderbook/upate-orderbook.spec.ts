@@ -1,6 +1,3 @@
-import 'mocha';
-import { assert } from 'chai';
-
 import { mergeBids, mergeAsks } from './update-orderbook';
 
 interface BidTestCase {
@@ -53,7 +50,7 @@ describe('Test update-orderbook.ts helper functions', () => {
     it('Test mergeBids case # ' + index, () => {
       const actualResult = mergeBids(test.bids, test.updateBids);
       console.log('bids actualResult', actualResult);
-      assert.deepEqual(actualResult, test.result, '#' + index + ': actual result is different from expect result');
+      expect(actualResult).toStrictEqual(test.result); // , '#' + index + ': actual result is different from expect result');
     });
   });
 
@@ -61,7 +58,7 @@ describe('Test update-orderbook.ts helper functions', () => {
     it('Test mergeAsks case # ' + index, () => {
       const actualResult = mergeAsks(test.asks, test.updateAsks);
       console.log('asks actualResult', actualResult);
-      assert.deepEqual(actualResult, test.result, '#' + index + ': actual result is different from expect result');
+      expect(actualResult).toStrictEqual(test.result); // , '#' + index + ': actual result is different from expect result');
     });
   });
 });

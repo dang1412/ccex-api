@@ -1,18 +1,14 @@
-import 'mocha';
-import { assert } from 'chai';
 import { take } from 'rxjs/operators';
 
+import { checkCandleStick } from '../../exchange-test.functions';
 import { BitfinexCandleStick } from './bitfinex-candlestick';
 
 const bitfinexCandlestick = new BitfinexCandleStick();
 
-describe('Test bitfinex candlestick functions', function() {
-  this.timeout(0);
-
+describe('Test bitfinex candlestick functions', () => {
   it('should fetch btc_usd 5min candles in time range', (done) => {
     bitfinexCandlestick.fetchCandleStickRange$('btc_usd', 5, 1529509826239 - 60000 * 60 * 24, 1529509826239).subscribe((candles) => {
-      console.log(candles.length, candles[0]);
-      assert(candles[0].close);
+      checkCandleStick(candles[0]);
       done();
     });
   });
@@ -23,7 +19,7 @@ describe('Test bitfinex candlestick functions', function() {
       .pipe(take(5))
       .subscribe(
         (candle) => {
-          console.log(candle);
+          checkCandleStick(candle);
         },
         () => console.log('error'),
         () => {

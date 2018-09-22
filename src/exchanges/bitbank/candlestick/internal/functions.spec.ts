@@ -1,6 +1,3 @@
-import 'mocha';
-import { assert } from 'chai';
-
 import { nextDateString } from './functions';
 
 const dateStringArray = [
@@ -42,7 +39,7 @@ const dateStringArray = [
 describe('Bitbank candlestick internal functions', () => {
   it('test nextDateString', () => {
     for (let i = 0; i < dateStringArray.length - 1; i++) {
-      assert(nextDateString(dateStringArray[i]), dateStringArray[i + 1]);
+      expect(nextDateString(dateStringArray[i])).toBe(dateStringArray[i + 1]);
     }
   });
 });

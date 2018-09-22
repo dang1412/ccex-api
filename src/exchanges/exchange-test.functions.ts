@@ -5,14 +5,14 @@ export function checkTicker(ticker: Ticker): void {
   expect(ticker);
   expect(ticker.bid);
   expect(ticker.ask);
-  // assert(ticker.low);
-  // assert(ticker.high);
+  // expect(ticker.low);
+  // expect(ticker.high);
   expect(ticker.vol);
-  // assert.typeOf(ticker.bid, 'number');
-  // assert.typeOf(ticker.ask, 'number');
-  // assert.typeOf(ticker.low, 'number');
-  // assert.typeOf(ticker.high, 'number');
-  // assert.typeOf(ticker.vol, 'number');
+  expect(typeof ticker.bid).toBe('number');
+  expect(typeof ticker.ask).toBe('number');
+  expect(typeof ticker.low).toBe('number');
+  expect(typeof ticker.high).toBe('number');
+  expect(typeof ticker.vol).toBe('number');
 }
 
 // check orderbook
@@ -29,14 +29,14 @@ export function checkOrderbook(orderbook: Orderbook): void {
   expect(+orderbook.bids[0][0] < +orderbook.asks[0][0]);
 
   // check order bids: DESC, asks: ASC
-  // expect(
-  //   checkOrder<[string, string]>(orderbook.bids, (prevBid, curBid) => +prevBid[0] > +curBid[0]),
-  //   'bids should have price in DESC order',
-  // );
-  // expect(
-  //   checkOrder<[string, string]>(orderbook.asks, (prevAsk, curAsk) => +prevAsk[0] < +curAsk[0]),
-  //   'asks should have price in ASC order',
-  // );
+  expect(
+    checkOrder<[string, string]>(orderbook.bids, (prevBid, curBid) => +prevBid[0] > +curBid[0]),
+    // 'bids should have price in DESC order',
+  );
+  expect(
+    checkOrder<[string, string]>(orderbook.asks, (prevAsk, curAsk) => +prevAsk[0] < +curAsk[0]),
+    // 'asks should have price in ASC order',
+  );
 }
 
 // check trades
@@ -71,11 +71,11 @@ export function checkCandleStick(candle: CandleStick): void {
   expect(candle.low);
   expect(candle.close);
   // assert(candle.volume);
-  // assert.typeOf(candle.open, 'number');
-  // assert.typeOf(candle.high, 'number');
-  // assert.typeOf(candle.low, 'number');
-  // assert.typeOf(candle.close, 'number');
-  // assert.typeOf(candle.volume, 'number');
+  expect(typeof candle.open).toBe('number');
+  expect(typeof candle.high).toBe('number');
+  expect(typeof candle.low).toBe('number');
+  expect(typeof candle.close).toBe('number');
+  expect(typeof candle.volume).toBe('number');
 }
 
 // used to check orderbook bids, asks order
