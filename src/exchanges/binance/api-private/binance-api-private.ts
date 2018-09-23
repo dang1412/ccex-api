@@ -11,13 +11,17 @@ enum PrivateUrl {
 
 export class BinanceApiPrivate {
   private key: string;
+  private corsProxy: string;
 
-  constructor(key: string) {
+  constructor(key: string, corsProxy?: string) {
     this.key = key;
+    this.corsProxy = corsProxy;
   }
 
   getUserStreamListenKey$(): Observable<string> {
-    const url = `${apiEndPoint}/${PrivateUrl.userStream}`;
+    const originUrl = `${apiEndPoint}/${PrivateUrl.userStream}`;
+    const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
+
     const fetchOptions = {
       method: 'POST',
       headers: {

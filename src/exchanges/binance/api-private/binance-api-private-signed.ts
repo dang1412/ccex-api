@@ -1,7 +1,7 @@
 import * as qs from 'querystring';
 import { Observable } from 'rxjs';
+import * as crypto from 'crypto';
 
-import * as crypto from '../../../lib/isomorphic-crypto';
 import { fetchRxjs } from '../../../common';
 import { apiEndPoint } from '../binance-common';
 import { BinanceAccountInformation } from './internal/types';
@@ -13,10 +13,12 @@ enum PrivateUrlSigned {
 export class BinanceApiPrivateSigned {
   private key: string;
   private secret: string;
+  private corsProxy: string;
 
-  constructor(key: string, secret: string) {
+  constructor(key: string, secret: string, corsProxy?: string) {
     this.key = key;
     this.secret = secret;
+    this.corsProxy = corsProxy;
   }
 
   getAccountInformation(): Observable<BinanceAccountInformation> {
@@ -25,7 +27,8 @@ export class BinanceApiPrivateSigned {
     };
 
     const queryString = qs.stringify(params);
-    const url = `${apiEndPoint}/${PrivateUrlSigned.account}?${queryString}&signature=${this.sign(queryString)}`;
+    const originUrl = `${apiEndPoint}/${PrivateUrlSigned.account}?${queryString}&signature=${this.sign(queryString)}`;
+    const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
     const fetchOptions = {
       method: 'GET', // *GET, POST, PUT, DELETE, etc.

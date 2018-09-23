@@ -8,10 +8,12 @@ import { BinanceUserStreamAccount, BinanceUserStreamOrder } from './internal/typ
 
 export class BinanceUserStream {
   private key: string;
+  private corsProxy: string;
   private socket: WebSocketRxJs<BinanceUserStreamAccount | BinanceUserStreamOrder>;
 
-  constructor(key: string) {
+  constructor(key: string, corsProxy?: string) {
     this.key = key;
+    this.corsProxy = corsProxy;
   }
 
   userDataAccount$(): Observable<BinanceUserStreamAccount> {
@@ -33,7 +35,7 @@ export class BinanceUserStream {
   private userData$(): Observable<BinanceUserStreamAccount | BinanceUserStreamOrder> {
     if (!this.socket) {
       // request for user data stream listen key
-      const binanceApiPrivate = new BinanceApiPrivate(this.key);
+      const binanceApiPrivate = new BinanceApiPrivate(this.key, this.corsProxy);
       return binanceApiPrivate.getUserStreamListenKey$().pipe(
         switchMap((listenKey) => {
           const channel = wsEndpoint + listenKey;
