@@ -1,6 +1,6 @@
 {
   "name": "ccex-api",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Crypto currencies exchanges api implementation using typescript and rxjs",
   "main": "index.js",
   "types": "index.d.ts",
@@ -33,7 +33,6 @@
   "author": "Dang Thanh Tung",
   "license": "MIT",
   "dependencies": {
-    "crypto": "^1.0.1",
     "node-fetch": "^2.1.2",
     "pubnub": "^4.20.3",
     "querystring": "^0.2.0",

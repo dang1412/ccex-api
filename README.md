@@ -14,33 +14,35 @@ These features are supported with all major exchanges
 - More to come: Tradingview datafeed, private rest api with api/secret key...
 
 # Prequisite
-This library is built on top of typescript and [Rxjs](https://github.com/ReactiveX/rxjs) (v6).
-All reactive function will return an `observable` stream so familiar with [Rxjs](https://github.com/ReactiveX/rxjs) would definitely be an advantage but basically using stream `.subscribe((data) => {/**/})` method should be sufficient. Or you can easily turn an one-time-complete observable into promise using `.toPromise()` to be used with async await.
+ - Using crypto to sign private request requrie node 10.
+ - This library is built on top of [typescript](https://www.typescriptlang.org/) and [Rxjs](https://github.com/ReactiveX/rxjs) (v6). All async functions will return an `observable` stream so familiar with [Rxjs](https://github.com/ReactiveX/rxjs) would definitely be an advantage but basically using stream `.subscribe((data) => {/**/})` method should be sufficient. You can also easily turn an `one-time-complete` observable into promise using `.toPromise()` to be used with async await.
 
 # Sample
  - [Demo](https://angular-practice-starter.firebaseapp.com/ccex-api)
  - [Angular sample](https://github.com/dang1412/angular-practice-starter/tree/feature/ccex-api)
  - Webpack typescript (TODO)
  - Rollup typescript (TODO)
+ - React sample (TODO)
+ - Vue sample (TODO)
 
 # Supported Exchanges
-Binance, Bitbank, Bitfinex, Coinbase (Gdax)
+Binance, Bitbank, Bitfinex, Coinbase
 
 |                                                                                                                           | id                 | name                                                                         | ver | doc                                                                                          | countries                               |
 |---------------------------------------------------------------------------------------------------------------------------|--------------------|------------------------------------------------------------------------------|:---:|:--------------------------------------------------------------------------------------------:|-----------------------------------------|
 |![Binance](https://user-images.githubusercontent.com/1294454/29604020-d5483cdc-87ee-11e7-94c7-d1a8d9169293.jpg)            | binance            | [Binance](https://www.binance.com)                                           | *   | [API](https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md) | China                                   |
 |![Bitbank](https://user-images.githubusercontent.com/1294454/37808081-b87f2d9c-2e59-11e8-894d-c1900b7584fe.jpg)            | bitbank            | [Bitbank](https://bitbank.cc/)                                               | 1   | [API](https://docs.bitbank.cc/)                                                              | Japan                                   |
 |![Bitfinex](https://user-images.githubusercontent.com/1294454/27766244-e328a50c-5ed2-11e7-947b-041416579bb3.jpg)           | bitfinex           | [Bitfinex v2](https://www.bitfinex.com)                                      | 2   | [API](https://bitfinex.readme.io/v2/docs)                                                    | British Virgin Islands                  |
-|![Coinbase](https://user-images.githubusercontent.com/1294454/27766527-b1be41c6-5edb-11e7-95f6-5b496c469e2c.jpg)           | coinbase           | [Coinbase](https://pro.coinbase.com/)                                        | *   | [API](https://docs.pro.coinbase.com/)                                                        | US                                      |
+|![Coinbase](https://user-images.githubusercontent.com/1294454/40811661-b6eceae2-653a-11e8-829e-10bfadb078cf.jpg)           | coinbase           | [Coinbase](https://pro.coinbase.com/)                                        | *   | [API](https://docs.pro.coinbase.com/)                                                        | US                                      |
 
 # Roadmap (TODO)
 | Task | Date |
----|---|---
+|---|---|
 | Binance Private Api | 2018/09 |
 | Binance Private User Data Stream | 2018/09 |
 | Bitbank, Bitifnex, Coinbase private stream | 2018/10, 11 |
 | Huobi, Okex | 2018/11, 12 |
-| More exchanges... | 2019 |
+| More exchanges | 2019 |
 | Python and Go version | 2019 |
 
 # Usage
@@ -122,6 +124,7 @@ npm run sub-test
 
 # Dependencies
 - [Rxjs](https://github.com/ReactiveX/rxjs) (v6 or above)
-- [pubnub](https://www.pubnub.com/)
-- [node-fetch](https://github.com/bitinn/node-fetch) (nodejs only)
-- [ws](https://github.com/websockets/ws) (nodejs only)
+- Optional
+  - [pubnub](https://www.pubnub.com/) (bitbank api)
+  - [node-fetch](https://github.com/bitinn/node-fetch) (nodejs environment)
+  - [ws](https://github.com/websockets/ws) (nodejs environment)

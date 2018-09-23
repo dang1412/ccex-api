@@ -6,9 +6,9 @@
     "json"
   ],
   "transform": {
-    "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    "^.+\\.tsx?$": "ts-jest"
   },
-  "testRegex": "/src/.*binance/user.*\\.(test|spec).(ts)$",
+  "testRegex": "/src/.*binance/api-private.*\\.(test|spec).(ts)$",
   "testURL": "http://localhost/",
   "collectCoverageFrom": [
     "src/**/*.{ts}",
