@@ -1,12 +1,10 @@
-import 'mocha';
-
 import { checkTicker } from '../../exchange-test.functions';
 import { SampleTicker } from './sample-ticker';
 
 const sampleTicker = new SampleTicker();
 
-describe('Test Sample ticker', function() {
-  const markets = [];
+describe('sampleTicker', function() {
+  const markets = ['btc_jpy'];
   markets.forEach((market) => {
     it('should fetch ticker ' + market, (done) => {
       sampleTicker.fetchTicker$(market).subscribe((ticker) => {

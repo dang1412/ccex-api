@@ -2,7 +2,6 @@ import { Observable, empty } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
-
 import { SampleTicker } from './ticker/sample-ticker';
 
 export class SampleApi extends ExchangeApi {
@@ -13,16 +12,16 @@ export class SampleApi extends ExchangeApi {
       name: 'sample',
       logoUrl: 'https://sample-logo.png',
       homepage: 'https://www.sample.com/',
-      country: 'Sample country',
+      country: 'Exchange country',
     };
   }
 
   get markets(): string[] {
-    return [];
+    return ['btc_jpy'];
   }
 
   get representativeMarkets(): string[] {
-    return [];
+    return ['btc_jpy'];
   }
 
   get supportFeatures(): SupportFeatures {
@@ -63,7 +62,7 @@ export class SampleApi extends ExchangeApi {
     return empty();
   }
 
-  // stop realtime depth
+  // stop realtime orderbook
   stopOrderbook(pair: string): void {
     // implement
   }
@@ -76,6 +75,7 @@ export class SampleApi extends ExchangeApi {
     return empty();
   }
 
+  // stop realtime trade
   stopTrade(pair: string): void {
     // implement
   }
