@@ -10,9 +10,9 @@ import { binanceOrderbookApiUrl, binanceOrderbookChannel, adaptBinanceWsOrderboo
 export class BinanceOrderbook {
   private pairStreamMap: { [pair: string]: ReplaySubject<Orderbook> } = {};
   private pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
-  private corsProxy = '';
+  private corsProxy: string;
 
-  constructor(corsProxy?: string) {
+  constructor(corsProxy = '') {
     this.corsProxy = corsProxy;
   }
 
@@ -69,9 +69,13 @@ export class BinanceOrderbook {
 
     // after init orderbooks come, keep listening to diff orderbook stream and reflect it in current orderbook
     return concat(initOrderbook$, update$).pipe(
-      scan<Orderbook>(
-        (orderbook, update) => (orderbook.lastUpdateId >= update.lastUpdateId ? orderbook : updateOrderbook(orderbook, update)),
-      ),
+      scan<Orderbook>((orderbook, update) => {
+        if (!orderbook.lastUpdateId || !update.lastUpdateId) {
+          return updateOrderbook(orderbook, update);
+        }
+
+        return orderbook.lastUpdateId >= update.lastUpdateId ? orderbook : updateOrderbook(orderbook, update)
+      }),
     );
   }
 }

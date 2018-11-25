@@ -15,7 +15,7 @@ export class BinanceApiPrivateSigned {
   private secret: string;
   private corsProxy: string;
 
-  constructor(key: string, secret: string, corsProxy?: string) {
+  constructor(key: string, secret: string, corsProxy = '') {
     this.key = key;
     this.secret = secret;
     this.corsProxy = corsProxy;

@@ -1,7 +1,7 @@
 // RxJs wrapper for websocket
 import { Observable, ReplaySubject } from 'rxjs';
 import { take, filter } from 'rxjs/operators';
-import WebSocket from '../lib/isomorphic-ws';
+import * as WebSocket from '../lib/isomorphic-ws';
 
 export class WebSocketRxJs<T = any> {
   private webSocket: WebSocket;
@@ -17,16 +17,16 @@ export class WebSocketRxJs<T = any> {
 
   constructor(url: string) {
     this.webSocket = new WebSocket(url);
-    this.webSocket.onopen = (e) => {
+    this.webSocket.onopen = () => {
       this.opened$.next(true);
     };
-    this.webSocket.onclose = (e) => {
+    this.webSocket.onclose = () => {
       this.opened$.next(false);
     };
-    this.webSocket.onerror = (e) => {
+    this.webSocket.onerror = () => {
       this.opened$.next(false);
     };
-    this.webSocket.onmessage = (e) => {
+    this.webSocket.onmessage = (e: any) => {
       try {
         const data = JSON.parse(<string>e.data);
         this.data$.next(data);

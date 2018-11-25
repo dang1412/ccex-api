@@ -15,7 +15,7 @@ export class BinanceApiPrivate {
 
   constructor(key: string, corsProxy?: string) {
     this.key = key;
-    this.corsProxy = corsProxy;
+    this.corsProxy = corsProxy || '';
   }
 
   getUserStreamListenKey$(): Observable<string> {

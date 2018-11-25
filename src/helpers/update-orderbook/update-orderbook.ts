@@ -27,9 +27,7 @@ export function updateOrderbook(orderbook: Orderbook, update: Orderbook): Orderb
  * @param newBids
  */
 export function mergeBids(bids: [string, string][], newBids: [string, string][]): [string, string][] {
-  return mergeOrder(bids, newBids, (bidPrice, newBidPrice) => {
-    return bidPrice > newBidPrice ? 1 : bidPrice === newBidPrice ? 0 : -1;
-  });
+  return mergeArray(bids, newBids, false);
 }
 
 /**
@@ -38,49 +36,17 @@ export function mergeBids(bids: [string, string][], newBids: [string, string][])
  * @param newAsks
  */
 export function mergeAsks(asks: [string, string][], newAsks: [string, string][]): [string, string][] {
-  return mergeOrder(asks, newAsks, (askPrice, newAskPrice) => {
-    return askPrice < newAskPrice ? 1 : askPrice === newAskPrice ? 0 : -1;
-  });
+  return mergeArray(asks, newAsks, true);
 }
 
 /**
- *
- * @param orders
- * @param newOrders
- * @param comparePrice
- */
-function mergeOrder(
-  orders: [string, string][],
-  newOrders: [string, string][],
-  comparePrice: (price: number, newPrice: number) => 1 | 0 | -1,
-): [string, string][] {
-  return mergeArray<[string, string]>(orders, newOrders, (order, newOrder) => {
-    if (!order) {
-      return [newOrder, 0, 1];
-    }
-
-    if (!newOrder) {
-      return [order, 1, 0];
-    }
-
-    const originPrice = +order[0];
-    const newPrice = +newOrder[0];
-    const compareResult = comparePrice(originPrice, newPrice);
-    if (compareResult === 1) {
-      return [order, 1, 0];
-    }
-
-    return compareResult === 0 ? [newOrder, 1, 1] : [newOrder, 0, 1];
-  });
-}
-
-/**
+ * Merge array, assume that both array are in right order
  *
  * @param originArr
  * @param updateArr
- * @param compareStep
+ * @param increaseOrder
  */
-function mergeArray<T>(originArr: T[], updateArr: T[], compareStep: (origin: T, update: T) => [T, number, number]): T[] {
+function mergeArray(originArr: [string, string][], updateArr: [string, string][], increaseOrder: boolean): [string, string][] {
   if (!originArr || !originArr.length) {
     return updateArr;
   }
@@ -89,17 +55,65 @@ function mergeArray<T>(originArr: T[], updateArr: T[], compareStep: (origin: T, 
     return originArr;
   }
 
-  const rs = [];
+  const rs: [string, string][] = [];
   let originIndex = 0;
   let updateIndex = 0;
-
   while (originIndex < originArr.length || updateIndex < updateArr.length) {
-    const nextMove = compareStep(originArr[originIndex], updateArr[updateIndex]);
-    if (nextMove[0] && +nextMove[0][1] > 0) {
-      rs.push(nextMove[0]);
+    const origin = originArr[originIndex];
+    const update = updateArr[updateIndex];
+
+    // abnormal case
+    if (!origin && !update) {
+      break;
     }
-    originIndex += nextMove[1];
-    updateIndex += nextMove[2];
+
+    // origin ended, pick update
+    if (!origin && update) {
+      if (+update[1] > 0) {
+        rs.push(update);
+      }
+      updateIndex ++;
+      continue;
+    }
+
+    // update ended, pick origin
+    if (!update && origin) {
+      if (+origin[1] > 0) {
+        rs.push(origin);
+      }
+      originIndex ++;
+      continue;
+    }
+
+    const originPrice = +origin[0];
+    const originAmount = +origin[1];
+
+    const updatePrice = +update[0];
+    const updateAmount = +update[1];
+
+    // equal price, pick update and drop origin
+    if (originPrice === updatePrice) {
+      if (updateAmount > 0) {
+        rs.push(update);
+      }
+      originIndex ++;
+      updateIndex ++;
+      continue;
+    }
+
+    if (originPrice < updatePrice === increaseOrder) {
+      // pick origin
+      if (originAmount > 0) {
+        rs.push(origin);
+      }
+      originIndex ++;
+    } else {
+      // pick update if update amount > 0
+      if (updateAmount > 0) {
+        rs.push(update);
+      }
+      updateIndex++;
+    }
   }
 
   return rs;

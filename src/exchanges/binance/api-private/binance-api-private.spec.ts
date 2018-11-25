@@ -1,10 +1,10 @@
-import apiKey from '../api-key-test.json';
+import { apiKeys } from '../api-key-test';
 import { BinanceApiPrivate } from './binance-api-private';
 import { BinanceApiPrivateSigned } from './binance-api-private-signed';
 import { checkBinanceAccountInformation } from './internal/functions-test';
 
-const binanceApiPrivateSigned = new BinanceApiPrivateSigned(apiKey.key, apiKey.secret);
-const binanceApiPrivate = new BinanceApiPrivate(apiKey.key);
+const binanceApiPrivateSigned = new BinanceApiPrivateSigned(apiKeys.key, apiKeys.secret);
+const binanceApiPrivate = new BinanceApiPrivate(apiKeys.key);
 
 describe('Test binance api private functions', () => {
   it('Should fetch account information', (done) => {

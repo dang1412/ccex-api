@@ -9,9 +9,9 @@ import { adaptBinanceWsTicker, adaptBinanceRestTicker, binanceTickerChannel, bin
 export class BinanceTicker {
   private pairStreamMap: { [pair: string]: Observable<Ticker> } = {};
   private pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
-  private corsProxy = '';
+  private corsProxy: string;
 
-  constructor(corsProxy?: string) {
+  constructor(corsProxy = '') {
     this.corsProxy = corsProxy;
   }
 

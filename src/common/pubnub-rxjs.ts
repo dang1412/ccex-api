@@ -2,7 +2,7 @@
 
 import { Observable, ReplaySubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import Pubnub from 'pubnub';
+import * as Pubnub from 'pubnub';
 
 export class PubnubRxJs {
   private pubnub: Pubnub;

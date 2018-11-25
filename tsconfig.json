@@ -1,40 +1,25 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "outDir": "./dist",
-    "rootDir": "src",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
+    "target": "ES2016",
     "module": "commonjs",
-    "declaration": true,
-    "inlineSourceMap": true,
-    "esModuleInterop": true,
-    "strict": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "traceResolution": false,
-    "listEmittedFiles": false,
-    "listFiles": false,
-    "pretty": true,
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "moduleResolution": "node",
+    "strict": true,
     "types": [
       "node",
       "jest"
     ],
     "typeRoots": [
-      "node_modules/@types"
-    ]
+      "./node_modules/@types"
+    ],
+    "rootDir": "./",
+    "outDir": "./dist",
+    "declaration": true,
+    "baseUrl": "./"
   },
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
-    "node_modules/**"
-  ],
-  "compileOnSave": false
+    "node_modules"
+  ]
 }

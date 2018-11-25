@@ -10,8 +10,8 @@
     "format": "prettier --config .prettierrc --write src/**/*.ts",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\"",
     "test-mocha": "mocha -r ts-node/register ./src/**/*.spec.ts",
-    "test": "jest --config=jest.json --runInBand --detectOpenHandles",
-    "test-w": "npm test -- --watch"
+    "test": "jest --runInBand --detectOpenHandles",
+    "test-w": "npm test -- --watch --onlyChanged"
   },
   "keywords": [
     "crypto",
@@ -37,23 +37,23 @@
     "pubnub": "^4.20.3",
     "querystring": "^0.2.0",
     "rxjs": "^6.0.0",
-    "ws": "^5.2.0"
+    "ws": "^6.1.2"
   },
   "devDependencies": {
     "@types/gulp": "^4.0.5",
     "@types/jest": "^23.3.1",
     "@types/node": "^10.1.2",
-    "@types/node-fetch": "^1.6.9",
+    "@types/node-fetch": "^2.1.4",
     "@types/pubnub": "^4.0.2",
-    "@types/ws": "^5.1.1",
+    "@types/ws": "^6.0.1",
     "gulp": "^4.0.0",
     "gulp-typescript": "^5.0.0-alpha.3",
     "jest": "^23.5.0",
-    "prettier": "1.13.7",
+    "prettier": "1.15.2",
     "ts-jest": "^23.1.4",
-    "ts-node": "^6.0.3",
+    "ts-node": "^7.0.1",
     "tslint": "^5.10.0",
     "tslint-no-unused-expression-chai": "^0.1.3",
-    "typescript": "^2.9.2"
+    "typescript": "^3.1.6"
   }
 }

@@ -55,7 +55,7 @@ export function adaptBinanceWsCandle(binanceCandle: BinanceRawWsCandle): CandleS
   };
 }
 
-const minutesIntervalMap = {
+const minutesIntervalMap: {[key: number]: string} = {
   1: '1m',
   3: '3m',
   5: '5m',

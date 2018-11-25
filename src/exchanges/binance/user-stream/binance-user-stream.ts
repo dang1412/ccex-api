@@ -9,11 +9,11 @@ import { BinanceUserStreamAccount, BinanceUserStreamOrder } from './internal/typ
 export class BinanceUserStream {
   private key: string;
   private corsProxy: string;
-  private socket: WebSocketRxJs<BinanceUserStreamAccount | BinanceUserStreamOrder>;
+  private socket: WebSocketRxJs<BinanceUserStreamAccount | BinanceUserStreamOrder> | null = null;
 
   constructor(key: string, corsProxy?: string) {
     this.key = key;
-    this.corsProxy = corsProxy;
+    this.corsProxy = corsProxy || '';
   }
 
   userDataAccount$(): Observable<BinanceUserStreamAccount> {
@@ -39,6 +39,7 @@ export class BinanceUserStream {
       return binanceApiPrivate.getUserStreamListenKey$().pipe(
         switchMap((listenKey) => {
           const channel = wsEndpoint + listenKey;
+          console.log('channel', channel);
           this.socket = new WebSocketRxJs<BinanceUserStreamAccount | BinanceUserStreamOrder>(channel);
           return this.socket.message$;
         })

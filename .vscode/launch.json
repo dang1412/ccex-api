@@ -1,0 +1,12 @@
+{
+  "type": "node",
+  "request": "launch",
+  "name": "Ccex-api test",
+  "runtimeArgs": [
+    "-r",
+    "ts-node/register"
+  ],
+  "args": [
+    "${workspaceFolder}/test/binance.ts"
+  ]
+}

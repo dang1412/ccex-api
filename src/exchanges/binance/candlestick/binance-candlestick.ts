@@ -9,9 +9,9 @@ import { binanceCandleStickApiUrl, adaptBinanceRestCandle, adaptBinanceWsCandle,
 export class BinanceCandleStick {
   private pairStreamMap: { [pair: string]: Observable<CandleStick> } = {};
   private pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
-  private corsProxy = '';
+  private corsProxy: string;
 
-  constructor(corsProxy?: string) {
+  constructor(corsProxy = '') {
     this.corsProxy = corsProxy;
   }
 

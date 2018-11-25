@@ -9,9 +9,9 @@ import { adaptBinanceRestTrade, adaptBinanceWsTrade, binanceTradeApiUrl, binance
 export class BinanceTrade {
   private pairStreamMap: { [pair: string]: Observable<Trade> } = {};
   private pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
-  private corsProxy = '';
+  private corsProxy: string;
 
-  constructor(corsProxy?: string) {
+  constructor(corsProxy = '') {
     this.corsProxy = corsProxy;
   }
 

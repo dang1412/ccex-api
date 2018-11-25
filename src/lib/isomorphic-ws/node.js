@@ -1,3 +1,3 @@
-// use ws package in node environment
-const WebSocket = require('ws');
-module.exports = WebSocket;
+"use strict";
+
+module.exports = require('ws');
