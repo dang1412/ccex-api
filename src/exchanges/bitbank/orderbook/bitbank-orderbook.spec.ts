@@ -1,4 +1,3 @@
-import 'mocha';
 import { take } from 'rxjs/operators';
 
 import { checkOrderbook } from '../../exchange-test.functions';
@@ -7,8 +6,6 @@ import { BitbankOrderbook } from './bitbank-orderbook';
 const bitbankOrderbook = new BitbankOrderbook();
 
 describe('Test Bitbank orderbook', function() {
-  this.timeout(0);
-
   const markets = ['btc_jpy', 'xrp_jpy'];
   markets.forEach((market) => {
     it('should get depth ' + market, (done) => {

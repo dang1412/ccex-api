@@ -48,7 +48,7 @@ export function isLatestTimestring(timestring: string): boolean {
 export function getTimestringArrayFromRange(resolution: string, start: number, end: number): string[] {
   // each resolution is stored in a file of 1 day or 1 year,
   // this indicates resolutions that stored in 1 day file (1hour or lower)
-  const resolutionUseDay = {
+  const resolutionUseDay: {[key: string]: boolean} = {
     '1min': true,
     '5min': true,
     '15min': true,

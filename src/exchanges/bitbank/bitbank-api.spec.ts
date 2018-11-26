@@ -1,5 +1,5 @@
-import { ExchangeApiTest } from '../exchange-api.test';
-import { BitbankApi } from './bitbank-api';
+// import { ExchangeApiTest } from '../exchange-api.test';
+// import { BitbankApi } from './bitbank-api';
 
-const bitbankApi = new BitbankApi();
-new ExchangeApiTest(bitbankApi).run();
+// const bitbankApi = new BitbankApi();
+// new ExchangeApiTest(bitbankApi).run();

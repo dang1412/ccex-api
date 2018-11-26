@@ -26,9 +26,6 @@ function testExchange(exchange: ExchangeApi, only = false): void {
   const supportFeatures = exchange.supportFeatures;
 
   describeFunc(`Test ${exchange.exchangeInfo.name} functions`, function() {
-    // remove limited timeout
-    this.timeout(0);
-
     // it test for ticker
     if (supportFeatures.ticker) {
       markets.forEach((market) => {

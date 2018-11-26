@@ -1,4 +1,3 @@
-import 'mocha';
 import { take, bufferCount } from 'rxjs/operators';
 
 import { checkTrades } from '../../exchange-test.functions';
@@ -7,8 +6,7 @@ import { BitbankTrade } from './bitbank-trade';
 const bitbankTrade = new BitbankTrade();
 
 describe('Test Bitbank trades', function() {
-  this.timeout(0);
-
+  jest.setTimeout(30000);
   const markets = ['btc_jpy', 'xrp_jpy'];
 
   markets.forEach((market) => {
