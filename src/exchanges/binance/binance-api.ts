@@ -8,10 +8,10 @@ import { BinanceTrade } from './trade';
 import { BinanceCandleStick } from './candlestick';
 
 export class BinanceApi extends ExchangeApi {
-  private binanceTicker: BinanceTicker;
-  private binanceOrderbook: BinanceOrderbook;
-  private binanceTrade: BinanceTrade;
-  private binanceCandleStick: BinanceCandleStick;
+  private readonly binanceTicker: BinanceTicker;
+  private readonly binanceOrderbook: BinanceOrderbook;
+  private readonly binanceTrade: BinanceTrade;
+  private readonly binanceCandleStick: BinanceCandleStick;
 
   get exchangeInfo(): ExchangeInfo {
     return {

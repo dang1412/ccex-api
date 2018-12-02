@@ -11,11 +11,11 @@ enum PrivateUrlSigned {
 }
 
 export class BinanceApiPrivateSigned {
-  private key: string;
-  private secret: string;
-  private corsProxy: string;
+  private readonly key: string;
+  private readonly secret: string;
+  private readonly corsProxy: string;
 
-  constructor(key: string, secret: string, corsProxy = '') {
+  constructor(key: string, secret: string, corsProxy: string = '') {
     this.key = key;
     this.secret = secret;
     this.corsProxy = corsProxy;
@@ -23,7 +23,7 @@ export class BinanceApiPrivateSigned {
 
   getAccountInformation(): Observable<BinanceAccountInformation> {
     const params = {
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     const queryString = qs.stringify(params);

@@ -6,12 +6,12 @@ import { BinanceUserStreamPostResponse } from './internal/types';
 import { map } from 'rxjs/operators';
 
 enum PrivateUrl {
-  userStream = 'api/v1/userDataStream'
+  userStream = 'api/v1/userDataStream',
 }
 
 export class BinanceApiPrivate {
-  private key: string;
-  private corsProxy: string;
+  private readonly key: string;
+  private readonly corsProxy: string;
 
   constructor(key: string, corsProxy?: string) {
     this.key = key;

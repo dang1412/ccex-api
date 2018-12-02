@@ -6,7 +6,7 @@ import { BinanceRawRestCandle, BinanceRawWsCandle } from './types';
 export function binanceCandleStickApiUrl(pair: string, minutesFoot: number, startTime?: number, endTime?: number, limit?: number): string {
   const symbol = binancePair(pair).toUpperCase();
   const interval = getCandleInterval(minutesFoot);
-  let url = apiEndPoint + `/api/v1/klines?symbol=${symbol}&interval=${interval}`;
+  let url = `${apiEndPoint}/api/v1/klines?symbol=${symbol}&interval=${interval}`;
 
   // if startTime provided and no limit, calculate to use limit and drop startTime
   if (startTime && endTime && !limit) {

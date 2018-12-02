@@ -7,11 +7,11 @@ import { BinanceRawRestCandle, BinanceRawWsCandle } from './internal/types';
 import { binanceCandleStickApiUrl, adaptBinanceRestCandle, adaptBinanceWsCandle, binanceCandleStickChannel } from './internal/functions';
 
 export class BinanceCandleStick {
-  private pairStreamMap: { [pair: string]: Observable<CandleStick> } = {};
-  private pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
-  private corsProxy: string;
+  private readonly pairStreamMap: { [pair: string]: Observable<CandleStick> } = {};
+  private readonly pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
+  private readonly corsProxy: string;
 
-  constructor(corsProxy = '') {
+  constructor(corsProxy: string = '') {
     this.corsProxy = corsProxy;
   }
 
@@ -27,7 +27,7 @@ export class BinanceCandleStick {
     if (!this.pairStreamMap[key]) {
       const channel = binanceCandleStickChannel(pair, minutesFoot);
       const ws = new WebSocketRxJs<BinanceRawWsCandle>(channel);
-      this.pairStreamMap[key] = ws.message$.pipe(map((binanceCandle) => adaptBinanceWsCandle(binanceCandle)));
+      this.pairStreamMap[key] = ws.message$.pipe(map(adaptBinanceWsCandle));
       this.pairSocketMap[key] = ws;
     }
 

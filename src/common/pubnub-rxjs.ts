@@ -5,9 +5,9 @@ import { filter } from 'rxjs/operators';
 import * as Pubnub from 'pubnub';
 
 export class PubnubRxJs {
-  private pubnub: Pubnub;
+  private readonly pubnub: Pubnub;
   // use one subject for each distinct channel
-  private channelSubjectMap: { [channel: string]: ReplaySubject<any> } = {};
+  private readonly channelSubjectMap: { [channel: string]: ReplaySubject<any> } = {};
 
   constructor(config: Pubnub.PubnubConfig) {
     this.pubnub = new Pubnub(config);
@@ -28,7 +28,7 @@ export class PubnubRxJs {
   /**
    * @param channel
    */
-  unsubscribeChannel(channel: string) {
+  unsubscribeChannel(channel: string): void {
     this.pubnub.unsubscribe({
       channels: [channel],
     });
@@ -38,9 +38,9 @@ export class PubnubRxJs {
    * Register message event listener for pubnub instance
    * @param {PUBNUB} pubnub
    */
-  private addEventListener() {
+  private addEventListener(): void {
     this.pubnub.addListener({
-      status: function(statusEvent: any) {
+      status: (statusEvent: any) => {
         if (statusEvent.category === 'PNConnectedCategory') {
           // pubnub connected
         }

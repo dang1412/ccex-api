@@ -15,7 +15,7 @@ beforeEach(() => {
   binanceCandlestick.stopCandleStick(pair, minutesFoot);
 });
 
-describe('Test binance candlestick functions', function() {
+describe('Test binance candlestick functions', () => {
   jest.setTimeout(10000);
 
   it(`should fetch ${pair} ${minutesFoot}min candles in provided time range`, (done) => {
@@ -55,7 +55,7 @@ describe('Test binance candlestick functions', function() {
     setTimeout(() => binanceCandlestick.stopCandleStick(pair, minutesFoot), 1000);
   });
 
-  it(`should not complete stream when stop same pair but different minutesFoot candle socket`, function(done) {
+  it(`should not complete stream when stop same pair but different minutesFoot candle socket`, (done) => {
     let completeOtherCandleStream = false;
 
     binanceCandlestick.candlestick$(pair, otherMinutesFoot).subscribe(

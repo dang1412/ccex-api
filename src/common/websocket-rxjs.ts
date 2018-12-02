@@ -4,9 +4,9 @@ import { take, filter } from 'rxjs/operators';
 import * as WebSocket from '../lib/isomorphic-ws';
 
 export class WebSocketRxJs<T = any> {
-  private webSocket: WebSocket;
-  private data$ = new ReplaySubject<T>(1);
-  private opened$ = new ReplaySubject<boolean>(1);
+  private readonly webSocket: WebSocket;
+  private readonly data$ = new ReplaySubject<T>(1);
+  private readonly opened$ = new ReplaySubject<boolean>(1);
 
   /**
    * message stream
@@ -39,7 +39,7 @@ export class WebSocketRxJs<T = any> {
   /**
    * @param text
    */
-  send(text: string) {
+  send(text: string): void {
     // wait until socket open and send the text only once per call
     this.opened$
       .pipe(
@@ -51,7 +51,7 @@ export class WebSocketRxJs<T = any> {
       });
   }
 
-  close() {
+  close(): void {
     this.webSocket.close();
     this.data$.complete();
   }
