@@ -9,11 +9,11 @@ import { CoinbaseOrderbook } from './orderbook';
 import { CoinbaseTrade } from './trade';
 
 export class CoinbaseApi extends ExchangeApi {
-  private coinbaseWebsocket: CoinbaseWebsocket;
-  private coinbaseTicker: CoinbaseTicker;
-  private coinbaseCandleStick: CoinbaseCandleStick;
-  private coinbaseOrderbook: CoinbaseOrderbook;
-  private coinbaseTrade: CoinbaseTrade;
+  private readonly coinbaseWebsocket: CoinbaseWebsocket;
+  private readonly coinbaseTicker: CoinbaseTicker;
+  private readonly coinbaseCandleStick: CoinbaseCandleStick;
+  private readonly coinbaseOrderbook: CoinbaseOrderbook;
+  private readonly coinbaseTrade: CoinbaseTrade;
 
   get exchangeInfo(): ExchangeInfo {
     return {

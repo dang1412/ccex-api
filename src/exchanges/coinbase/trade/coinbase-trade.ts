@@ -11,15 +11,15 @@ import { adaptCoinbaseRawTrade, getTradesUrl } from './internal/functions';
 import { CoinbaseRawWsTrade, CoinbaseRawRestTrade } from './internal/types';
 
 export class CoinbaseTrade {
-  private corsProxy: string;
-  private coinbaseWebsocket: CoinbaseWebsocket;
+  private readonly corsProxy: string;
+  private readonly coinbaseWebsocket: CoinbaseWebsocket;
 
   /**
    *
    * @param corsProxy
    * @param coinbaseWebsocket
    */
-  constructor(corsProxy?: string, coinbaseWebsocket?: CoinbaseWebsocket) {
+  constructor(corsProxy: string = '', coinbaseWebsocket?: CoinbaseWebsocket) {
     this.corsProxy = corsProxy;
     this.coinbaseWebsocket = coinbaseWebsocket || new CoinbaseWebsocket();
   }

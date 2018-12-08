@@ -17,11 +17,11 @@ import {
 } from './internal/functions';
 
 export class CoinbaseOrderbook {
-  private corsProxy: string;
-  private coinbaseWebsocket: CoinbaseWebsocket;
-  private pairOderbookStreamMap: { [pair: string]: Observable<Orderbook> } = {};
+  private readonly corsProxy: string;
+  private readonly coinbaseWebsocket: CoinbaseWebsocket;
+  private readonly pairOderbookStreamMap: { [pair: string]: Observable<Orderbook> } = {};
 
-  constructor(corsProxy?: string, coinbaseWebsocket?: CoinbaseWebsocket) {
+  constructor(corsProxy: string = '', coinbaseWebsocket?: CoinbaseWebsocket) {
     this.corsProxy = corsProxy;
     this.coinbaseWebsocket = coinbaseWebsocket || new CoinbaseWebsocket();
   }
@@ -68,7 +68,7 @@ export class CoinbaseOrderbook {
           return adaptCoinbaseWsOrderbookUpdate(snapshotOrUpdate);
         }
       }),
-      scan<Orderbook>((orderbook, update) => updateOrderbook(orderbook, update)),
+      scan<Orderbook>(updateOrderbook),
     );
   }
 }

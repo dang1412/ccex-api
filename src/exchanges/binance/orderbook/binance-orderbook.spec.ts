@@ -5,13 +5,13 @@ import { BinanceOrderbook } from './binance-orderbook';
 
 const binanceOrderbook = new BinanceOrderbook();
 
-describe('Test Binance orderbook', function() {
+describe('binanceOrderbook', () => {
   jest.setTimeout(10000);
 
   const markets = ['btc_usdt', 'eos_btc', 'eos_usdt'];
 
   markets.forEach((market) => {
-    it('should fetch orderbook ' + market, (done) => {
+    it(`should fetch orderbook ${market}`, (done) => {
       binanceOrderbook.fetchOrderbook$(market).subscribe(
         (orderbook) => {
           checkOrderbook(orderbook);
@@ -26,7 +26,7 @@ describe('Test Binance orderbook', function() {
   });
 
   markets.forEach((market) => {
-    it('should get orderbook realtime ' + market, (done) => {
+    it(`should get orderbook realtime ${market}`, (done) => {
       binanceOrderbook
         .orderbook$(market)
         .pipe(take(2))

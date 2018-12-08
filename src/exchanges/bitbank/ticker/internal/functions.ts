@@ -3,7 +3,7 @@ import { BitbankRawTicker } from './types';
 
 export function adaptBitbankTicker(bitbankTicker: BitbankRawTicker, pair: string): Ticker {
   return {
-    pair: pair,
+    pair,
     ask: +bitbankTicker.sell,
     bid: +bitbankTicker.buy,
     low: +bitbankTicker.low,

@@ -1,11 +1,11 @@
-import { Observable, empty } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
 import { CoincheckTicker } from './ticker/coincheck-ticker';
 
 export class CoincheckApi extends ExchangeApi {
-  private coincheckTicker: CoincheckTicker;
+  private readonly coincheckTicker: CoincheckTicker;
 
   get exchangeInfo(): ExchangeInfo {
     return {
@@ -54,12 +54,12 @@ export class CoincheckApi extends ExchangeApi {
 
   // api request for depth
   fetchOrderbook$(pair: string): Observable<Orderbook> {
-    return empty();
+    return EMPTY;
   }
 
   // realtime depth
   orderbook$(pair: string): Observable<Orderbook> {
-    return empty();
+    return EMPTY;
   }
 
   // stop realtime orderbook
@@ -68,11 +68,11 @@ export class CoincheckApi extends ExchangeApi {
   }
 
   fetchTrades$(pair: string): Observable<Trade[]> {
-    return empty();
+    return EMPTY;
   }
 
   trade$(pair: string): Observable<Trade> {
-    return empty();
+    return EMPTY;
   }
 
   // stop realtime trade
@@ -82,6 +82,6 @@ export class CoincheckApi extends ExchangeApi {
 
   // request candlestick by time range and resolution
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
-    return empty();
+    return EMPTY;
   }
 }

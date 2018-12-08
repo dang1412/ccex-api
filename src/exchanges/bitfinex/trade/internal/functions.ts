@@ -2,7 +2,7 @@ import { getSymbol, apiEndpoint } from '../../bitfinex-common';
 import { BitfinexRawTrade } from './types';
 import { Trade } from '../../../exchange-types';
 
-export function getTradesUrl(pair: string, start: number, end: number, limit: number, sort = -1): string {
+export function getTradesUrl(pair: string, start?: number, end?: number, limit?: number, sort: number = -1): string {
   // `${url}/trades/tBTCUSD/hist`,
   const symbol = getSymbol(pair);
   let url = `${apiEndpoint}/trades/${symbol}/hist?sort=${sort}`;

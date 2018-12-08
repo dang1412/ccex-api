@@ -7,13 +7,13 @@ import { BinanceApiPrivate } from '../api-private/binance-api-private';
 import { BinanceUserStreamAccount, BinanceUserStreamOrder } from './internal/types';
 
 export class BinanceUserStream {
-  private key: string;
-  private corsProxy: string;
+  private readonly key: string;
+  private readonly corsProxy: string;
   private socket: WebSocketRxJs<BinanceUserStreamAccount | BinanceUserStreamOrder> | null = null;
 
-  constructor(key: string, corsProxy?: string) {
+  constructor(key: string, corsProxy: string = '') {
     this.key = key;
-    this.corsProxy = corsProxy || '';
+    this.corsProxy = corsProxy;
   }
 
   userDataAccount$(): Observable<BinanceUserStreamAccount> {
@@ -24,7 +24,7 @@ export class BinanceUserStream {
     return this.userData$().pipe(filter(data => data.e === 'executionReport'), map(data => <BinanceUserStreamOrder>data));
   }
 
-  stopUserData() {
+  stopUserData(): void {
     if (this.socket) {
       this.socket.close();
       this.socket = null;
@@ -36,13 +36,15 @@ export class BinanceUserStream {
     if (!this.socket) {
       // request for user data stream listen key
       const binanceApiPrivate = new BinanceApiPrivate(this.key, this.corsProxy);
+
       return binanceApiPrivate.getUserStreamListenKey$().pipe(
         switchMap((listenKey) => {
           const channel = wsEndpoint + listenKey;
           console.log('channel', channel);
           this.socket = new WebSocketRxJs<BinanceUserStreamAccount | BinanceUserStreamOrder>(channel);
+
           return this.socket.message$;
-        })
+        }),
       );
     }
 

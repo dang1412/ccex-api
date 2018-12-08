@@ -1,4 +1,3 @@
-import 'mocha';
 import { bufferCount, take } from 'rxjs/operators';
 
 import { checkTrades } from '../../exchange-test.functions';
@@ -6,14 +5,14 @@ import { BitfinexTrade } from './bitfinex-trade';
 
 const bitfinexTrade = new BitfinexTrade();
 
-describe('Test Bitfinex trades', function() {
-  this.timeout(0);
+describe('bitfinexTrade', () => {
+  jest.setTimeout(30000);
 
   const markets = ['btc_usd', 'eth_btc'];
 
   markets.forEach((market) => {
-    it('should fetch rest api trades ' + market, (done) => {
-      bitfinexTrade.fetchTrades$(market, null, null, 10, 1).subscribe(
+    it(`should fetch rest api trades ${market}`, (done) => {
+      bitfinexTrade.fetchTrades$(market, undefined, undefined, 10, 1).subscribe(
         (trades) => {
           console.log(trades);
           checkTrades(trades);
@@ -27,7 +26,7 @@ describe('Test Bitfinex trades', function() {
   });
 
   markets.forEach((market) => {
-    it('should get realtime trades ' + market, (done) => {
+    it(`should get realtime trades ${market}`, (done) => {
       bitfinexTrade
         .trade$(market)
         .pipe(

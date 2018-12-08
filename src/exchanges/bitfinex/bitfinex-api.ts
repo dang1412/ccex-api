@@ -9,11 +9,11 @@ import { BitfinexCandleStick } from './candlestick';
 import { BitfinexTrade } from './trade';
 
 export class BitfinexApi extends ExchangeApi {
-  private bitfinexWebsocket: BitfinexWebsocket;
-  private bitfinexTicker: BitfinexTicker;
-  private bitfinexOrderbook: BitfinexOrderbook;
-  private bitfinexCandleStick: BitfinexCandleStick;
-  private bitfinexTrade: BitfinexTrade;
+  private readonly bitfinexWebsocket: BitfinexWebsocket;
+  private readonly bitfinexTicker: BitfinexTicker;
+  private readonly bitfinexOrderbook: BitfinexOrderbook;
+  private readonly bitfinexCandleStick: BitfinexCandleStick;
+  private readonly bitfinexTrade: BitfinexTrade;
 
   get exchangeInfo(): ExchangeInfo {
     return {

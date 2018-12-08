@@ -11,15 +11,15 @@ import { getTradesUrl, adaptBitfinexTrade } from './internal/functions';
 import { BitfinexRawTrade } from './internal/types';
 
 export class BitfinexTrade {
-  private corsProxy: string;
-  private bitfinexWebsocket: BitfinexWebsocket;
+  private readonly corsProxy: string;
+  private readonly bitfinexWebsocket: BitfinexWebsocket;
 
   /**
    *
    * @param corsProxy
    * @param bitfinexWebsocket
    */
-  constructor(corsProxy?: string, bitfinexWebsocket?: BitfinexWebsocket) {
+  constructor(corsProxy: string = '', bitfinexWebsocket?: BitfinexWebsocket) {
     this.corsProxy = corsProxy;
     this.bitfinexWebsocket = bitfinexWebsocket || new BitfinexWebsocket();
   }
@@ -34,18 +34,21 @@ export class BitfinexTrade {
 
   trade$(pair: string): Observable<Trade> {
     const subcribeRequest = getTradeSubcribeRequest(pair);
+
     return this.bitfinexWebsocket.subscribe<BitfinexRawTrade[] | BitfinexRawTrade>(subcribeRequest).pipe(
-      filter((tradeArrayOrTrade) => tradeArrayOrTrade[0] && typeof tradeArrayOrTrade[0] === 'number'),
-      map((trade: BitfinexRawTrade) => adaptBitfinexTrade(trade)),
+      filter((tradeArrayOrTrade) => typeof tradeArrayOrTrade[0] === 'number'),
+      map((trade) => adaptBitfinexTrade(<BitfinexRawTrade>trade)),
     );
   }
 
   tradeWithInitialHistory$(pair: string): Observable<Trade[] | Trade> {
     const subcribeRequest = getTradeSubcribeRequest(pair);
+
     return this.bitfinexWebsocket.subscribe<BitfinexRawTrade[] | BitfinexRawTrade>(subcribeRequest).pipe(
       map((tradeArrayOrTrade) => {
         if (tradeArrayOrTrade[0] && typeof tradeArrayOrTrade[0] === 'object') {
           const initialTrades = <BitfinexRawTrade[]>tradeArrayOrTrade;
+
           return initialTrades.map(adaptBitfinexTrade);
         }
 

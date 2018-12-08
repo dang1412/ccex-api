@@ -8,13 +8,13 @@ import { getCandleStickUrl, adaptCoinbaseCandleStick } from './internal/function
 import { CoinbaseRawCandleStick } from './internal/types';
 
 export class CoinbaseCandleStick {
-  private corsProxy: string;
+  private readonly corsProxy: string;
 
   /**
    *
    * @param corsProxy
    */
-  constructor(corsProxy?: string) {
+  constructor(corsProxy: string = '') {
     this.corsProxy = corsProxy;
   }
 
@@ -24,7 +24,7 @@ export class CoinbaseCandleStick {
 
     return fetchRxjs<CoinbaseRawCandleStick[]>(url).pipe(
       map((coinbaseCandles) => coinbaseCandles.map(adaptCoinbaseCandleStick)),
-      map(candles => candles.sort((c1, c2) => c1.timestamp - c2.timestamp))
+      map(candles => candles.sort((c1, c2) => c1.timestamp - c2.timestamp)),
     );
   }
 }

@@ -1,4 +1,4 @@
-import { Observable, ReplaySubject, empty } from 'rxjs';
+import { Observable, ReplaySubject, EMPTY } from 'rxjs';
 
 import { WebSocketRxJs } from '../../common/websocket-rxjs';
 import { WebsocketRequest, WebsocketMessageResponse } from './coinbase-common.types';
@@ -6,15 +6,15 @@ import { websocketEndpoint } from './coinbase-common';
 
 // normally the type in response message is the same to subscribed channel
 // if it is different we have this to determine which channel the message belongs to
-const typeChannelMap = {
+const typeChannelMap: {[key: string]: string} = {
   snapshot: 'level2',
   l2update: 'level2',
   match: 'matches',
 };
 
 export class CoinbaseWebsocket {
-  private websocket: WebSocketRxJs<WebsocketMessageResponse>;
-  private keyStreamMap: { [key: string]: ReplaySubject<any> } = {};
+  private websocket: WebSocketRxJs<WebsocketMessageResponse> | null = null;
+  private readonly keyStreamMap: { [key: string]: ReplaySubject<any> } = {};
 
   /**
    * allow only 1 product and 1 channel for each subscribe
@@ -27,11 +27,11 @@ export class CoinbaseWebsocket {
     }
 
     if (subscribeRequest.type !== 'subscribe') {
-      return empty();
+      return EMPTY;
     }
 
     const key = getKeyFromRequest(subscribeRequest);
-    if (!this.keyStreamMap[key]) {
+    if (!this.keyStreamMap[key] && this.websocket) {
       this.keyStreamMap[key] = new ReplaySubject<T>(1);
       this.websocket.send(JSON.stringify(subscribeRequest));
     }
@@ -62,7 +62,7 @@ export class CoinbaseWebsocket {
     }
   }
 
-  private initWebsocket() {
+  private initWebsocket(): void {
     if (this.websocket) {
       throw new Error('Coinbase websocket is already initialized');
     }

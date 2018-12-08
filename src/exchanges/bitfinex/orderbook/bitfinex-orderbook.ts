@@ -12,27 +12,27 @@ import { adaptBitfinexOrderbook, getOrderbookApiUrl } from './internal/functions
 import { BitfinexOrderbookSingleItem } from './internal/types';
 
 export class BitfinexOrderbook {
-  private keyOderbookStreamMap: { [key: string]: ReplaySubject<Orderbook> } = {};
-  private corsProxy: string;
-  private bitfinexWebsocket: BitfinexWebsocket;
+  private readonly corsProxy: string;
+  private readonly keyOderbookStreamMap: { [key: string]: ReplaySubject<Orderbook> } = {};
+  private readonly bitfinexWebsocket: BitfinexWebsocket;
 
   /**
    * @param corsProxy
    * @param bitfinexWebsocket
    */
-  constructor(corsProxy?: string, bitfinexWebsocket?: BitfinexWebsocket) {
+  constructor(corsProxy: string = '', bitfinexWebsocket?: BitfinexWebsocket) {
     this.corsProxy = corsProxy;
     this.bitfinexWebsocket = bitfinexWebsocket || new BitfinexWebsocket();
   }
 
-  fetchOrderbook$(pair: string, prec = 'P0'): Observable<Orderbook> {
+  fetchOrderbook$(pair: string, prec: string = 'P0'): Observable<Orderbook> {
     const originUrl = getOrderbookApiUrl(pair, prec);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
     return fetchRxjs<BitfinexOrderbookSingleItem[]>(url).pipe(map(adaptBitfinexOrderbook));
   }
 
-  orderbook$(pair: string, prec = 'P0', freq = 'F0', len = '25'): Observable<Orderbook> {
+  orderbook$(pair: string, prec: string = 'P0', freq: string = 'F0', len: string = '25'): Observable<Orderbook> {
     const subscribeRequest: WebsocketSubOrUnSubRequest = {
       event: 'subscribe',
       channel: 'book',
@@ -51,7 +51,7 @@ export class BitfinexOrderbook {
     return this.keyOderbookStreamMap[key].asObservable();
   }
 
-  stopOrderbook(pair: string, prec = 'P0', freq = 'F0', len = '25'): void {
+  stopOrderbook(pair: string, prec: string = 'P0', freq: string = 'F0', len: string = '25'): void {
     const unsubscribeRequest = {
       channel: 'book',
       symbol: getSymbol(pair),
@@ -86,9 +86,9 @@ export class BitfinexOrderbook {
         // this case is not expected (1 item come instead of array),
         // this happens when the stream is hot because ws channel already subscribed before so only update come,
         // in that case consider single updating item as snapshot
-        if (typeof snapshot[0] === 'number') {
-          snapshot = [snapshot];
-        }
+        // if (typeof snapshot[0] === 'number') {
+        //   snapshot = [snapshot];
+        // }
 
         return <BitfinexOrderbookSingleItem[]>snapshot;
       }),
@@ -99,10 +99,10 @@ export class BitfinexOrderbook {
     // orderbook updates,
     // TODO buffer some changes in 1 second into 1 to improve performance ?
     const orderbookUpdate$ = orderbookSnapshotAndUpdate$.pipe(
-      filter((orderbookItem) => orderbookItem && orderbookItem.length && typeof orderbookItem[0] === 'number'),
-      map((orderbookItem: BitfinexOrderbookSingleItem) => adaptBitfinexOrderbook([orderbookItem])),
+      filter((orderbookItem) => !!orderbookItem && orderbookItem.length > 0 && typeof orderbookItem[0] === 'number'),
+      map((orderbookItem) => adaptBitfinexOrderbook(<BitfinexOrderbookSingleItem[]>[orderbookItem])),
     );
 
-    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(scan((orderbook, update) => updateOrderbook(orderbook, update)));
+    return concat(orderbookSnapshot$, orderbookUpdate$).pipe(scan(updateOrderbook));
   }
 }

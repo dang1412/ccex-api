@@ -5,12 +5,12 @@ import { BitbankTrade } from './bitbank-trade';
 
 const bitbankTrade = new BitbankTrade();
 
-describe('Test Bitbank trades', function() {
+describe('bitbankTrade', () => {
   jest.setTimeout(30000);
   const markets = ['btc_jpy', 'xrp_jpy'];
 
   markets.forEach((market) => {
-    it('should get realtime trades ' + market, (done) => {
+    it(`should get realtime trades ${market}`, (done) => {
       bitbankTrade
         .trade$(market)
         .pipe(
@@ -31,7 +31,7 @@ describe('Test Bitbank trades', function() {
   });
 
   markets.forEach((market) => {
-    it('should fetch rest api trades ' + market, (done) => {
+    it(`should fetch rest api trades ${market}`, (done) => {
       bitbankTrade.fetchTrades$(market).subscribe(
         (trades) => {
           // check trades without increase timestamp order

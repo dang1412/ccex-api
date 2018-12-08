@@ -13,7 +13,7 @@ export abstract class ExchangeApi {
   abstract get supportFeatures(): SupportFeatures;
 
   constructor(options?: ExchangeOptions) {
-    this.options = Object.assign({}, defaultOptions, options);
+    this.options = {...defaultOptions, ...options};
   }
 
   // request ticker
@@ -30,7 +30,7 @@ export abstract class ExchangeApi {
   // stop realtime orderbook
   abstract stopOrderbook(pair: string): void;
 
-  //request trades
+  // request trades
   abstract fetchTrades$(pair: string): Observable<Trade[]>;
   // realtime trades
   abstract trade$(pair: string): Observable<Trade>;

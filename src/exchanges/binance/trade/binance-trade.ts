@@ -7,16 +7,16 @@ import { BinanceRawRestTrade, BinanceRawWsTrade } from './internal/types';
 import { adaptBinanceRestTrade, adaptBinanceWsTrade, binanceTradeApiUrl, binanceTradeChannel } from './internal/functions';
 
 export class BinanceTrade {
-  private pairStreamMap: { [pair: string]: Observable<Trade> } = {};
-  private pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
-  private corsProxy: string;
+  private readonly pairStreamMap: { [pair: string]: Observable<Trade> } = {};
+  private readonly pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
+  private readonly corsProxy: string;
 
-  constructor(corsProxy = '') {
+  constructor(corsProxy: string = '') {
     this.corsProxy = corsProxy;
   }
 
   // fetch trades
-  fetchTrades$(pair: string, limit = 100): Observable<Trade[]> {
+  fetchTrades$(pair: string, limit: number = 100): Observable<Trade[]> {
     const originUrl = binanceTradeApiUrl(pair, limit);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 

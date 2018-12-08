@@ -3,13 +3,15 @@ import { apiEndPoint, wsEndpoint, binancePair } from '../../binance-common';
 import { BinanceRawWsOrderbook } from './types';
 
 // orderbook rest api url
-export function binanceOrderbookApiUrl(pair: string, limit = 20): string {
-  return apiEndPoint + '/api/v1/depth?limit=' + limit + '&symbol=' + binancePair(pair).toUpperCase();
+export function binanceOrderbookApiUrl(pair: string, limit: number = 20): string {
+  const symbol = binancePair(pair).toUpperCase();
+
+  return `${apiEndPoint}/api/v1/depth?limit=${limit}&symbol=${symbol}`;
 }
 
 // orderbook ws channel
 export function binanceOrderbookChannel(pair: string): string {
-  return wsEndpoint + binancePair(pair) + '@depth';
+  return `${wsEndpoint}/${binancePair(pair)}@depth`;
 }
 
 // adapt socket orderbook

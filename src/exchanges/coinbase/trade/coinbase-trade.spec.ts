@@ -1,4 +1,3 @@
-import 'mocha';
 import { bufferCount, take } from 'rxjs/operators';
 
 import { checkTrades } from '../../exchange-test.functions';
@@ -6,8 +5,8 @@ import { CoinbaseTrade } from './coinbase-trade';
 
 const coinbaseTrade = new CoinbaseTrade();
 
-describe('Coinbase trade functions', function() {
-  this.timeout(0);
+describe('coinbaseTrade', () => {
+  jest.setTimeout(0);
 
   const markets = ['btc_usd'];
 
@@ -15,7 +14,7 @@ describe('Coinbase trade functions', function() {
    * Rest api trades
    */
   markets.forEach((market) => {
-    it('should fetch rest api trades ' + market, (done) => {
+    it(`should fetch rest api trades ${market}`, (done) => {
       coinbaseTrade.fetchTrades$(market).subscribe(
         (trades) => {
           checkTrades(trades, false);
@@ -32,7 +31,7 @@ describe('Coinbase trade functions', function() {
    * Realtime trade
    */
   markets.forEach((market) => {
-    it('should get realtime trades ' + market, (done) => {
+    it(`should get realtime trades ${market}`, (done) => {
       coinbaseTrade
         .trade$(market)
         .pipe(

@@ -10,14 +10,14 @@ import { adaptBitfinexTicker, getTickerApiUrl } from './internal/functions';
 import { BitfinexRawTicker } from './internal/types';
 
 export class BitfinexTicker {
-  private corsProxy: string;
-  private bitfinexWebsocket: BitfinexWebsocket;
+  private readonly corsProxy: string;
+  private readonly bitfinexWebsocket: BitfinexWebsocket;
 
   /**
    * @param corsProxy
    * @param bitfinexWebsocket
    */
-  constructor(corsProxy?: string, bitfinexWebsocket?: BitfinexWebsocket) {
+  constructor(corsProxy: string = '', bitfinexWebsocket?: BitfinexWebsocket) {
     this.corsProxy = corsProxy;
     this.bitfinexWebsocket = bitfinexWebsocket || new BitfinexWebsocket();
   }

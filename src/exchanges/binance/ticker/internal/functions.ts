@@ -4,12 +4,14 @@ import { BinanceRawRestTicker, BinanceRawWsTicker } from './types';
 
 // ticker rest api url
 export function binanceTickerApiUrl(pair: string): string {
-  return apiEndPoint + '/api/v1/ticker/24hr?symbol=' + binancePair(pair).toUpperCase();
+  const symbol = binancePair(pair).toUpperCase();
+
+  return `${apiEndPoint}/api/v1/ticker/24hr?symbol=${symbol}`;
 }
 
 // ticker ws channel
 export function binanceTickerChannel(pair: string): string {
-  return wsEndpoint + binancePair(pair) + '@ticker';
+  return `${wsEndpoint}/${binancePair(pair)}@ticker`;
 }
 
 // adapt rest ticker

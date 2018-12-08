@@ -3,13 +3,15 @@ import { apiEndPoint, binancePair, wsEndpoint } from '../../binance-common';
 import { BinanceRawRestTrade, BinanceRawWsTrade } from './types';
 
 // trades rest api url
-export function binanceTradeApiUrl(pair: string, limit = 100): string {
-  return apiEndPoint + '/api/v1/trades?limit=' + limit + '&symbol=' + binancePair(pair).toUpperCase();
+export function binanceTradeApiUrl(pair: string, limit: number = 100): string {
+  const symbol = binancePair(pair).toUpperCase();
+
+  return `${apiEndPoint}/api/v1/trades?limit=${limit}&symbol=${symbol}`;
 }
 
 // trades ws channel
 export function binanceTradeChannel(pair: string): string {
-  return wsEndpoint + binancePair(pair) + '@trade';
+  return `${wsEndpoint}/${binancePair(pair)}@trade`;
 }
 
 export function adaptBinanceRestTrade(binanceTrade: BinanceRawRestTrade): Trade {

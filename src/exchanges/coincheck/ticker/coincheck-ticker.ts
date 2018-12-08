@@ -1,4 +1,4 @@
-import { Observable, empty } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { fetchRxjs } from '../../../common';
@@ -8,16 +8,17 @@ import { adaptCoincheckRawTicker, publicUrl } from '../coincheck-functions';
 
 export class CoincheckTicker {
   fetchTicker$(pair: string): Observable<Ticker> {
-    const url = publicUrl + '/api/ticker';
+    const url = `${publicUrl}/api/ticker`;
+
     return fetchRxjs<CoincheckRawTicker>(url).pipe(map((coincheckRawTicker) => adaptCoincheckRawTicker(coincheckRawTicker, pair)));
   }
 
   ticker$(pair: string): Observable<Ticker> {
     // receive rawTicker and adapt to Ticker here
-    return empty();
+    return EMPTY;
   }
 
-  stopTicker(pair: string) {
+  stopTicker(pair: string): void {
     // implement
   }
 }

@@ -11,10 +11,10 @@ import { adaptCoinbaseRawWsTicker, adaptCoinbaseRawRestTicker, getTickerUrl } fr
 import { CoinbaseRawWsTicker, CoinbaseRawRestTicker } from './internal/types';
 
 export class CoinbaseTicker {
-  private corsProxy: string;
-  private coinbaseWebsocket: CoinbaseWebsocket;
+  private readonly corsProxy: string;
+  private readonly coinbaseWebsocket: CoinbaseWebsocket;
 
-  constructor(corsProxy?: string, coinbaseWebsocket?: CoinbaseWebsocket) {
+  constructor(corsProxy: string = '', coinbaseWebsocket?: CoinbaseWebsocket) {
     this.corsProxy = corsProxy;
     this.coinbaseWebsocket = coinbaseWebsocket || new CoinbaseWebsocket();
   }
@@ -40,7 +40,7 @@ export class CoinbaseTicker {
       .pipe(map((rawTicker) => adaptCoinbaseRawWsTicker(rawTicker, pair)));
   }
 
-  stopTicker(pair: string) {
+  stopTicker(pair: string): void {
     const request: WebsocketRequest = {
       type: 'unsubscribe',
       channels: ['ticker'],

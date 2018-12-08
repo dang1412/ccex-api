@@ -1,46 +1,40 @@
-import 'mocha';
 import { take } from 'rxjs/operators';
 
 import { ExchangeApi } from './exchange-api.abstract';
 import { checkTicker } from './exchange-test.functions';
 
 export class ExchangeApiTest {
-  private exchange: ExchangeApi;
+  private readonly exchange: ExchangeApi;
 
   constructor(exchange: ExchangeApi) {
     this.exchange = exchange;
   }
 
-  run() {
+  run(): void {
     testExchange(this.exchange);
-  }
-
-  runOnly() {
-    testExchange(this.exchange, true);
   }
 }
 
-function testExchange(exchange: ExchangeApi, only = false): void {
-  const describeFunc = only ? describe.only : describe;
+function testExchange(exchange: ExchangeApi): void {
   const markets = exchange.representativeMarkets;
   const supportFeatures = exchange.supportFeatures;
 
-  describeFunc(`Test ${exchange.exchangeInfo.name} functions`, function() {
+  describe(`${exchange.exchangeInfo.name} exchange`, () => {
     // it test for ticker
     if (supportFeatures.ticker) {
       markets.forEach((market) => {
-        it(`should get ticker ${market}`, (done) => {
+        it(`should get ticker ${market} realtime`, (done) => {
           exchange
             .ticker$(market)
-            .pipe(take(2))
-            .subscribe((ticker) => checkTicker(ticker), (e) => console.log('Error', e), () => done());
+            .pipe(take(1))
+            .subscribe(checkTicker, (e) => console.log('Error', e), done);
         });
       });
     }
 
     // it test for orderbook
     if (supportFeatures.orderbook) {
-      it('should get depths realtime for all pairs', () => {/* test orderbook */});
+      it('should get orderbook realtime for all pairs', () => {/* test orderbook */});
     }
   });
 }

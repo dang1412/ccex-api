@@ -11,15 +11,15 @@ import { getCandleStickUrl, adaptBitfinexRawCandleStick, getCandleTimeFrame } fr
 import { BitfinexRawCandleStick } from './internal/types';
 
 export class BitfinexCandleStick {
-  private corsProxy: string;
-  private bitfinexWebsocket: BitfinexWebsocket;
+  private readonly corsProxy: string;
+  private readonly bitfinexWebsocket: BitfinexWebsocket;
 
   /**
    *
    * @param corsProxy
    * @param bitfinexWebsocket
    */
-  constructor(corsProxy?: string, bitfinexWebsocket?: BitfinexWebsocket) {
+  constructor(corsProxy: string = '', bitfinexWebsocket?: BitfinexWebsocket) {
     this.corsProxy = corsProxy;
     this.bitfinexWebsocket = bitfinexWebsocket || new BitfinexWebsocket();
   }
@@ -51,8 +51,8 @@ export class BitfinexCandleStick {
 
     return this.bitfinexWebsocket.subscribe<BitfinexRawCandleStick[] | BitfinexRawCandleStick>(subscribeRequest).pipe(
       // filter the first initial history data
-      filter((candleArrayOrCandle) => candleArrayOrCandle[0] && typeof candleArrayOrCandle[0] === 'number'),
-      map((candle: BitfinexRawCandleStick) => adaptBitfinexRawCandleStick(candle)),
+      filter((candleArrayOrCandle) => typeof candleArrayOrCandle[0] === 'number'),
+      map((candle) => adaptBitfinexRawCandleStick(<BitfinexRawCandleStick>candle)),
     );
   }
 
@@ -68,6 +68,7 @@ export class BitfinexCandleStick {
       map((candleArrayOrCandle) => {
         if (candleArrayOrCandle[0] && typeof candleArrayOrCandle[0] === 'object') {
           const initialCandles = <BitfinexRawCandleStick[]>candleArrayOrCandle;
+
           return initialCandles.map(adaptBitfinexRawCandleStick);
         }
 
@@ -95,6 +96,7 @@ export class BitfinexCandleStick {
 function getCandleSubcribeRequest(pair: string, minutesFoot: number): WebsocketSubOrUnSubRequest {
   const symbol = getSymbol(pair);
   const timeFrame = getCandleTimeFrame(minutesFoot);
+
   return {
     event: 'subscribe',
     channel: 'candles',

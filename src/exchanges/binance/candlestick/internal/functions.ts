@@ -9,19 +9,21 @@ export function binanceCandleStickApiUrl(pair: string, minutesFoot: number, star
   let url = `${apiEndPoint}/api/v1/klines?symbol=${symbol}&interval=${interval}`;
 
   // if startTime provided and no limit, calculate to use limit and drop startTime
+  let startTimeAdjusted = startTime;
+  let limitAdjusted = limit;
   if (startTime && endTime && !limit) {
-    limit = Math.round((endTime - startTime) / (minutesFoot * 60 * 1000)) + 1;
-    startTime = 0;
+    limitAdjusted = Math.round((endTime - startTime) / (minutesFoot * 60 * 1000)) + 1;
+    startTimeAdjusted = 0;
   }
 
-  if (startTime) {
-    url += `&startTime=${startTime}`;
+  if (startTimeAdjusted) {
+    url += `&startTime=${startTimeAdjusted}`;
   }
   if (endTime) {
     url += `&endTime=${endTime}`;
   }
-  if (limit) {
-    url += `&limit=${limit}`;
+  if (limitAdjusted) {
+    url += `&limit=${limitAdjusted}`;
   }
 
   return url;
@@ -30,7 +32,8 @@ export function binanceCandleStickApiUrl(pair: string, minutesFoot: number, star
 // candlestick ws channel
 export function binanceCandleStickChannel(pair: string, minutesFoot: number): string {
   const interval = getCandleInterval(minutesFoot);
-  return wsEndpoint + binancePair(pair) + '@kline_' + interval;
+
+  return `${wsEndpoint}/${binancePair(pair)}@kline_${interval}`;
 }
 
 export function adaptBinanceRestCandle(binanceCandle: BinanceRawRestCandle): CandleStick {

@@ -8,15 +8,15 @@ import { BinanceRawOrderbook, BinanceRawWsOrderbook } from './internal/types';
 import { binanceOrderbookApiUrl, binanceOrderbookChannel, adaptBinanceWsOrderbook } from './internal/functions';
 
 export class BinanceOrderbook {
-  private pairStreamMap: { [pair: string]: ReplaySubject<Orderbook> } = {};
-  private pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
-  private corsProxy: string;
+  private readonly pairStreamMap: { [pair: string]: ReplaySubject<Orderbook> } = {};
+  private readonly pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
+  private readonly corsProxy: string;
 
-  constructor(corsProxy = '') {
+  constructor(corsProxy: string = '') {
     this.corsProxy = corsProxy;
   }
 
-  fetchOrderbook$(pair: string, limit = 20): Observable<Orderbook> {
+  fetchOrderbook$(pair: string, limit: number = 20): Observable<Orderbook> {
     const originUrl = binanceOrderbookApiUrl(pair, limit);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
@@ -57,8 +57,9 @@ export class BinanceOrderbook {
     // orderbook (diff) realtime stream, buffered in time range: [fetch start => fetch done]
     const updateBufferBeforeFetchDone$ = update$.pipe(
       buffer(fetchOrderbook$),
-      take(1),
-      mergeMap((bufferOrderbooks) => from(bufferOrderbooks)),
+      mergeMap((orderbooks) => {
+        return from(orderbooks);
+      }),
     );
 
     // start these 2 streams concurrently at first, data come in order and then complete:

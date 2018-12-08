@@ -5,10 +5,10 @@ import { BitbankOrderbook } from './bitbank-orderbook';
 
 const bitbankOrderbook = new BitbankOrderbook();
 
-describe('Test Bitbank orderbook', function() {
+describe('bitbankOrderbook', () => {
   const markets = ['btc_jpy', 'xrp_jpy'];
   markets.forEach((market) => {
-    it('should get depth ' + market, (done) => {
+    it(`should get depth ${market}`, (done) => {
       bitbankOrderbook
         .orderbook$(market)
         .pipe(take(2))

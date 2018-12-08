@@ -15,9 +15,7 @@ export function adaptBitbankCandle(bitbankCandle: BitbankRawCandle): CandleStick
   };
 }
 
-export function eliminateRedundantCandles(candles: CandleStick[], start: number, end?: number): CandleStick[] {
-  candles = candles || [];
-
+export function eliminateRedundantCandles(candles: CandleStick[] = [], start: number, end?: number): CandleStick[] {
   let index = candles.findIndex((candle) => candle.timestamp >= start);
   // not found
   index = index === -1 ? 0 : index;
@@ -39,7 +37,7 @@ export function convertTimestampToCandleFoot(timestamp: number, minutesFoot: num
 
 export function isLatestTimestring(timestring: string): boolean {
   const date = new Date();
-  const latestYear = date.getUTCFullYear() + '';
+  const latestYear = `${date.getUTCFullYear()}`;
   const latestDay = getUTCDateString(date.getTime());
 
   return timestring === latestYear || timestring === latestDay;
@@ -68,7 +66,7 @@ export function getTimestringArrayFromRange(resolution: string, start: number, e
  */
 function getUTCDateString(ts: number): string {
   const d = new Date(ts);
-  const yearStr = d.getUTCFullYear() + '';
+  const yearStr = `${d.getUTCFullYear()}`;
 
   const month = d.getUTCMonth() + 1;
   const monthStr = (month < 10 ? '0' : '') + month;
@@ -102,7 +100,7 @@ function getYearTimestringArrayFromRange(start: number, end: number): string[] {
 
   // loop condition: dateFormat <= endDateFormat;
   while (year <= endYear) {
-    timestringArray.push(year + '');
+    timestringArray.push(`${year}`);
     year += 1;
   }
 
@@ -113,10 +111,12 @@ export function nextDateString(dateString: string): string {
   const dayStr = dateString.substr(6, 2);
   const date = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dayStr}`);
   const nextDay = +dayStr + 1;
+
   return getUTCDateString(date.setUTCDate(nextDay));
 }
 
 function getUTCYearString(ts: number): number {
   const d = new Date(ts);
+
   return d.getUTCFullYear();
 }

@@ -6,14 +6,15 @@ import { Orderbook } from '../../exchange-types';
 import { publicUrl, subscribeKey, RawData } from '../bitbank-common';
 
 export class BitbankOrderbook {
-  private pubnub: PubnubRxJs;
+  private readonly pubnub: PubnubRxJs;
 
   constructor(pubnub?: PubnubRxJs) {
     this.pubnub = pubnub || new PubnubRxJs({ subscribeKey });
   }
 
   fetchOrderbook$(pair: string): Observable<Orderbook> {
-    const orderbookUrl = publicUrl + `/${pair}/depth`;
+    const orderbookUrl = `${publicUrl}/${pair}/depth`;
+
     return fetchRxjs<RawData<Orderbook>>(orderbookUrl).pipe(map((raw) => raw.data));
   }
 
@@ -22,12 +23,13 @@ export class BitbankOrderbook {
   }
 
   stopOrderbook(pair: string): void {
-    const channel = 'depth_' + pair;
+    const channel = `depth_${pair}`;
     this.pubnub.unsubscribeChannel(channel);
   }
 
   private pubnubOrderbook$(pair: string): Observable<Orderbook> {
-    const channel = 'depth_' + pair;
+    const channel = `depth_${pair}`;
+
     return this.pubnub.subscribeChannel<RawData<Orderbook>>(channel).pipe(map((raw) => raw.data));
   }
 }

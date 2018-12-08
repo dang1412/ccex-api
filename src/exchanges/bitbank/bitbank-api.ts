@@ -10,11 +10,11 @@ import { BitbankOrderbook } from './orderbook';
 import { BitbankTrade } from './trade';
 
 export class BitbankApi extends ExchangeApi {
-  private pubnub: PubnubRxJs;
-  private bitbankCandlestick: BitbankCandlestick;
-  private bitbankTicker: BitbankTicker;
-  private bitbankOrderbook: BitbankOrderbook;
-  private bitbankTrade: BitbankTrade;
+  private readonly pubnub: PubnubRxJs;
+  private readonly bitbankCandlestick: BitbankCandlestick;
+  private readonly bitbankTicker: BitbankTicker;
+  private readonly bitbankOrderbook: BitbankOrderbook;
+  private readonly bitbankTrade: BitbankTrade;
 
   get pubnubRxJs(): PubnubRxJs {
     return this.pubnub;

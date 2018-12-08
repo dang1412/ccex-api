@@ -47,7 +47,7 @@ const askTestCases: AskTestCase[] = [
 
 describe('Test update-orderbook.ts helper functions', () => {
   bidTestCases.forEach((test, index) => {
-    it('Test mergeBids case # ' + index, () => {
+    it(`Test mergeBids case # ${index}`, () => {
       const actualResult = mergeBids(test.bids, test.updateBids);
       console.log('bids actualResult', actualResult);
       expect(actualResult).toStrictEqual(test.result); // , '#' + index + ': actual result is different from expect result');
@@ -55,7 +55,7 @@ describe('Test update-orderbook.ts helper functions', () => {
   });
 
   askTestCases.forEach((test, index) => {
-    it('Test mergeAsks case # ' + index, () => {
+    it(`Test mergeAsks case # ${index}`, () => {
       const actualResult = mergeAsks(test.asks, test.updateAsks);
       console.log('asks actualResult', actualResult);
       expect(actualResult).toStrictEqual(test.result); // , '#' + index + ': actual result is different from expect result');

@@ -10,7 +10,7 @@ module.exports = {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
-  testMatch: ['<rootDir>/src/*/binance/**/*.spec.ts'],
+  testMatch: ['<rootDir>/src/*/bitbank/**/*.spec.ts'],
   // "testRegex": "/src/.*binance.*\\.(test|spec).(ts)$",
   testURL: 'http://localhost/',
   collectCoverageFrom: ['src/**/*.{js,ts}', '!**/node_modules/**', '!**/vendor/**'],

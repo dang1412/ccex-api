@@ -1,11 +1,11 @@
-import { Observable, empty } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
 import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
 import { SampleTicker } from './ticker/sample-ticker';
 
 export class SampleApi extends ExchangeApi {
-  private sampleTicker: SampleTicker;
+  private readonly sampleTicker: SampleTicker;
 
   get exchangeInfo(): ExchangeInfo {
     return {
@@ -54,12 +54,12 @@ export class SampleApi extends ExchangeApi {
 
   // api request for depth
   fetchOrderbook$(pair: string): Observable<Orderbook> {
-    return empty();
+    return EMPTY;
   }
 
   // realtime depth
   orderbook$(pair: string): Observable<Orderbook> {
-    return empty();
+    return EMPTY;
   }
 
   // stop realtime orderbook
@@ -68,11 +68,11 @@ export class SampleApi extends ExchangeApi {
   }
 
   fetchTrades$(pair: string): Observable<Trade[]> {
-    return empty();
+    return EMPTY;
   }
 
   trade$(pair: string): Observable<Trade> {
-    return empty();
+    return EMPTY;
   }
 
   // stop realtime trade
@@ -82,6 +82,6 @@ export class SampleApi extends ExchangeApi {
 
   // request candlestick by time range and resolution
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
-    return empty();
+    return EMPTY;
   }
 }

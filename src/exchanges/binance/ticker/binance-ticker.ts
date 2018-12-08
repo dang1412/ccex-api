@@ -7,11 +7,11 @@ import { BinanceRawWsTicker, BinanceRawRestTicker } from './internal/types';
 import { adaptBinanceWsTicker, adaptBinanceRestTicker, binanceTickerChannel, binanceTickerApiUrl } from './internal/functions';
 
 export class BinanceTicker {
-  private pairStreamMap: { [pair: string]: Observable<Ticker> } = {};
-  private pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
-  private corsProxy: string;
+  private readonly pairStreamMap: { [pair: string]: Observable<Ticker> } = {};
+  private readonly pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
+  private readonly corsProxy: string;
 
-  constructor(corsProxy = '') {
+  constructor(corsProxy: string = '') {
     this.corsProxy = corsProxy;
   }
 

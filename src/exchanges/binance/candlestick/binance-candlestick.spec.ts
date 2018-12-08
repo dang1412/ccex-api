@@ -21,8 +21,7 @@ describe('Test binance candlestick functions', () => {
   it(`should fetch ${pair} ${minutesFoot}min candles in provided time range`, (done) => {
     binanceCandlestick
       .fetchCandleStickRange$(pair, minutesFoot, 1529509826239 - 60000 * 60 * 24, 1529509826239)
-      .toPromise()
-      .then((candles) => {
+      .subscribe((candles) => {
         candles.forEach(checkCandleStick);
         done();
       });

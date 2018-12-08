@@ -40,7 +40,7 @@ export function checkOrderbook(orderbook: Orderbook): void {
 }
 
 // check trades
-export function checkTrades(trades: Trade[], increaseTimestamp = true): void {
+export function checkTrades(trades: Trade[], increaseTimestamp: boolean = true): void {
   expect(trades);
   expect(trades.length >= 0);
 

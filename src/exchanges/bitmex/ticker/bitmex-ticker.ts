@@ -1,18 +1,18 @@
-import { Observable, empty } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 
 import { Ticker } from '../../exchange-types';
 
 export class BitmexTicker {
   fetchTicker$(pair: string): Observable<Ticker> {
-    return empty();
+    return EMPTY;
   }
 
   ticker$(pair: string): Observable<Ticker> {
     // receive rawTicker and adapt to Ticker here
-    return empty();
+    return EMPTY;
   }
 
-  stopTicker(pair: string) {
+  stopTicker(pair: string): void {
     // implement
   }
 }

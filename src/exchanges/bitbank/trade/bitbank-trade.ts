@@ -12,30 +12,34 @@ interface BitbankRawTrades {
 }
 
 export class BitbankTrade {
-  private pubnub: PubnubRxJs;
+  private readonly pubnub: PubnubRxJs;
 
   constructor(pubnub?: PubnubRxJs) {
     this.pubnub = pubnub || new PubnubRxJs({ subscribeKey });
   }
 
   fetchTrades$(pair: string): Observable<Trade[]> {
-    const tradesUrl = publicUrl + `/${pair}/transactions`;
+    const tradesUrl = `${publicUrl}/${pair}/transactions`;
+
     return fetchRxjs<RawData<BitbankRawTrades>>(tradesUrl).pipe(map((raw) => raw.data.transactions.map(adaptBitbankTrade)));
   }
 
   trade$(pair: string): Observable<Trade> {
-    const channel = 'transactions_' + pair;
+    const channel = `transactions_${pair}`;
+
     return this.pubnub.subscribeChannel<RawData<BitbankRawTrades>>(channel).pipe(
       map((raw) => raw.data.transactions.map(adaptBitbankTrade)),
       // sort the trades in ascending order of timestamp (old to new one)
       map((trades) => trades.sort((t1, t2) => t1.timestamp - t2.timestamp)),
       // turn the stream of trade array into stream of single trade
-      concatMap((trades) => from(trades)),
+      concatMap((trades) => {
+        return from(trades);
+      }),
     );
   }
 
   stopTrade(pair: string): void {
-    const channel = 'transactions_' + pair;
+    const channel = `transactions_${pair}`;
     this.pubnub.unsubscribeChannel(channel);
   }
 }

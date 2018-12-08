@@ -1,4 +1,3 @@
-import 'mocha';
 import { take } from 'rxjs/operators';
 
 import { checkTicker } from '../../exchange-test.functions';
@@ -6,8 +5,8 @@ import { CoinbaseTicker } from './coinbase-ticker';
 
 const coinbaseTicker = new CoinbaseTicker();
 
-describe('Test Coinbase tickers', function() {
-  this.timeout(0);
+describe('coinbaseTicker', () => {
+  jest.setTimeout(30000);
 
   const markets = ['btc_usd', 'eth_usd', 'eth_btc'];
 
@@ -15,7 +14,7 @@ describe('Test Coinbase tickers', function() {
    * Rest api ticker
    */
   markets.forEach((market) => {
-    it('should fetch ticker api' + market, (done) => {
+    it(`should fetch ticker api ${market}`, (done) => {
       coinbaseTicker.fetchTicker$(market).subscribe(
         (ticker) => {
           console.log(ticker.pair, ticker.last);
@@ -33,7 +32,7 @@ describe('Test Coinbase tickers', function() {
    * Realtime ticker
    */
   markets.forEach((market) => {
-    it('should listen ticker realtime ' + market, (done) => {
+    it(`should listen ticker realtime ${market}`, (done) => {
       coinbaseTicker
         .ticker$(market)
         .pipe(take(2))

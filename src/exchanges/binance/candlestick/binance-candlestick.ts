@@ -49,5 +49,5 @@ export class BinanceCandleStick {
 }
 
 function getKey(pair: string, minutesFoot: number): string {
-  return pair + minutesFoot;
+  return `${pair}${minutesFoot}`;
 }

@@ -7,10 +7,10 @@ import { getKey, wsEndpoint } from '../bitfinex-common';
 type WsResponse = WebsocketRequestResponse | WebsocketMessageResponse<any>;
 
 export class BitfinexWebsocket {
-  private ws: WebSocketRxJs<WsResponse>;
-  private keyStreamMap: { [key: string]: ReplaySubject<any> } = {};
-  private chanIdKeyMap: { [chanId: number]: string } = {};
-  private unsubscribeSuccess$ = new ReplaySubject<string>(1);
+  private ws: WebSocketRxJs<WsResponse> | null = null;
+  private readonly keyStreamMap: { [key: string]: ReplaySubject<any> } = {};
+  private readonly chanIdKeyMap: { [chanId: number]: string } = {};
+  private readonly unsubscribeSuccess$ = new ReplaySubject<string>(1);
 
   /**
    *
@@ -26,7 +26,7 @@ export class BitfinexWebsocket {
     // map each subscribe channel to an unique key
     // use key to store corresponding stream
     const key = getKey(subscribeRequest);
-    if (!this.keyStreamMap[key]) {
+    if (!this.keyStreamMap[key] && this.ws) {
       // prepare subject
       this.keyStreamMap[key] = new ReplaySubject<T>(1);
       // send subscribe request
@@ -72,8 +72,10 @@ export class BitfinexWebsocket {
   }
 
   destroy(): void {
-    this.ws.close();
-    this.ws = null;
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
 
     // TODO complete and delete all subject
   }
@@ -81,7 +83,7 @@ export class BitfinexWebsocket {
   /**
    *
    */
-  private initWebsocket() {
+  private initWebsocket(): void {
     if (this.ws) {
       throw new Error('Bitfinex websocket is already initialized');
     }
@@ -120,6 +122,8 @@ export class BitfinexWebsocket {
   }
 }
 
-function getKeyByValue(object: { [key: number]: string }, value: string): number {
-  return +Object.keys(object).find((key) => object[key] === value);
+function getKeyByValue(object: { [key: string]: string }, value: string): number {
+  const keyString = Object.keys(object).find((key) => object[key] === value);
+
+  return keyString ? +keyString : 0;
 }

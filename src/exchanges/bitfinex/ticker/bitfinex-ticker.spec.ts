@@ -1,4 +1,3 @@
-import 'mocha';
 import { take } from 'rxjs/operators';
 
 import { checkTicker } from '../../exchange-test.functions';
@@ -6,11 +5,12 @@ import { BitfinexTicker } from './bitfinex-ticker';
 
 const bitfinexTicker = new BitfinexTicker();
 
-describe('Test Bitfinex tickers', function() {
-  this.timeout(0);
+describe('bitfinexTicker', () => {
+  jest.setTimeout(30000);
+
   const markets = ['btc_usd', 'eos_btc', 'eos_usd'];
   markets.forEach((market) => {
-    it('should get ticker ' + market, (done) => {
+    it(`should get ticker ${market}`, (done) => {
       bitfinexTicker
         .ticker$(market)
         .pipe(take(2))
