@@ -22,9 +22,9 @@ export function adaptCoinbaseWsOrderbookSnapshot(snapshot: CoinbaseWsOrderbookSn
 }
 
 export function adaptCoinbaseWsOrderbookUpdate(update: CoinbaseWsOrderbookUpdate): Orderbook {
-  const orderbook = { bids: [], asks: [] };
+  const orderbook: Orderbook = { bids: [], asks: [] };
   update.changes.forEach((change) => {
-    const orderbookItem = [change[1], change[2]];
+    const orderbookItem: [string, string] = [change[1], change[2]];
     if (change[0] === 'buy') {
       orderbook.bids.push(orderbookItem);
     } else if (change[0] === 'sell') {

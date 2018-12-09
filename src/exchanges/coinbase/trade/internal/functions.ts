@@ -13,6 +13,6 @@ export function adaptCoinbaseRawTrade(coinbaseRawTrade: CoinbaseRawWsTrade | Coi
     side: coinbaseRawTrade.side,
     price: +coinbaseRawTrade.price,
     amount: +coinbaseRawTrade.size,
-    timestamp: new Date(coinbaseRawTrade.time).getTime(),
+    timestamp: new Date(coinbaseRawTrade.time || '').getTime(),
   };
 }

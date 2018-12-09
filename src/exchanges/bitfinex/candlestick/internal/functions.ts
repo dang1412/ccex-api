@@ -50,7 +50,7 @@ export function adaptBitfinexRawCandleStick(bitfinexCandle: BitfinexRawCandleSti
 }
 
 // '1m', '5m', '15m', '30m', '1h', '3h', '6h', '12h', '1D', '7D', '14D', '1M'
-const minutesTimeFrameMap = {
+const minutesTimeFrameMap: {[key: string]: string} = {
   1: '1m',
   5: '5m',
   15: '15m',

@@ -1,6 +1,6 @@
-import gulp from 'gulp';
-import ts from 'gulp-typescript';
-import tsconfig from './tsconfig.json';
+import * as gulp from 'gulp';
+import * as ts from 'gulp-typescript';
+import * as tsconfig from './tsconfig.json';
 
 // compile ts
 gulp.task('compile', () => {

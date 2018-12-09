@@ -16,7 +16,7 @@ export function adaptCoinbaseRawWsTicker(coinbaseRawTicker: CoinbaseRawWsTicker,
     high: +coinbaseRawTicker.high_24h,
     last: +coinbaseRawTicker.price,
     vol: +coinbaseRawTicker.volume_24h,
-    timestamp: new Date(coinbaseRawTicker.time).getTime(),
+    timestamp: new Date(coinbaseRawTicker.time || '').getTime(),
   };
 }
 

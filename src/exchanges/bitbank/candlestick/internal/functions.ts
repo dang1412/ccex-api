@@ -69,10 +69,10 @@ function getUTCDateString(ts: number): string {
   const yearStr = `${d.getUTCFullYear()}`;
 
   const month = d.getUTCMonth() + 1;
-  const monthStr = (month < 10 ? '0' : '') + month;
+  const monthStr = month < 10 ? `0${month}` : `${month}`;
 
   const day = d.getUTCDate();
-  const dayStr = (day < 10 ? '0' : '') + day;
+  const dayStr = day < 10 ? `0${day}` : `${day}`;
 
   return yearStr + monthStr + dayStr;
 }
