@@ -61,7 +61,6 @@ export class CoinbaseOrderbook {
 
     return this.coinbaseWebsocket.subscribe<CoinbaseWsOrderbookSnapshot | CoinbaseWsOrderbookUpdate>(request).pipe(
       map((snapshotOrUpdate) => {
-        console.log('[dev] coinbase level2', snapshotOrUpdate);
         if (snapshotOrUpdate.type === 'snapshot') {
           return adaptCoinbaseWsOrderbookSnapshot(snapshotOrUpdate);
         } else {

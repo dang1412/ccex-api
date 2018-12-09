@@ -57,6 +57,7 @@ export class BinanceOrderbook {
     // orderbook (diff) realtime stream, buffered in time range: [fetch start => fetch done]
     const updateBufferBeforeFetchDone$ = update$.pipe(
       buffer(fetchOrderbook$),
+      take(1),
       mergeMap((orderbooks) => {
         return from(orderbooks);
       }),

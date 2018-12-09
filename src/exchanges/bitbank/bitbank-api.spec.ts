@@ -3,3 +3,6 @@
 
 // const bitbankApi = new BitbankApi();
 // new ExchangeApiTest(bitbankApi).run();
+describe('bitbankApi', () => {
+  it('should work', () => {});
+});

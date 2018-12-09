@@ -6,7 +6,7 @@ import { CoinbaseTrade } from './coinbase-trade';
 const coinbaseTrade = new CoinbaseTrade();
 
 describe('coinbaseTrade', () => {
-  jest.setTimeout(0);
+  jest.setTimeout(20000);
 
   const markets = ['btc_usd'];
 

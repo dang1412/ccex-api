@@ -6,7 +6,7 @@ import { CoinbaseOrderbook } from './coinbase-orderbook';
 const coinbaseOrderbook = new CoinbaseOrderbook();
 
 describe('coinbaseOrderbook', () => {
-  jest.setTimeout(30000);
+  jest.setTimeout(10000);
 
   const markets = ['btc_usd', 'eth_usd'];
 
@@ -17,7 +17,6 @@ describe('coinbaseOrderbook', () => {
     it(`should fetch orderbook api ${market}`, (done) => {
       coinbaseOrderbook.fetchOrderbook$(market).subscribe(
         (orderbook) => {
-          console.log(orderbook.asks[0], orderbook.bids[0]);
           checkOrderbook(orderbook);
         },
         (e) => console.log('Error'),
@@ -35,10 +34,9 @@ describe('coinbaseOrderbook', () => {
     it(`should listen orderbook realtime ${market}`, (done) => {
       coinbaseOrderbook
         .orderbook$(market)
-        .pipe(take(4))
+        .pipe(take(3))
         .subscribe(
           (orderbook) => {
-            console.log(orderbook.asks[0], orderbook.bids[0]);
             checkOrderbook(orderbook);
           },
           (e) => console.log('Error'),

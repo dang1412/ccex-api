@@ -6,9 +6,9 @@ import { CoinbaseTicker } from './coinbase-ticker';
 const coinbaseTicker = new CoinbaseTicker();
 
 describe('coinbaseTicker', () => {
-  jest.setTimeout(30000);
+  jest.setTimeout(20000);
 
-  const markets = ['btc_usd', 'eth_usd', 'eth_btc'];
+  const markets = ['btc_usd', 'eth_usd'];
 
   /**
    * Rest api ticker
@@ -17,7 +17,6 @@ describe('coinbaseTicker', () => {
     it(`should fetch ticker api ${market}`, (done) => {
       coinbaseTicker.fetchTicker$(market).subscribe(
         (ticker) => {
-          console.log(ticker.pair, ticker.last);
           checkTicker(ticker);
         },
         (e) => console.log('Error'),
@@ -32,13 +31,12 @@ describe('coinbaseTicker', () => {
    * Realtime ticker
    */
   markets.forEach((market) => {
-    it(`should listen ticker realtime ${market}`, (done) => {
+    it(`should get ticker realtime ${market}`, (done) => {
       coinbaseTicker
         .ticker$(market)
         .pipe(take(2))
         .subscribe(
           (ticker) => {
-            console.log(ticker.pair, ticker.last);
             checkTicker(ticker);
           },
           (e) => console.log('Error'),

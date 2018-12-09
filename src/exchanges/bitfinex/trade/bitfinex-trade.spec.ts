@@ -8,13 +8,12 @@ const bitfinexTrade = new BitfinexTrade();
 describe('bitfinexTrade', () => {
   jest.setTimeout(30000);
 
-  const markets = ['btc_usd', 'eth_btc'];
+  const markets = ['btc_usd', 'eth_usd'];
 
   markets.forEach((market) => {
     it(`should fetch rest api trades ${market}`, (done) => {
       bitfinexTrade.fetchTrades$(market, undefined, undefined, 10, 1).subscribe(
         (trades) => {
-          console.log(trades);
           checkTrades(trades);
         },
         (e) => console.log('Error'),
@@ -30,12 +29,11 @@ describe('bitfinexTrade', () => {
       bitfinexTrade
         .trade$(market)
         .pipe(
-          bufferCount(5),
+          bufferCount(2),
           take(1),
         )
         .subscribe(
           (trades) => {
-            console.log('trades ===>', trades);
             checkTrades(trades);
           },
           (e) => console.log('Error'),

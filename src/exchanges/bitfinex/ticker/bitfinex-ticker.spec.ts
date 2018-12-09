@@ -6,17 +6,16 @@ import { BitfinexTicker } from './bitfinex-ticker';
 const bitfinexTicker = new BitfinexTicker();
 
 describe('bitfinexTicker', () => {
-  jest.setTimeout(30000);
+  jest.setTimeout(20000);
 
-  const markets = ['btc_usd', 'eos_btc', 'eos_usd'];
+  const markets = ['btc_usd', 'eth_usd'];
   markets.forEach((market) => {
-    it(`should get ticker ${market}`, (done) => {
+    it(`should get ticker realtime ${market}`, (done) => {
       bitfinexTicker
         .ticker$(market)
         .pipe(take(2))
         .subscribe(
           (ticker) => {
-            console.log(ticker.pair, ticker.last);
             checkTicker(ticker);
           },
           (e) => console.log('Error'),

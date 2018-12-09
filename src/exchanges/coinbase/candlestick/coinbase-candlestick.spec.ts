@@ -3,7 +3,7 @@ import { CoinbaseCandleStick } from './coinbase-candlestick';
 
 const coinbaseCandlestick = new CoinbaseCandleStick();
 
-describe('Coinbase candlestick functions', () => {
+describe('coinbaseCandlestick', () => {
   /**
    * Rest api candlestick
    */

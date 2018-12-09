@@ -6,7 +6,7 @@ import { BitbankTrade } from './bitbank-trade';
 const bitbankTrade = new BitbankTrade();
 
 describe('bitbankTrade', () => {
-  jest.setTimeout(30000);
+  jest.setTimeout(10000);
   const markets = ['btc_jpy', 'xrp_jpy'];
 
   markets.forEach((market) => {
@@ -14,7 +14,7 @@ describe('bitbankTrade', () => {
       bitbankTrade
         .trade$(market)
         .pipe(
-          bufferCount(10),
+          bufferCount(2),
           take(1),
         )
         .subscribe(
