@@ -101,25 +101,27 @@ Besides, an exchange may have more specific functions, it depends on exchange pr
 In that case, specific guide for that exchange will be located at `exchanges/{exchange}/README.md` (TODO)
 
 # Contributor guide
-In order to add a new exchange, simply clone folder `src/exchanges/sample`, rename, implement functions and include appropiate tests for sub-modules (ticker, orderbook...) and some internal functions (TODO)
+In order to add a new exchange, simply clone folder `src/exchanges/sample`, rename, implement functions and include appropiate tests for sub-modules (ticker, orderbook...) and some internal functions.
 
-Finally make sure the exchange `sample` pass predefined test by running (TODO)
+Finally make sure the exchange `sample` pass predefined test by running
 
 ```
-npm run main-test --exchange sample
+npm run test sample
 ```
 
 If you find a bug or anything should be added to fit your need, please create issue. This is still in very early stage so any feedback would be much appreciated.
 
-# Test (TODO)
-main test: test for main module which implement the above interface directly
+# Test
+We can test all or 1 specific exchange. Note that a realtime test can fail by timeout according to server data stream coming late.
+## Test all
 ```
-npm run main-test
+npm run test
 ```
 
-sub test: test for sub-modules used inside main module and its internal functions
+## Test specific exchanage
 ```
-npm run sub-test
+npm run test binance
+npm run test bitbank
 ```
 
 # Dependencies
