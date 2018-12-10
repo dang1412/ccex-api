@@ -11,7 +11,7 @@ These features are supported with all major exchanges
 - Support for both Nodejs and Browser environments.
 - Modular structure make sure you include minimum code as you need (especially for client side application).
 - Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere).
-- More to come: Tradingview datafeed, private rest api with api/secret key...
+- More to come: Tradingview realtime datafeed, private rest api with api/secret key...
 
 # Prequisite
  - Using crypto to sign private request requrie node 10.
@@ -28,22 +28,22 @@ These features are supported with all major exchanges
 # Supported Exchanges
 Binance, Bitbank, Bitfinex, Coinbase
 
-|                                                                                                                           | id                 | name                                                                         | ver | doc                                                                                          | countries                               |
-|---------------------------------------------------------------------------------------------------------------------------|--------------------|------------------------------------------------------------------------------|:---:|:--------------------------------------------------------------------------------------------:|-----------------------------------------|
-|![Binance](https://user-images.githubusercontent.com/1294454/29604020-d5483cdc-87ee-11e7-94c7-d1a8d9169293.jpg)            | binance            | [Binance](https://www.binance.com)                                           | *   | [API](https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md) | China                                   |
-|![Bitbank](https://user-images.githubusercontent.com/1294454/37808081-b87f2d9c-2e59-11e8-894d-c1900b7584fe.jpg)            | bitbank            | [Bitbank](https://bitbank.cc/)                                               | 1   | [API](https://docs.bitbank.cc/)                                                              | Japan                                   |
-|![Bitfinex](https://user-images.githubusercontent.com/1294454/27766244-e328a50c-5ed2-11e7-947b-041416579bb3.jpg)           | bitfinex           | [Bitfinex v2](https://www.bitfinex.com)                                      | 2   | [API](https://bitfinex.readme.io/v2/docs)                                                    | British Virgin Islands                  |
-|![Coinbase](https://user-images.githubusercontent.com/1294454/40811661-b6eceae2-653a-11e8-829e-10bfadb078cf.jpg)           | coinbase           | [Coinbase](https://pro.coinbase.com/)                                        | *   | [API](https://docs.pro.coinbase.com/)                                                        | US                                      |
+|   | id/docs  | homepage | version | origin | country                |
+|---|----------|----------|---------|--------|------------------------|
+|![Binance](https://user-images.githubusercontent.com/1294454/29604020-d5483cdc-87ee-11e7-94c7-d1a8d9169293.jpg)  | [binance](src/exchange/binance) | Binance  | *       | [API](https://github.com/binance-exchange/binance-official-api-docs/blob/master)    | China                  |
+|![Bitbank](https://user-images.githubusercontent.com/1294454/37808081-b87f2d9c-2e59-11e8-894d-c1900b7584fe.jpg)  | [bitbank](src/exchange/bitbank)  | Bitbank  | *       | [API](https://docs.bitbank.cc/)    | Japan                  |
+|![Bitfinex](https://user-images.githubusercontent.com/1294454/27766244-e328a50c-5ed2-11e7-947b-041416579bb3.jpg)  | [bitfinex](src/exchange/bitfinex) | Bitfinex | 2       | [API](https://bitfinex.readme.io/v2/docs)    | British Virgin Islands |
+|![Coinbase](https://user-images.githubusercontent.com/1294454/40811661-b6eceae2-653a-11e8-829e-10bfadb078cf.jpg)  | [coinbase](src/exchange/coinbase) | Coinbase | *       | [API](https://docs.pro.coinbase.com/)    | US                     |
 
 # Roadmap (TODO)
-| Task | Date |
-|---|---|
-| Binance Private Api | 2018/09 |
-| Binance Private User Data Stream | 2018/09 |
-| Bitbank, Bitifnex, Coinbase private stream | 2018/10, 11 |
-| Huobi, Okex | 2018/11, 12 |
-| More exchanges | 2019 |
-| Python and Go version | 2019 |
+| Task | Date | Status |
+|---|---|---|
+| Binance Private User Data Stream | 2018/09 | :white_check_mark: |
+| Binance Private Api | 2018/12 | |
+| Bitbank, Bitifnex, Coinbase private stream | 2019/Q1 | |
+| Huobi, Okex | 2019/Q1 | |
+| More exchanges | 2019/Q2 | |
+| Python and Go version | 2019/Q3, Q4 | |
 
 # Usage
 This library is designed to be usable in both nodejs and browser (with frontend framework like Angular, React, Vue..., with bundle tools like Webpack or Rollup having typescript configured, the umd javascript file coming later) environments.
