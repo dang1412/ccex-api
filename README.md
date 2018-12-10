@@ -30,10 +30,10 @@ Binance, Bitbank, Bitfinex, Coinbase
 
 |   | id/docs  | homepage | version | origin | country                |
 |---|----------|----------|---------|--------|------------------------|
-|![Binance](https://user-images.githubusercontent.com/1294454/29604020-d5483cdc-87ee-11e7-94c7-d1a8d9169293.jpg)  | [binance](tree/master/src/exchanges/binance) | Binance  | *       | [API](https://github.com/binance-exchange/binance-official-api-docs/blob/master)    | China                  |
-|![Bitbank](https://user-images.githubusercontent.com/1294454/37808081-b87f2d9c-2e59-11e8-894d-c1900b7584fe.jpg)  | [bitbank](tree/master/src/exchanges/bitbank)  | Bitbank  | *       | [API](https://docs.bitbank.cc/)    | Japan                  |
-|![Bitfinex](https://user-images.githubusercontent.com/1294454/27766244-e328a50c-5ed2-11e7-947b-041416579bb3.jpg)  | [bitfinex](tree/master/src/exchanges/bitfinex) | Bitfinex | 2       | [API](https://bitfinex.readme.io/v2/docs)    | British Virgin Islands |
-|![Coinbase](https://user-images.githubusercontent.com/1294454/40811661-b6eceae2-653a-11e8-829e-10bfadb078cf.jpg)  | [coinbase](tree/master/src/exchanges/coinbase) | Coinbase | *       | [API](https://docs.pro.coinbase.com/)    | US                     |
+|![Binance](https://user-images.githubusercontent.com/1294454/29604020-d5483cdc-87ee-11e7-94c7-d1a8d9169293.jpg)  | [binance](src/exchanges/binance) | Binance  | *       | [API](https://github.com/binance-exchange/binance-official-api-docs/blob/master)    | China                  |
+|![Bitbank](https://user-images.githubusercontent.com/1294454/37808081-b87f2d9c-2e59-11e8-894d-c1900b7584fe.jpg)  | [bitbank](src/exchanges/bitbank)  | Bitbank  | *       | [API](https://docs.bitbank.cc/)    | Japan                  |
+|![Bitfinex](https://user-images.githubusercontent.com/1294454/27766244-e328a50c-5ed2-11e7-947b-041416579bb3.jpg)  | [bitfinex](src/exchanges/bitfinex) | Bitfinex | 2       | [API](https://bitfinex.readme.io/v2/docs)    | British Virgin Islands |
+|![Coinbase](https://user-images.githubusercontent.com/1294454/40811661-b6eceae2-653a-11e8-829e-10bfadb078cf.jpg)  | [coinbase](src/exchanges/coinbase) | Coinbase | *       | [API](https://docs.pro.coinbase.com/)    | US                     |
 
 # Roadmap (TODO)
 | Task | Date | Status |
