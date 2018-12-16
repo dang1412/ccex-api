@@ -2,11 +2,13 @@ import { take } from 'rxjs/operators';
 
 import { checkCandleStick } from '../../exchange-test.functions';
 import { BitfinexCandleStick } from './bitfinex-candlestick';
+import { BitfinexWebsocket } from '../websocket';
 
-const bitfinexCandlestick = new BitfinexCandleStick();
+const bitfinexWebsocket = new BitfinexWebsocket();
+const bitfinexCandlestick = new BitfinexCandleStick('', bitfinexWebsocket);
 
 describe('Test bitfinex candlestick functions', () => {
-  jest.setTimeout(10000);
+  jest.setTimeout(30000);
 
   it('should fetch btc_usd 5min candles in time range', (done) => {
     bitfinexCandlestick.fetchCandleStickRange$('btc_usd', 5, 1529509826239 - 60000 * 60 * 24, 1529509826239).subscribe((candles) => {
@@ -26,6 +28,7 @@ describe('Test bitfinex candlestick functions', () => {
         () => console.log('error'),
         () => {
           bitfinexCandlestick.stopCandleStick('btc_usd', 5);
+          bitfinexWebsocket.destroy();
           done();
         },
       );

@@ -2,13 +2,15 @@ import { bufferCount, take } from 'rxjs/operators';
 
 import { checkTrades } from '../../exchange-test.functions';
 import { BitfinexTrade } from './bitfinex-trade';
+import { BitfinexWebsocket } from '../websocket';
 
-const bitfinexTrade = new BitfinexTrade();
+const bitfinexWebsocket = new BitfinexWebsocket();
+const bitfinexTrade = new BitfinexTrade('', bitfinexWebsocket);
 
 describe('bitfinexTrade', () => {
   jest.setTimeout(30000);
 
-  const markets = ['btc_usd', 'eth_usd'];
+  const markets = ['btc_usd'];
 
   markets.forEach((market) => {
     it(`should fetch rest api trades ${market}`, (done) => {
@@ -39,6 +41,7 @@ describe('bitfinexTrade', () => {
           (e) => console.log('Error'),
           () => {
             bitfinexTrade.stopTrade(market);
+            bitfinexWebsocket.destroy();
             done();
           },
         );

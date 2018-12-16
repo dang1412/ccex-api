@@ -2,13 +2,15 @@ import { take } from 'rxjs/operators';
 
 import { checkOrderbook } from '../../exchange-test.functions';
 import { BitfinexOrderbook } from './bitfinex-orderbook';
+import { BitfinexWebsocket } from '../websocket';
 
-const bitfinexOrderbook = new BitfinexOrderbook();
+const bitfinexWebsocket = new BitfinexWebsocket();
+const bitfinexOrderbook = new BitfinexOrderbook('', bitfinexWebsocket);
 
 describe('bitfinexOrderbook', () => {
-  jest.setTimeout(10000);
+  jest.setTimeout(30000);
 
-  const markets = ['btc_usd', 'eth_usd'];
+  const markets = ['btc_usd'];
 
   markets.forEach((market) => {
     it(`should get orderbook realtime ${market}`, (done) => {
@@ -22,6 +24,7 @@ describe('bitfinexOrderbook', () => {
           (e) => console.log('Error'),
           () => {
             bitfinexOrderbook.stopOrderbook(market);
+            bitfinexWebsocket.destroy();
             done();
           },
         );

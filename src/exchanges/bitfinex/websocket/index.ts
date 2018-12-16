@@ -1,1 +1,1 @@
-export { BitfinexWebsocket } from './bitfinex-websocket';
+export * from './bitfinex-websocket';
