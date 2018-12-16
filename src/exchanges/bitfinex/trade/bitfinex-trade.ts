@@ -4,25 +4,18 @@ import { map, filter } from 'rxjs/operators';
 import { fetchRxjs } from '../../../common';
 import { Trade } from '../../exchange-types';
 import { getSymbol } from '../bitfinex-common';
-import { WebsocketSubOrUnSubRequest } from '../bitfinex-common.types';
-import { BitfinexWebsocket } from '../websocket';
+import { BitfinexWebsocket, WebsocketRequestBase } from '../websocket';
 
 import { getTradesUrl, adaptBitfinexTrade } from './internal/functions';
 import { BitfinexRawTrade } from './internal/types';
 
 export class BitfinexTrade {
-  private readonly corsProxy: string;
-  private readonly bitfinexWebsocket: BitfinexWebsocket;
-
   /**
    *
    * @param corsProxy
    * @param bitfinexWebsocket
    */
-  constructor(corsProxy: string = '', bitfinexWebsocket?: BitfinexWebsocket) {
-    this.corsProxy = corsProxy;
-    this.bitfinexWebsocket = bitfinexWebsocket || new BitfinexWebsocket();
-  }
+  constructor(private readonly corsProxy: string = '', private readonly bitfinexWebsocket: BitfinexWebsocket) {}
 
   // fetch trades
   fetchTrades$(pair: string, start?: number, end?: number, limit?: number, sort?: number): Observable<Trade[]> {
@@ -32,8 +25,13 @@ export class BitfinexTrade {
     return fetchRxjs<BitfinexRawTrade[]>(url).pipe(map((trades) => trades.map(adaptBitfinexTrade)));
   }
 
+  /**
+   * latest trade only
+   *
+   * @param pair
+   */
   trade$(pair: string): Observable<Trade> {
-    const subcribeRequest = getTradeSubcribeRequest(pair);
+    const subcribeRequest = getTradeRequest(pair);
 
     return this.bitfinexWebsocket.subscribe<BitfinexRawTrade[] | BitfinexRawTrade>(subcribeRequest).pipe(
       filter((tradeArrayOrTrade) => typeof tradeArrayOrTrade[0] === 'number'),
@@ -41,33 +39,37 @@ export class BitfinexTrade {
     );
   }
 
+  /**
+   * trade array at first
+   *
+   * @param pair
+   */
   tradeWithInitialHistory$(pair: string): Observable<Trade[] | Trade> {
-    const subcribeRequest = getTradeSubcribeRequest(pair);
+    const subcribeRequest = getTradeRequest(pair);
 
     return this.bitfinexWebsocket.subscribe<BitfinexRawTrade[] | BitfinexRawTrade>(subcribeRequest).pipe(
       map((tradeArrayOrTrade) => {
+        // array trade
         if (tradeArrayOrTrade[0] && typeof tradeArrayOrTrade[0] === 'object') {
           const initialTrades = <BitfinexRawTrade[]>tradeArrayOrTrade;
 
           return initialTrades.map(adaptBitfinexTrade);
         }
 
+        // single trade
         return adaptBitfinexTrade(<BitfinexRawTrade>tradeArrayOrTrade);
       }),
     );
   }
 
   stopTrade(pair: string): void {
-    const unsubscribeRequest = getTradeSubcribeRequest(pair);
-    // not use event when unsubscribe, delete to avoid confusing
-    delete unsubscribeRequest.event;
+    const unsubscribeRequest = getTradeRequest(pair);
     this.bitfinexWebsocket.unsubscribe(unsubscribeRequest);
   }
 }
 
-function getTradeSubcribeRequest(pair: string): WebsocketSubOrUnSubRequest {
+function getTradeRequest(pair: string): WebsocketRequestBase {
   return {
-    event: 'subscribe',
     channel: 'trades',
     symbol: getSymbol(pair),
   };

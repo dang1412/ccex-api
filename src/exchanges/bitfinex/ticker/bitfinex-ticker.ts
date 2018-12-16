@@ -10,17 +10,11 @@ import { adaptBitfinexTicker, getTickerApiUrl } from './internal/functions';
 import { BitfinexRawTicker } from './internal/types';
 
 export class BitfinexTicker {
-  private readonly corsProxy: string;
-  private readonly bitfinexWebsocket: BitfinexWebsocket;
-
   /**
    * @param corsProxy
    * @param bitfinexWebsocket
    */
-  constructor(corsProxy: string = '', bitfinexWebsocket?: BitfinexWebsocket) {
-    this.corsProxy = corsProxy;
-    this.bitfinexWebsocket = bitfinexWebsocket || new BitfinexWebsocket();
-  }
+  constructor(private readonly corsProxy: string = '', private readonly bitfinexWebsocket: BitfinexWebsocket) {}
 
   fetchTicker$(pair: string): Observable<Ticker> {
     // https://api.bitfinex.com/v2/ticker/tBTCUSD
@@ -33,23 +27,21 @@ export class BitfinexTicker {
   ticker$(pair: string): Observable<Ticker> {
     // { "event": "subscribe", "channel": "ticker", "symbol": "tEOSETH" }
     const subscribeRequest = {
-      event: 'subscribe' as 'subscribe',
       channel: 'ticker',
       symbol: getSymbol(pair),
     };
 
     return this.bitfinexWebsocket
-      .sendRequest<BitfinexRawTicker>(subscribeRequest)
+      .subscribe<BitfinexRawTicker>(subscribeRequest)
       .pipe(map((rawTicker) => adaptBitfinexTicker(rawTicker, pair)));
   }
 
   stopTicker(pair: string): void {
     const unsubscribeRequest = {
-      event: 'unsubscribe' as 'unsubscribe',
       channel: 'ticker',
       symbol: getSymbol(pair),
     };
 
-    this.bitfinexWebsocket.sendRequest(unsubscribeRequest);
+    this.bitfinexWebsocket.unsubscribe(unsubscribeRequest);
   }
 }

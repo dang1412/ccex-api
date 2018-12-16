@@ -3,26 +3,19 @@ import { map, filter } from 'rxjs/operators';
 
 import { fetchRxjs } from '../../../common';
 import { CandleStick } from '../../exchange-types';
-import { WebsocketSubOrUnSubRequest } from '../bitfinex-common.types';
 import { getSymbol } from '../bitfinex-common';
-import { BitfinexWebsocket } from '../websocket';
+import { BitfinexWebsocket, WebsocketRequestBase } from '../websocket';
 
 import { getCandleStickUrl, adaptBitfinexRawCandleStick, getCandleTimeFrame } from './internal/functions';
 import { BitfinexRawCandleStick } from './internal/types';
 
 export class BitfinexCandleStick {
-  private readonly corsProxy: string;
-  private readonly bitfinexWebsocket: BitfinexWebsocket;
-
   /**
    *
    * @param corsProxy
    * @param bitfinexWebsocket
    */
-  constructor(corsProxy: string = '', bitfinexWebsocket?: BitfinexWebsocket) {
-    this.corsProxy = corsProxy;
-    this.bitfinexWebsocket = bitfinexWebsocket || new BitfinexWebsocket();
-  }
+  constructor(private readonly corsProxy: string = '', private readonly bitfinexWebsocket: BitfinexWebsocket) {}
 
   /**
    *
@@ -93,12 +86,11 @@ export class BitfinexCandleStick {
  * @param pair
  * @param minutesFoot
  */
-function getCandleSubcribeRequest(pair: string, minutesFoot: number): WebsocketSubOrUnSubRequest {
+function getCandleSubcribeRequest(pair: string, minutesFoot: number): WebsocketRequestBase {
   const symbol = getSymbol(pair);
   const timeFrame = getCandleTimeFrame(minutesFoot);
 
   return {
-    event: 'subscribe',
     channel: 'candles',
     key: `trade:${timeFrame}:${symbol}`,
   };

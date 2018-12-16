@@ -2,13 +2,15 @@ import { take } from 'rxjs/operators';
 
 import { checkTicker } from '../../exchange-test.functions';
 import { BitfinexTicker } from './bitfinex-ticker';
+import { BitfinexWebsocket } from '../websocket';
 
-const bitfinexTicker = new BitfinexTicker();
+const bitfinexWebsocket = new BitfinexWebsocket();
+const bitfinexTicker = new BitfinexTicker('', bitfinexWebsocket);
 
 describe('bitfinexTicker', () => {
-  jest.setTimeout(20000);
+  jest.setTimeout(30000);
 
-  const markets = ['btc_usd', 'eth_usd'];
+  const markets = ['btc_usd'];
   markets.forEach((market) => {
     it(`should get ticker realtime ${market}`, (done) => {
       bitfinexTicker
@@ -21,6 +23,7 @@ describe('bitfinexTicker', () => {
           (e) => console.log('Error'),
           () => {
             bitfinexTicker.stopTicker(market);
+            bitfinexWebsocket.destroy();
             done();
           },
         );

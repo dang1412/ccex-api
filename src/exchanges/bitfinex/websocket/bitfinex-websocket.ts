@@ -1,129 +1,153 @@
-import { Observable, ReplaySubject } from 'rxjs';
+import { ExchangeWebsocket } from '../../exchange-websocket.abstract';
+import { ReplaySubject, Observable, EMPTY } from 'rxjs';
+import { wsEndpoint } from '../bitfinex-common';
 
-import { WebSocketRxJs } from '../../../common/websocket-rxjs';
-import { WebsocketSubOrUnSubRequest, WebsocketRequestResponse, WebsocketMessageResponse } from '../bitfinex-common.types';
-import { getKey, wsEndpoint } from '../bitfinex-common';
+export class BitfinexWebsocket extends ExchangeWebsocket<WebsocketSubscribe | WebsocketUnSubscribe, WebsocketResponse | WebsocketData> {
+  private readonly keyStreamMap = new Map<string, ReplaySubject<any>>();
+  private readonly chanIdKeyMap = new Map<number, string>();
 
-type WsResponse = WebsocketRequestResponse | WebsocketMessageResponse<any>;
-
-export class BitfinexWebsocket {
-  private ws: WebSocketRxJs<WsResponse> | null = null;
-  private readonly keyStreamMap: { [key: string]: ReplaySubject<any> } = {};
-  private readonly chanIdKeyMap: { [chanId: number]: string } = {};
-  private readonly unsubscribeSuccess$ = new ReplaySubject<string>(1);
-
-  /**
-   *
-   * @param subscribeRequest
-   * { "event": "subscribe", "channel": "ticker", "symbol": "tEOSBTC" }
-   * { "event": "subscribe", "channel": "candles", "key": "trade:1h:tEOSBTC" }
-   */
-  subscribe<T>(subscribeRequest: WebsocketSubOrUnSubRequest): Observable<T> {
-    if (!this.ws) {
-      this.initWebsocket();
-    }
-
-    // map each subscribe channel to an unique key
-    // use key to store corresponding stream
-    const key = getKey(subscribeRequest);
-    if (!this.keyStreamMap[key] && this.ws) {
-      // prepare subject
-      this.keyStreamMap[key] = new ReplaySubject<T>(1);
-      // send subscribe request
-      this.ws.send(JSON.stringify(subscribeRequest));
-    }
-
-    // return subject's stream
-    return this.keyStreamMap[key].asObservable();
+  constructor(endPoint?: string) {
+    super(endPoint || wsEndpoint);
   }
 
   /**
+   * handle message
    *
-   * @param unsubscribeRequest
+   * @param message
    */
-  unsubscribe(unsubscribeRequest: WebsocketSubOrUnSubRequest): void {
-    if (!this.ws) {
+  handleMessage(message: WebsocketResponse | WebsocketData): void {
+    // console.log('handleMessage ===>', message);
+    const response = message as WebsocketResponse;
+    if (response.event === 'subscribed') {
+      // save chanId => key, no need to forward message to stream
+      const key = getKey(response);
+      this.chanIdKeyMap.set(response.chanId, key);
+
       return;
     }
 
-    // get key from unsubscribe request
-    const key = getKey(unsubscribeRequest);
-
-    // complete and delete subject
-    const subject = this.keyStreamMap[key];
-    if (subject) {
-      subject.complete();
-      delete this.keyStreamMap[key];
+    if (response.event === 'unsubscribed') {
+      // handle unsubcribe success
+      // console.log('unsubscribed', response);
+      return;
     }
 
-    // get chanId from key and delete keyMap
-    const chanId = getKeyByValue(this.chanIdKeyMap, key);
-    if (chanId) {
-      delete this.chanIdKeyMap[chanId];
-    }
+    const messageData = message as WebsocketData;
+    if (messageData.length >= 2 && typeof messageData[0] === 'number' && messageData[1] !== 'hb') {
+      const chanId = messageData[0];
+      const key = this.chanIdKeyMap.get(chanId);
+      if (key) {
+        const stream = this.keyStreamMap.get(key);
 
-    // send unsubscribe request using chanId
-    this.ws.send(
-      JSON.stringify({
-        event: 'unsubscribe',
-        chanId,
-      }),
-    );
+        // normally data is messageData[1], special 'trade' channel case: message is messageData[2]
+        const data = messageData[1] === 'tu' || messageData[1] === 'te' ? messageData[2] : messageData[1];
+        if (stream) {
+          stream.next(data);
+        }
+      }
+    }
   }
 
-  destroy(): void {
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
-
-    // TODO complete and delete all subject
+  onDestroy(): void {
+    // TODO complete all streams
+    // clear stream map and key map
+    this.keyStreamMap.clear();
+    this.chanIdKeyMap.clear();
   }
 
   /**
+   * Subscribe channel
    *
+   * @param request
    */
-  private initWebsocket(): void {
-    if (this.ws) {
-      throw new Error('Bitfinex websocket is already initialized');
+  subscribe<T>(request: WebsocketRequestBase): Observable<T> {
+    const key = getKey(request);
+    let stream = this.keyStreamMap.get(key);
+
+    if (!stream) {
+      stream = new ReplaySubject<T>(1);
+      this.keyStreamMap.set(key, stream);
     }
 
-    this.ws = new WebSocketRxJs<WsResponse>(wsEndpoint);
-    this.ws.message$.subscribe((response: any) => {
-      if (response.event === 'subscribed') {
-        // console.log('subcribe success ===>', response);
-        // subscribe response success
-        const subcribedResponse = <WebsocketRequestResponse>response;
-        const key = getKey(subcribedResponse);
-        // map chanId => key
-        this.chanIdKeyMap[subcribedResponse.chanId] = key;
-      } else if (response.event === 'unsubscribed') {
-        // unsubscribe success
-        // console.log('unsubcribe success ===>', response);
-        const chanId = response.chanId;
-        const key = this.chanIdKeyMap[chanId];
-        this.unsubscribeSuccess$.next(key);
-      } else if (response.length >= 2 && typeof response[0] === 'number' && response[1] && response[1] !== 'hb') {
-        // subscribed channel's message
+    this.send({...request, event: 'subscribe'});
 
-        const chanId = response[0];
-        const key = this.chanIdKeyMap[chanId];
+    return stream.asObservable();
+  }
 
-        // special trades channel case: message is response[2]
-        // normally message is response[1]
-        const message = response[1] === 'tu' || response[1] === 'te' ? response[2] : response[1];
-        // console.log('message ==>', message);
-        const subject = this.keyStreamMap[key];
-        if (subject && message) {
-          subject.next(message);
-        }
-      }
-    });
+  /**
+   * Unsubscribe channel
+   *
+   * @param request
+   */
+  unsubscribe(request: WebsocketRequestBase): void {
+    const key = getKey(request);
+    const stream = this.keyStreamMap.get(key);
+    if (stream) {
+      stream.complete();
+      this.keyStreamMap.delete(key);
+    }
+
+    const chanId = Array.from(this.chanIdKeyMap.keys()).find(cid => this.chanIdKeyMap.get(cid) === key);
+    if (chanId) {
+      this.chanIdKeyMap.delete(chanId);
+      this.send({ event: 'unsubscribe', chanId });
+    }
+
+    // TODO handle when unsubscribe complete
   }
 }
 
-function getKeyByValue(object: { [key: string]: string }, value: string): number {
-  const keyString = Object.keys(object).find((key) => object[key] === value);
-
-  return keyString ? +keyString : 0;
+export function getKey(request: WebsocketRequestBase): string {
+  return (
+    request.channel +
+    // (ticker, orderbook)
+    (request.symbol || '') +
+    // (orderbook)
+    (request.prec || '') +
+    (request.freq || '') +
+    (request.len || '') +
+    // (candle)
+    (request.key || '')
+  );
 }
+
+export interface WebsocketRequestBase {
+  channel: string;
+
+  // ex: tBTCUSD (ticker, orderbook)
+  symbol?: string;
+
+  // (orderbook)
+  // level of price aggregation (P0, P1, P2, P3)
+  // default: P0
+  prec?: string;
+
+  // (orderbook)
+  // Frequency of updates(F0, F1).
+  // F0 = realtime / F1=2sec.
+  freq?: string;
+
+  // (orderbook)
+  len?: string;
+
+  // (candles)
+  key?: string;
+}
+
+export interface WebsocketSubscribe extends WebsocketRequestBase {
+  event: 'subscribe';
+}
+
+export interface WebsocketUnSubscribe {
+  event: 'unsubscribe';
+  chanId: number;
+}
+
+export interface WebsocketResponse extends WebsocketRequestBase {
+  event: 'subscribed' | 'unsubscribed';
+  chanId: number;
+  // ex: BTCUSD
+  pair?: string;
+}
+
+export type WebsocketData = [number, any] | [number, string, any];
