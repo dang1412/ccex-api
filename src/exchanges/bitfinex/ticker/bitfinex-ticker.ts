@@ -33,22 +33,23 @@ export class BitfinexTicker {
   ticker$(pair: string): Observable<Ticker> {
     // { "event": "subscribe", "channel": "ticker", "symbol": "tEOSETH" }
     const subscribeRequest = {
-      event: 'subscribe',
+      event: 'subscribe' as 'subscribe',
       channel: 'ticker',
       symbol: getSymbol(pair),
     };
 
     return this.bitfinexWebsocket
-      .subscribe<BitfinexRawTicker>(subscribeRequest)
+      .sendRequest<BitfinexRawTicker>(subscribeRequest)
       .pipe(map((rawTicker) => adaptBitfinexTicker(rawTicker, pair)));
   }
 
   stopTicker(pair: string): void {
     const unsubscribeRequest = {
+      event: 'unsubscribe' as 'unsubscribe',
       channel: 'ticker',
       symbol: getSymbol(pair),
     };
 
-    this.bitfinexWebsocket.unsubscribe(unsubscribeRequest);
+    this.bitfinexWebsocket.sendRequest(unsubscribeRequest);
   }
 }
