@@ -1,5 +1,5 @@
 import { ExchangeWebsocket } from '../../exchange-websocket.abstract';
-import { ReplaySubject, Observable, EMPTY } from 'rxjs';
+import { ReplaySubject, Observable } from 'rxjs';
 import { wsEndpoint } from '../bitfinex-common';
 
 export class BitfinexWebsocket extends ExchangeWebsocket<WebsocketSubscribe | WebsocketUnSubscribe, WebsocketResponse | WebsocketData> {
