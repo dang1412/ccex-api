@@ -30,13 +30,13 @@ export function checkOrderbook(orderbook: Orderbook): void {
 
   // check order bids: DESC, asks: ASC
   expect(
-    checkOrder<[string, string]>(orderbook.bids, (prevBid, curBid) => +prevBid[0] > +curBid[0]),
     // 'bids should have price in DESC order',
-  );
+    checkOrder<[string, string]>(orderbook.bids, (prevBid, curBid) => +prevBid[0] > +curBid[0]),
+  ).toBe(true);
   expect(
-    checkOrder<[string, string]>(orderbook.asks, (prevAsk, curAsk) => +prevAsk[0] < +curAsk[0]),
     // 'asks should have price in ASC order',
-  );
+    checkOrder<[string, string]>(orderbook.asks, (prevAsk, curAsk) => +prevAsk[0] < +curAsk[0]),
+  ).toBe(true);
 }
 
 // check trades

@@ -4,7 +4,7 @@ import { BitmexTicker } from './bitmex-ticker';
 const bitmexTicker = new BitmexTicker();
 
 describe('bitmexTicker', () => {
-  const markets = ['btc_jpy'];
+  const markets = ['btc_usd'];
   markets.forEach((market) => {
     it(`should fetch ticker ${market}`, (done) => {
       bitmexTicker.fetchTicker$(market).subscribe((ticker) => {

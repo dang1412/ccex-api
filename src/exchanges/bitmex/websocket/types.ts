@@ -11,7 +11,7 @@ export interface WebsocketResponse {
   request?: WebsocketRequest;
 }
 
-export interface WebsocketData {
+export interface WebsocketData<T = any> {
   // Table name / Subscription topic.
   // Could be "trade", "order", "instrument", etc.
   table: string,
@@ -24,7 +24,7 @@ export interface WebsocketData {
   action: 'partial' | 'update' | 'insert' | 'delete',
 
   // An array of table rows is emitted here. They are identical in structure to data returned from the REST API.
-  data: {}[],
+  data: T[],
 
   //
   // The below fields define the table and are only sent on a `partial`
