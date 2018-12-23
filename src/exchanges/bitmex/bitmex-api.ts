@@ -9,7 +9,7 @@ export class BitmexApi extends ExchangeApi {
 
   get exchangeInfo(): ExchangeInfo {
     return {
-      name: 'coincheck',
+      name: 'bitmex',
       logoUrl: 'https://coincheck-logo.png',
       homepage: 'https://www.coincheck.com/',
       country: 'Coincheck country',
