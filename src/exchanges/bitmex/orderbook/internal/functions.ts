@@ -9,7 +9,7 @@ export function adaptBitmexOrderbook(orderbookWs: WebsocketData<BitmexOrderbookW
   };
 
   for (const item of orderbookWs.data) {
-    const orderbookItem: [string, string] = [`${item.price}`, (item.size / item.price).toFixed(2)];
+    const orderbookItem: [string, string] = [`${item.price}`, `${item.size}`];
     if (item.side === 'Sell') {
       orderbook.asks.push(orderbookItem);
     } else {

@@ -1,70 +1,81 @@
 import { Observable, EMPTY } from 'rxjs';
 
 import { ExchangeApi } from '../exchange-api.abstract';
-import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick } from '../exchange-types';
-import { BitmexTicker } from './ticker/bitmex-ticker';
+import { ExchangeInfo, SupportFeatures, Ticker, Orderbook, Trade, CandleStick, ExchangeOptions } from '../exchange-types';
+import { BitmexWebsocket } from './websocket';
+import { BitmexTrade } from './trade';
+import { BitmexOrderbook } from './orderbook';
+import { BitmexCandleStick } from './candlestick';
 
 export class BitmexApi extends ExchangeApi {
-  private readonly bitmexTicker: BitmexTicker;
+  private readonly bitmexWebsocket: BitmexWebsocket;
+  private readonly bitmexOrderbook: BitmexOrderbook;
+  private readonly bitmexCandleStick: BitmexCandleStick;
+  private readonly bitmexTrade: BitmexTrade;
 
   get exchangeInfo(): ExchangeInfo {
     return {
       name: 'bitmex',
-      logoUrl: 'https://coincheck-logo.png',
-      homepage: 'https://www.coincheck.com/',
-      country: 'Coincheck country',
+      logoUrl: 'https://www.bitmex.com/img/bitmex-logo-alt-white.png',
+      homepage: 'https://www.bitmex.com/',
+      country: 'Hong Kong',
     };
   }
 
   get markets(): string[] {
-    return ['btc_jpy'];
+    return ['xbt_usd', 'adaz18', 'eosz18', 'bchz18', 'ethz18', 'ltcz18', 'xrpz18', 'trxz18'];
   }
 
   get representativeMarkets(): string[] {
-    return ['btc_jpy'];
+    return [];
   }
 
   get supportFeatures(): SupportFeatures {
     return {
       ticker: false,
-      orderbook: false,
-      chart: false,
+      orderbook: true,
+      chart: true,
     };
   }
 
-  constructor() {
-    super();
-    this.bitmexTicker = new BitmexTicker();
+  constructor(options?: ExchangeOptions) {
+    super(options);
+    const corsProxy = this.options.corsProxy;
+
+    this.bitmexWebsocket = new BitmexWebsocket();
+    this.bitmexOrderbook = new BitmexOrderbook(corsProxy, this.bitmexWebsocket);
+    this.bitmexCandleStick = new BitmexCandleStick(corsProxy);
+    this.bitmexTrade = new BitmexTrade(corsProxy, this.bitmexWebsocket);
   }
 
   // api request for ticker
   fetchTicker$(pair: string): Observable<Ticker> {
-    return this.bitmexTicker.fetchTicker$(pair);
+    return EMPTY;
   }
 
   // realtime ticker
   ticker$(pair: string): Observable<Ticker> {
-    return this.bitmexTicker.ticker$(pair);
+    return EMPTY;
   }
 
   // stop realtime ticker
   stopTicker(pair: string): void {
-    this.bitmexTicker.stopTicker(pair);
+    // implement
   }
 
-  // api request for depth
+  // api request for orderbook
   fetchOrderbook$(pair: string): Observable<Orderbook> {
     return EMPTY;
   }
 
-  // realtime depth
+  // realtime orderbook
   orderbook$(pair: string): Observable<Orderbook> {
-    return EMPTY;
+    return this.bitmexOrderbook.orderbook$(pair);
   }
 
   // stop realtime orderbook
   stopOrderbook(pair: string): void {
-    // implement
+    this.bitmexOrderbook.stopOrderbook(pair);
   }
 
   fetchTrades$(pair: string): Observable<Trade[]> {
@@ -72,16 +83,16 @@ export class BitmexApi extends ExchangeApi {
   }
 
   trade$(pair: string): Observable<Trade> {
-    return EMPTY;
+    return this.bitmexTrade.trade$(pair);
   }
 
   // stop realtime trade
   stopTrade(pair: string): void {
-    // implement
+    this.bitmexTrade.stopTrade(pair);
   }
 
   // request candlestick by time range and resolution
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
-    return EMPTY;
+    return this.bitmexCandleStick.fetchCandleStickRange$(pair, minutesFoot, start, end);
   }
 }

@@ -1,4 +1,4 @@
-export const apiEndPoint = 'https://www.bitmex.com/api/v1';
+export const apiEndPoint = 'https://www.bitmex.com/api';
 export const wsEndpoint = 'wss://www.bitmex.com/realtime';
 
 // get bitmex symbol xbt_usd => XBTUSD
