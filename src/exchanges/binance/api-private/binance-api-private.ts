@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
 
-import { fetchRxjs } from '../../../common';
 import { apiEndPoint } from '../binance-common';
 import { BinanceUserStreamPostResponse } from './internal/types';
 import { map } from 'rxjs/operators';
@@ -29,6 +29,6 @@ export class BinanceApiPrivate {
       },
     };
 
-    return fetchRxjs<BinanceUserStreamPostResponse>(url, fetchOptions).pipe(map(res => res.listenKey));
+    return ajax.getJSON<BinanceUserStreamPostResponse>(url, fetchOptions).pipe(map(res => res.listenKey));
   }
 }

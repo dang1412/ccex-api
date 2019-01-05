@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import { map, concat } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
 
-import { PubnubRxJs, fetchRxjs } from '../../../common';
+import { PubnubRxJs } from '../../../common';
 import { Orderbook } from '../../exchange-types';
 import { publicUrl, subscribeKey, RawData } from '../bitbank-common';
 
@@ -15,7 +16,7 @@ export class BitbankOrderbook {
   fetchOrderbook$(pair: string): Observable<Orderbook> {
     const orderbookUrl = `${publicUrl}/${pair}/depth`;
 
-    return fetchRxjs<RawData<Orderbook>>(orderbookUrl).pipe(map((raw) => raw.data));
+    return ajax.getJSON<RawData<Orderbook>>(orderbookUrl).pipe(map((raw) => raw.data));
   }
 
   orderbook$(pair: string): Observable<Orderbook> {

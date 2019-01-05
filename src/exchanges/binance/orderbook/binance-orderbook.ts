@@ -1,7 +1,8 @@
 import { Observable, concat, from, merge, ReplaySubject } from 'rxjs';
 import { map, scan, buffer, take, mergeMap } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
 
-import { WebSocketRxJs, fetchRxjs } from '../../../common';
+import { WebSocketRxJs } from '../../../common';
 import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
 import { BinanceRawOrderbook, BinanceRawWsOrderbook } from './internal/types';
@@ -20,7 +21,7 @@ export class BinanceOrderbook {
     const originUrl = binanceOrderbookApiUrl(pair, limit);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BinanceRawOrderbook>(url);
+    return ajax.getJSON<BinanceRawOrderbook>(url);
   }
 
   orderbook$(pair: string): Observable<Orderbook> {

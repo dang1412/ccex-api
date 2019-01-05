@@ -1,8 +1,8 @@
 import * as qs from 'querystring';
 import { Observable } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
 import * as crypto from 'crypto';
 
-import { fetchRxjs } from '../../../common';
 import { apiEndPoint } from '../binance-common';
 import { BinanceAccountInformation } from './internal/types';
 
@@ -40,7 +40,7 @@ export class BinanceApiPrivateSigned {
       // body: JSON.stringify(data), // body data type must match 'Content-Type' header
     };
 
-    return fetchRxjs<BinanceAccountInformation>(url, fetchOptions);
+    return ajax.getJSON<BinanceAccountInformation>(url, fetchOptions);
   }
 
   private sign(queryString: string): string {
