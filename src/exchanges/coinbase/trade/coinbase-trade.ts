@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
 
-import { fetchRxjs } from '../../../common';
 import { Trade } from '../../exchange-types';
 import { WebsocketRequest } from '../coinbase-common.types';
 import { getProductId } from '../coinbase-common';
@@ -29,7 +29,7 @@ export class CoinbaseTrade {
     const originUrl = getTradesUrl(pair);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<CoinbaseRawRestTrade[]>(url).pipe(map((rawTrades) => rawTrades.map(adaptCoinbaseRawTrade)));
+    return ajax.getJSON<CoinbaseRawRestTrade[]>(url).pipe(map((rawTrades) => rawTrades.map(adaptCoinbaseRawTrade)));
   }
 
   trade$(pair: string): Observable<Trade> {

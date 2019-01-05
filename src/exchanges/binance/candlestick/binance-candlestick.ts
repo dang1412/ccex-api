@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
 
-import { fetchRxjs, WebSocketRxJs } from '../../../common';
+import { WebSocketRxJs } from '../../../common';
 import { CandleStick } from '../../exchange-types';
 import { BinanceRawRestCandle, BinanceRawWsCandle } from './internal/types';
 import { binanceCandleStickApiUrl, adaptBinanceRestCandle, adaptBinanceWsCandle, binanceCandleStickChannel } from './internal/functions';
@@ -19,7 +20,7 @@ export class BinanceCandleStick {
     const originUrl = binanceCandleStickApiUrl(pair, minutesFoot, start, end);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BinanceRawRestCandle[]>(url).pipe(map((binanceCandles) => binanceCandles.map(adaptBinanceRestCandle)));
+    return ajax.getJSON<BinanceRawRestCandle[]>(url).pipe(map((binanceCandles) => binanceCandles.map(adaptBinanceRestCandle)));
   }
 
   candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {

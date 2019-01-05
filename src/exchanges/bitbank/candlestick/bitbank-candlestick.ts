@@ -1,7 +1,7 @@
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
 
-import { fetchRxjs } from '../../../common';
 import { CandleStick } from '../../exchange-types';
 import { publicUrl, RawData } from '../bitbank-common';
 
@@ -57,7 +57,7 @@ export class BitbankCandlestick {
     const requestArray = timestrArray.map((timestr) => fetchAndCacheCandleStick$(pair, resolution, timestr));
 
     return forkJoin(requestArray).pipe(
-      map((results) => [].concat.apply([], results)),
+      map((results) => Array.prototype.concat.apply([], results)),
       map((candles) => eliminateRedundantCandles(candles, start, end)),
     );
   }
@@ -94,5 +94,5 @@ function fetchAndCacheCandleStick$(pair: string, resolution: string, timeString:
 function fetchCandleStickFile$(pair: string, resolution: string, timeString: string): Observable < CandleStick[] > {
   const url = `${publicUrl}/${pair}/candlestick/${resolution}/${timeString}`;
 
-  return fetchRxjs<RawData<BitbankRawCandlesticks>>(url).pipe(map((raw) => raw.data.candlestick[0].ohlcv.map(adaptBitbankCandle)));
+  return ajax.getJSON<RawData<BitbankRawCandlesticks>>(url).pipe(map((raw) => raw.data.candlestick[0].ohlcv.map(adaptBitbankCandle)));
 }

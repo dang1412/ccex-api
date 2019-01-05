@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map, scan } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
 
-import { fetchRxjs } from '../../../common';
 import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
 import { CoinbaseWebsocket } from '../coinbase-websocket';
@@ -30,7 +30,7 @@ export class CoinbaseOrderbook {
     const originUrl = getOrderbookUrl(pair);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<CoinbaseRestOrderbook>(url).pipe(map(adaptCoinbaseRestOrderbook));
+    return ajax.getJSON<CoinbaseRestOrderbook>(url).pipe(map(adaptCoinbaseRestOrderbook));
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
