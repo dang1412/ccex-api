@@ -48,7 +48,7 @@ export const TickerComp: React.SFC<ITickerProps> = (props) => {
           <table>
             <tbody>
               <tr>
-                <th className={classes.tableTh}>Price ({ticker.change24Perc! * 100}%)</th>
+                <th className={classes.tableTh}>Price {displayPercent(ticker.change24Perc)}</th>
                 <td className={classes.tableTd}>{ticker.last}</td>
                 <th className={classes.tableTh}>Volume 24</th>
                 <td className={classes.tableTd}>{ticker.vol}</td>
@@ -78,3 +78,11 @@ export const TickerComp: React.SFC<ITickerProps> = (props) => {
 };
 
 export const TickerCompWithStyles = withStyles(styles)(TickerComp);
+
+function displayPercent(change24Perc: number | undefined): string {
+  if (!change24Perc) {
+    return '';
+  }
+
+  return `(${(change24Perc * 100).toFixed(2)}%)`;
+}
