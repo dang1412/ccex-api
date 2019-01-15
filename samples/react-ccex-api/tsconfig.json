@@ -1,5 +1,5 @@
 {
-  "compilerOptions": {
+  "compilerOptions": { 
     "baseUrl": ".",
     "outDir": "build/dist",
     "module": "esnext",
@@ -17,12 +17,7 @@
     "importHelpers": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "paths": {
-      "ccex-api/*": [
-        "../../dist/*"
-      ]
-    }
+    "noUnusedLocals": true
   },
   "exclude": [
     "node_modules",
@@ -31,6 +26,7 @@
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "post-install.js"
   ]
 }

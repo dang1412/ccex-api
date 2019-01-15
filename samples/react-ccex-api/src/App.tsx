@@ -1,27 +1,42 @@
 import * as React from 'react';
 import './App.css';
 
+import { Ticker } from 'ccex-api';
 import { BitfinexApi } from 'ccex-api/exchanges/bitfinex';
-import logo from './logo.svg';
+import { TickerCompWithStyles } from './components';
+const corsProxy = 'https://api.exchangecompare.com/';
 
-class App extends React.Component {
+interface IAppState {
+  ticker: Ticker
+}
+
+class App extends React.Component<{}, IAppState> {
   private bitfinexApi: BitfinexApi;
 
   constructor(props: any) {
     super(props);
-    this.bitfinexApi = new BitfinexApi();
-    this.bitfinexApi.ticker$('btc_usd').subscribe(ticker => console.log(ticker));
+    this.bitfinexApi = new BitfinexApi({ corsProxy });
+    this.bitfinexApi.ticker$('btc_usd').subscribe(ticker => {
+      this.setState({ ticker });
+    });
   }
+
   public render() {
+    const tickerComponent = this.state
+      ? <TickerCompWithStyles tickerData={this.state.ticker}/>
+      : '';
+
     return (
       <div className="App">
-        <header className="App-header">
+        {/* <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <p className="App-intro">
           To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+        </p> */}
+        
+        {tickerComponent}
       </div>
     );
   }
