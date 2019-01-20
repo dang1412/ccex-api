@@ -9,6 +9,9 @@ import CardContent from '@material-ui/core/CardContent';
 import { Ticker } from 'ccex-api';
 import * as React from 'react';
 
+import { ChangeColor } from '../ChangeColor';
+import { Percent } from '../Percent';
+
 export interface ITickerProps {
   tickerData: Ticker;
   classes: {
@@ -48,10 +51,10 @@ export const TickerComp: React.SFC<ITickerProps> = (props) => {
           <table>
             <tbody>
               <tr>
-                <th className={classes.tableTh}>Price {displayPercent(ticker.change24Perc)}</th>
-                <td className={classes.tableTd}>{ticker.last}</td>
+                <th className={classes.tableTh}>Price <Percent change={ticker.change24Perc}/></th>
+                <td className={classes.tableTd}><ChangeColor value={ticker.last} /></td>
                 <th className={classes.tableTh}>Volume 24</th>
-                <td className={classes.tableTd}>{ticker.vol}</td>
+                <td className={classes.tableTd}><ChangeColor value={ticker.vol} /></td>
               </tr>
               <tr>
                 <th className={classes.tableTh}>Bid</th>
@@ -78,11 +81,3 @@ export const TickerComp: React.SFC<ITickerProps> = (props) => {
 };
 
 export const TickerCompWithStyles = withStyles(styles)(TickerComp);
-
-function displayPercent(change24Perc: number | undefined): string {
-  if (!change24Perc) {
-    return '';
-  }
-
-  return `(${(change24Perc * 100).toFixed(2)}%)`;
-}

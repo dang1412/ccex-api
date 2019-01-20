@@ -2,7 +2,7 @@ import * as React from 'react';
 import './App.css';
 
 import { Ticker } from 'ccex-api';
-import { BitfinexApi } from 'ccex-api/exchanges/bitfinex';
+import { CoinbaseApi } from 'ccex-api/exchanges/coinbase';
 import { TickerCompWithStyles } from './components';
 const corsProxy = 'https://api.exchangecompare.com/';
 
@@ -11,12 +11,12 @@ interface IAppState {
 }
 
 class App extends React.Component<{}, IAppState> {
-  private bitfinexApi: BitfinexApi;
+  private exchangeApi: CoinbaseApi;
 
   constructor(props: any) {
     super(props);
-    this.bitfinexApi = new BitfinexApi({ corsProxy });
-    this.bitfinexApi.ticker$('btc_usd').subscribe(ticker => {
+    this.exchangeApi = new CoinbaseApi({ corsProxy });
+    this.exchangeApi.ticker$('btc_usd').subscribe(ticker => {
       this.setState({ ticker });
     });
   }

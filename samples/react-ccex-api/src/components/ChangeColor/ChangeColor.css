@@ -1,0 +1,35 @@
+/* .element {
+  -moz-transition: all 0s ease-in;
+  -o-transition: all 0s ease-in;
+  -webkit-transition: all 0s ease-in;
+  transition: all 0s ease-in;
+  color: inherit;
+}
+
+.highlight-up {
+  color: #84f766;
+}
+
+.highlight-down {
+  color: #ff6939;
+} */
+
+.highlight-up {
+  animation-name: animatedUpColor;
+  animation-duration: 1.2s;
+}
+
+.highlight-down {
+  animation-name: animatedDownColor;
+  animation-duration: 1.2s;
+}
+
+@keyframes animatedUpColor {
+	from { color: #84f766; }
+	to { color: currentValue; }
+}
+
+@keyframes animatedDownColor {
+	from { color: #ff6939; }
+	to { color: currentValue; }
+}
