@@ -8,7 +8,6 @@ import { BinanceTrade } from './trade';
 import { BinanceCandleStick } from './candlestick';
 
 export class BinanceApi extends ExchangeApi {
-  private readonly binanceTicker: BinanceTicker;
   private readonly binanceOrderbook: BinanceOrderbook;
   private readonly binanceTrade: BinanceTrade;
   private readonly binanceCandleStick: BinanceCandleStick;
@@ -42,7 +41,6 @@ export class BinanceApi extends ExchangeApi {
     super(options);
     const corsProxy = this.options.corsProxy;
 
-    this.binanceTicker = new BinanceTicker(corsProxy);
     this.binanceOrderbook = new BinanceOrderbook(corsProxy);
     this.binanceTrade = new BinanceTrade(corsProxy);
     this.binanceCandleStick = new BinanceCandleStick(corsProxy);
@@ -53,15 +51,15 @@ export class BinanceApi extends ExchangeApi {
    */
 
   fetchTicker$(pair: string): Observable<Ticker> {
-    return this.binanceTicker.fetchTicker$(pair);
+    return BinanceTicker.of(pair).fetch$(this.options.corsProxy);
   }
 
   ticker$(pair: string): Observable<Ticker> {
-    return this.binanceTicker.ticker$(pair);
+    return BinanceTicker.of(pair).getStream$();
   }
 
   stopTicker(pair: string): void {
-    this.binanceTicker.stopTicker(pair);
+    BinanceTicker.of(pair).stop();
   }
 
   fetchOrderbook$(pair: string): Observable<Orderbook> {

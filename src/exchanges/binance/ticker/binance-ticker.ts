@@ -8,40 +8,55 @@ import { BinanceRawWsTicker, BinanceRawRestTicker } from './internal/types';
 import { adaptBinanceWsTicker, adaptBinanceRestTicker, binanceTickerChannel, binanceTickerApiUrl } from './internal/functions';
 
 export class BinanceTicker {
-  private readonly pairStreamMap: { [pair: string]: Observable<Ticker> } = {};
-  private readonly pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
-  private readonly corsProxy: string;
+  private static readonly pairTickerMap = new Map<string, BinanceTicker>();
 
-  constructor(corsProxy: string = '') {
-    this.corsProxy = corsProxy;
+  static of(pair: string): BinanceTicker {
+    const instance = BinanceTicker.pairTickerMap.get(pair) || new BinanceTicker(pair);
+    BinanceTicker.pairTickerMap.set(pair, instance);
+
+    return instance;
   }
 
-  fetchTicker$(pair: string): Observable<Ticker> {
-    const originUrl = binanceTickerApiUrl(pair);
-    const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
+  private stream$: Observable<Ticker> | undefined = undefined;
+  private socket: WebSocketRxJs<BinanceRawWsTicker> | undefined = undefined;
 
-    return ajax.getJSON<BinanceRawRestTicker>(url).pipe(map((binanceTicker) => adaptBinanceRestTicker(binanceTicker, pair)));
+  /**
+   *
+   * @param pair
+   * @param createSocket
+   */
+  constructor(private pair: string, private createSocket: (pair: string) => WebSocketRxJs<BinanceRawWsTicker> = socketFactory) {}
+
+  fetch$(corsProxy?: string): Observable<Ticker> {
+    const originUrl = binanceTickerApiUrl(this.pair);
+    const url = corsProxy ? `${corsProxy}${originUrl}` : originUrl;
+
+    return ajax.getJSON<BinanceRawRestTicker>(url).pipe(map((binanceTicker) => adaptBinanceRestTicker(binanceTicker, this.pair)));
   }
 
-  ticker$(pair: string): Observable<Ticker> {
-    if (!this.pairStreamMap[pair]) {
-      const channel = binanceTickerChannel(pair);
-      const ws = new WebSocketRxJs<BinanceRawWsTicker>(channel);
-      this.pairStreamMap[pair] = ws.message$.pipe(map((binanceTicker) => adaptBinanceWsTicker(binanceTicker, pair)));
-      this.pairSocketMap[pair] = ws;
+  getStream$(): Observable<Ticker> {
+    if (!this.stream$) {
+      this.socket = this.createSocket(this.pair);
+      this.stream$ = this.socket.message$.pipe(map((binanceTicker) => adaptBinanceWsTicker(binanceTicker, this.pair)));
     }
 
-    return this.pairStreamMap[pair];
+    return this.stream$;
   }
 
-  stopTicker(pair: string): void {
-    if (this.pairSocketMap[pair]) {
-      this.pairSocketMap[pair].close();
-      delete this.pairSocketMap[pair];
+  stop(): void {
+    if (this.socket) {
+      this.socket.close();
+      this.socket = undefined;
     }
 
-    if (this.pairStreamMap[pair]) {
-      delete this.pairStreamMap[pair];
+    if (this.stream$) {
+      this.stream$ = undefined;
     }
   }
+}
+
+function socketFactory(pair: string): WebSocketRxJs<BinanceRawWsTicker> {
+  const channel = binanceTickerChannel(pair);
+
+  return new WebSocketRxJs<BinanceRawWsTicker>(channel);
 }
