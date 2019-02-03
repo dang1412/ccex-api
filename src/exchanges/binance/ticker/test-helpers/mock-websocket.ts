@@ -1,5 +1,4 @@
-import { timer } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { WebsocketRxJsMock } from '../../../../common';
 
 const MOCK_TICKER_DATA = [
   {
@@ -28,25 +27,9 @@ const MOCK_TICKER_DATA = [
     o: '98.5',
     x: '90',
   },
+  'stop',
 ];
 
-// type MockOf<Class> = {
-//   [Member in keyof Class]: Class[Member];
-// };
-
-// export class MockWebSocketRxJs implements MockOf<WebSocketRxJs> {
-//   get message$(): Observable<any> {
-//     return timer().pipe(map(i => MOCK_TICKER_DATA[i] as any));
-//   }
-
-//   close(): void { }
-
-//   send(): void { }
-// }
-
-// export const MOCK_SOCKET = new MockWebSocketRxJs();
-
-export const MOCK_SOCKET: any = {
-  message$: timer().pipe(map(i => MOCK_TICKER_DATA[i] as any)),
-  close: () => {},
-};
+export const MOCK_SOCKET = new WebsocketRxJsMock({
+  default: MOCK_TICKER_DATA.map((data, i) => ({time: i + 1, payload: data})),
+});
