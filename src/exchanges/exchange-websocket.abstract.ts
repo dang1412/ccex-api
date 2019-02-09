@@ -1,5 +1,7 @@
 import { WebSocketRxJs } from '../common/websocket-rxjs';
 
+export type SocketFactory = <T>(endPoint: string) => WebSocketRxJs<T>;
+
 /**
  * Abstract class for websocket api
  *
@@ -8,7 +10,7 @@ import { WebSocketRxJs } from '../common/websocket-rxjs';
  */
 export abstract class ExchangeWebsocket<T = any, U = any> {
   private ws: WebSocketRxJs<U> | null = null;
-  constructor(private readonly endPoint: string) { }
+  constructor(private readonly endPoint: string, private readonly createSocket: SocketFactory = socketFactory) { }
 
   abstract handleMessage(response: U): void;
   abstract onDestroy(): void;
@@ -37,9 +39,13 @@ export abstract class ExchangeWebsocket<T = any, U = any> {
       throw new Error('websocket is already initialized');
     }
 
-    this.ws = new WebSocketRxJs<U>(this.endPoint);
+    this.ws = this.createSocket<U>(this.endPoint);
     this.ws.message$.subscribe((response) => {
       this.handleMessage(response);
     });
   }
+}
+
+function socketFactory<T>(endPoint: string): WebSocketRxJs<T> {
+  return new WebSocketRxJs<T>(endPoint);
 }

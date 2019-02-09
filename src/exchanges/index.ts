@@ -5,3 +5,4 @@ export { BitfinexApi } from './bitfinex';
 export { CoinbaseApi } from './coinbase';
 export { CoincheckApi } from './coincheck';
 export * from './exchange-types';
+export * from './exchange-websocket.abstract';

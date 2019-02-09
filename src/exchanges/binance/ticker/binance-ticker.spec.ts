@@ -12,7 +12,6 @@ describe('binanceTicker', () => {
       .getStream$()
       .subscribe(
         (ticker) => {
-          console.log('ticker ==>', ticker);
           checkTicker(ticker);
         },
         () => {/* error */},

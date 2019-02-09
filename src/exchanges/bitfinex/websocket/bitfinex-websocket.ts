@@ -1,4 +1,4 @@
-import { ExchangeWebsocket } from '../../exchange-websocket.abstract';
+import { ExchangeWebsocket, SocketFactory } from '../../exchange-websocket.abstract';
 import { ReplaySubject, Observable } from 'rxjs';
 import { wsEndpoint } from '../bitfinex-common';
 
@@ -6,8 +6,49 @@ export class BitfinexWebsocket extends ExchangeWebsocket<WebsocketSubscribe | We
   private readonly keyStreamMap = new Map<string, ReplaySubject<any>>();
   private readonly chanIdKeyMap = new Map<number, string>();
 
-  constructor(endPoint?: string) {
-    super(endPoint || wsEndpoint);
+  constructor(endPoint?: string, createSocket?: SocketFactory) {
+    super(endPoint || wsEndpoint, createSocket);
+  }
+
+  /**
+   * Subscribe channel
+   *
+   * @param request
+   */
+  subscribe<T>(request: WebsocketRequestBase): Observable<T> {
+    const key = getKey(request);
+    let stream = this.keyStreamMap.get(key);
+
+    if (!stream) {
+      stream = new ReplaySubject<T>(1);
+      this.keyStreamMap.set(key, stream);
+    }
+
+    this.send({ ...request, event: 'subscribe' });
+
+    return stream.asObservable();
+  }
+
+  /**
+   * Unsubscribe channel
+   *
+   * @param request
+   */
+  unsubscribe(request: WebsocketRequestBase): void {
+    const key = getKey(request);
+    const stream = this.keyStreamMap.get(key);
+    if (stream) {
+      stream.complete();
+      this.keyStreamMap.delete(key);
+    }
+
+    const chanId = Array.from(this.chanIdKeyMap.keys()).find(cid => this.chanIdKeyMap.get(cid) === key);
+    if (chanId) {
+      this.chanIdKeyMap.delete(chanId);
+      this.send({ event: 'unsubscribe', chanId });
+    }
+
+    // TODO handle when unsubscribe complete
   }
 
   /**
@@ -53,47 +94,6 @@ export class BitfinexWebsocket extends ExchangeWebsocket<WebsocketSubscribe | We
     // clear stream map and key map
     this.keyStreamMap.clear();
     this.chanIdKeyMap.clear();
-  }
-
-  /**
-   * Subscribe channel
-   *
-   * @param request
-   */
-  subscribe<T>(request: WebsocketRequestBase): Observable<T> {
-    const key = getKey(request);
-    let stream = this.keyStreamMap.get(key);
-
-    if (!stream) {
-      stream = new ReplaySubject<T>(1);
-      this.keyStreamMap.set(key, stream);
-    }
-
-    this.send({...request, event: 'subscribe'});
-
-    return stream.asObservable();
-  }
-
-  /**
-   * Unsubscribe channel
-   *
-   * @param request
-   */
-  unsubscribe(request: WebsocketRequestBase): void {
-    const key = getKey(request);
-    const stream = this.keyStreamMap.get(key);
-    if (stream) {
-      stream.complete();
-      this.keyStreamMap.delete(key);
-    }
-
-    const chanId = Array.from(this.chanIdKeyMap.keys()).find(cid => this.chanIdKeyMap.get(cid) === key);
-    if (chanId) {
-      this.chanIdKeyMap.delete(chanId);
-      this.send({ event: 'unsubscribe', chanId });
-    }
-
-    // TODO handle when unsubscribe complete
   }
 }
 
