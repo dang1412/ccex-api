@@ -9,11 +9,13 @@ export class BitfinexWebsocket {
   private readonly ws: WebSocketRxJs<WebsocketMessageI>;
 
   private get subcribedResponse$(): Observable<WebsocketResponseI> {
-    return this.ws.message$.pipe(filter((m: WebsocketResponseI) => m.event === 'subscribed'));
+    // filter type WebsocketResponseI
+    return this.ws.message$.pipe(filter((m: any) => m.event === 'subscribed'));
   }
 
   private get streamData$(): Observable<WebsocketDataI> {
-    return this.ws.message$.pipe(filter((m: WebsocketDataI) => m.length >= 2 && typeof m[0] === 'number' && m[1] !== 'hb'));
+    // filter type WebsocketDataI
+    return this.ws.message$.pipe(filter((m: any) => m.length >= 2 && typeof m[0] === 'number' && m[1] !== 'hb'));
   }
 
   constructor(endPointOrWs?: string | WebSocketRxJs) {
