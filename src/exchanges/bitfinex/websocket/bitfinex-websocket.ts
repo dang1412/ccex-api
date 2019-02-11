@@ -1,103 +1,83 @@
-import { ExchangeWebsocket, SocketFactory } from '../../exchange-websocket.abstract';
-import { ReplaySubject, Observable } from 'rxjs';
+import { ReplaySubject, Observable, empty } from 'rxjs';
 import { wsEndpoint } from '../bitfinex-common';
+import { WebSocketRxJs } from '../../../common';
+import { WebsocketMessageI, WebsocketRequestBaseI, WebsocketSubscribeI, WebsocketUnSubscribeI, WebsocketResponseI, WebsocketDataI } from './bitfinex-websocket.type';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 
-export class BitfinexWebsocket extends ExchangeWebsocket<WebsocketSubscribe | WebsocketUnSubscribe, WebsocketResponse | WebsocketData> {
-  private readonly keyStreamMap = new Map<string, ReplaySubject<any>>();
-  private readonly chanIdKeyMap = new Map<number, string>();
+export class BitfinexWebsocket {
+  private readonly keyChanIdMap = new Map<string, ReplaySubject<number | null>>();
+  private readonly ws: WebSocketRxJs<WebsocketMessageI>;
 
-  constructor(endPoint?: string, createSocket?: SocketFactory) {
-    super(endPoint || wsEndpoint, createSocket);
+  private get subcribedResponse$(): Observable<WebsocketResponseI> {
+    return this.ws.message$.pipe(filter((m: WebsocketResponseI) => m.event === 'subscribed'));
   }
 
-  /**
-   * Subscribe channel
-   *
-   * @param request
-   */
-  subscribe<T>(request: WebsocketRequestBase): Observable<T> {
+  private get streamData$(): Observable<WebsocketDataI> {
+    return this.ws.message$.pipe(filter((m: WebsocketDataI) => m.length >= 2 && typeof m[0] === 'number' && m[1] !== 'hb'));
+  }
+
+  constructor(endPointOrWs?: string | WebSocketRxJs) {
+    this.ws = endPointOrWs === undefined ? new WebSocketRxJs(wsEndpoint)
+      : typeof endPointOrWs === 'string' ? new WebSocketRxJs(endPointOrWs)
+      : endPointOrWs;
+  }
+
+  subscribeChannel<T>(request: WebsocketRequestBaseI): Observable<T> {
     const key = getKey(request);
-    let stream = this.keyStreamMap.get(key);
 
-    if (!stream) {
-      stream = new ReplaySubject<T>(1);
-      this.keyStreamMap.set(key, stream);
+    // get chanId$ and cache
+    const chanId$ = this.keyChanIdMap.get(key) || new ReplaySubject<number | null>(1);
+    if (!this.keyChanIdMap.has(key)) {
+      this.keyChanIdMap.set(key, chanId$);
+      this.getUpcomingChanId$(key).subscribe(chanId => chanId$.next(chanId));
+      this.send({ ...request, event: 'subscribe' });
     }
 
-    this.send({ ...request, event: 'subscribe' });
-
-    return stream.asObservable();
+    return chanId$.pipe(
+      switchMap(chanId => chanId ? this.getChanIdData$<T>(chanId) : empty()),
+    );
   }
 
-  /**
-   * Unsubscribe channel
-   *
-   * @param request
-   */
-  unsubscribe(request: WebsocketRequestBase): void {
+  unsubscribeChannel(request: WebsocketRequestBaseI): void {
     const key = getKey(request);
-    const stream = this.keyStreamMap.get(key);
-    if (stream) {
-      stream.complete();
-      this.keyStreamMap.delete(key);
-    }
-
-    const chanId = Array.from(this.chanIdKeyMap.keys()).find(cid => this.chanIdKeyMap.get(cid) === key);
-    if (chanId) {
-      this.chanIdKeyMap.delete(chanId);
-      this.send({ event: 'unsubscribe', chanId });
-    }
-
-    // TODO handle when unsubscribe complete
-  }
-
-  /**
-   * handle message
-   *
-   * @param message
-   */
-  handleMessage(message: WebsocketResponse | WebsocketData): void {
-    // console.log('handleMessage ===>', message);
-    const response = message as WebsocketResponse;
-    if (response.event === 'subscribed') {
-      // save chanId => key, no need to forward message to stream
-      const key = getKey(response);
-      this.chanIdKeyMap.set(response.chanId, key);
-
-      return;
-    }
-
-    if (response.event === 'unsubscribed') {
-      // handle unsubcribe success
-      // console.log('unsubscribed', response);
-      return;
-    }
-
-    const messageData = message as WebsocketData;
-    if (messageData.length >= 2 && typeof messageData[0] === 'number' && messageData[1] !== 'hb') {
-      const chanId = messageData[0];
-      const key = this.chanIdKeyMap.get(chanId);
-      if (key) {
-        const stream = this.keyStreamMap.get(key);
-
-        // normally data is messageData[1], special 'trade' channel case: message is messageData[2]
-        const data = messageData[1] === 'tu' || messageData[1] === 'te' ? messageData[2] : messageData[1];
-        if (stream) {
-          stream.next(data);
+    const chanId$ = this.keyChanIdMap.get(key);
+    if (chanId$) {
+      chanId$.subscribe((chanId) => {
+        if (chanId) {
+          this.keyChanIdMap.delete(key);
+          this.send({ chanId, event: 'unsubscribe' });
+          chanId$.next(null);
+          chanId$.complete();
         }
-      }
+      });
     }
   }
 
-  onDestroy(): void {
-    // TODO complete all streams
-    // clear stream map and key map
-    this.keyStreamMap.clear();
-    this.chanIdKeyMap.clear();
+  destroy(): void {
+    this.ws.close();
+  }
+
+  private getUpcomingChanId$(key: string): Observable<number> {
+    return this.subcribedResponse$.pipe(
+      filter(res => getKey(res) === key),
+      map(res => res.chanId),
+      take(1),
+    );
+  }
+
+  private getChanIdData$<T>(chanId: number): Observable<T> {
+    return this.streamData$.pipe(
+      filter(m => m[0] === chanId),
+      map(m => m[1] === 'te' || m[1] === 'tu' ? m[2] : m[1]),
+    )
+  }
+
+  private send(req: WebsocketSubscribeI | WebsocketUnSubscribeI): void {
+    this.ws.send(JSON.stringify(req));
   }
 }
 
-export function getKey(request: WebsocketRequestBase): string {
+export function getKey(request: WebsocketRequestBaseI): string {
   return (
     request.channel +
     // (ticker, orderbook)
@@ -110,44 +90,3 @@ export function getKey(request: WebsocketRequestBase): string {
     (request.key || '')
   );
 }
-
-export interface WebsocketRequestBase {
-  channel: string;
-
-  // ex: tBTCUSD (ticker, orderbook)
-  symbol?: string;
-
-  // (orderbook)
-  // level of price aggregation (P0, P1, P2, P3)
-  // default: P0
-  prec?: string;
-
-  // (orderbook)
-  // Frequency of updates(F0, F1).
-  // F0 = realtime / F1=2sec.
-  freq?: string;
-
-  // (orderbook)
-  len?: string;
-
-  // (candles)
-  key?: string;
-}
-
-export interface WebsocketSubscribe extends WebsocketRequestBase {
-  event: 'subscribe';
-}
-
-export interface WebsocketUnSubscribe {
-  event: 'unsubscribe';
-  chanId: number;
-}
-
-export interface WebsocketResponse extends WebsocketRequestBase {
-  event: 'subscribed' | 'unsubscribed';
-  chanId: number;
-  // ex: BTCUSD
-  pair?: string;
-}
-
-export type WebsocketData = [number, any] | [number, string, any];

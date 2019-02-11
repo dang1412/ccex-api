@@ -3,7 +3,7 @@ import { map, filter } from 'rxjs/operators';
 
 import { Trade } from '../../exchange-types';
 import { getSymbol } from '../bitfinex-common';
-import { BitfinexWebsocket, WebsocketRequestBase } from '../websocket';
+import { BitfinexWebsocket, WebsocketRequestBaseI } from '../websocket';
 
 import { getTradesUrl, adaptBitfinexTrade } from './internal/functions';
 import { BitfinexRawTrade } from './internal/types';
@@ -33,7 +33,7 @@ export class BitfinexTrade {
   trade$(pair: string): Observable<Trade> {
     const subcribeRequest = getTradeRequest(pair);
 
-    return this.bitfinexWebsocket.subscribe<BitfinexRawTrade[] | BitfinexRawTrade>(subcribeRequest).pipe(
+    return this.bitfinexWebsocket.subscribeChannel<BitfinexRawTrade[] | BitfinexRawTrade>(subcribeRequest).pipe(
       filter((tradeArrayOrTrade) => typeof tradeArrayOrTrade[0] === 'number'),
       map((trade) => adaptBitfinexTrade(<BitfinexRawTrade>trade)),
     );
@@ -47,7 +47,7 @@ export class BitfinexTrade {
   tradeWithInitialHistory$(pair: string): Observable<Trade[] | Trade> {
     const subcribeRequest = getTradeRequest(pair);
 
-    return this.bitfinexWebsocket.subscribe<BitfinexRawTrade[] | BitfinexRawTrade>(subcribeRequest).pipe(
+    return this.bitfinexWebsocket.subscribeChannel<BitfinexRawTrade[] | BitfinexRawTrade>(subcribeRequest).pipe(
       map((tradeArrayOrTrade) => {
         // array trade
         if (tradeArrayOrTrade[0] && typeof tradeArrayOrTrade[0] === 'object') {
@@ -64,11 +64,11 @@ export class BitfinexTrade {
 
   stopTrade(pair: string): void {
     const unsubscribeRequest = getTradeRequest(pair);
-    this.bitfinexWebsocket.unsubscribe(unsubscribeRequest);
+    this.bitfinexWebsocket.unsubscribeChannel(unsubscribeRequest);
   }
 }
 
-function getTradeRequest(pair: string): WebsocketRequestBase {
+function getTradeRequest(pair: string): WebsocketRequestBaseI {
   return {
     channel: 'trades',
     symbol: getSymbol(pair),

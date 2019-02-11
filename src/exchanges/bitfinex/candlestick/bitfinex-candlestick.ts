@@ -3,7 +3,7 @@ import { map, filter } from 'rxjs/operators';
 
 import { CandleStick } from '../../exchange-types';
 import { getSymbol } from '../bitfinex-common';
-import { BitfinexWebsocket, WebsocketRequestBase } from '../websocket';
+import { BitfinexWebsocket, WebsocketRequestBaseI } from '../websocket';
 
 import { getCandleStickUrl, adaptBitfinexRawCandleStick, getCandleTimeFrame } from './internal/functions';
 import { BitfinexRawCandleStick } from './internal/types';
@@ -42,7 +42,7 @@ export class BitfinexCandleStick {
   candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {
     const subscribeRequest = getCandleSubcribeRequest(pair, minutesFoot);
 
-    return this.bitfinexWebsocket.subscribe<BitfinexRawCandleStick[] | BitfinexRawCandleStick>(subscribeRequest).pipe(
+    return this.bitfinexWebsocket.subscribeChannel<BitfinexRawCandleStick[] | BitfinexRawCandleStick>(subscribeRequest).pipe(
       // filter the first initial history data
       filter((candleArrayOrCandle) => typeof candleArrayOrCandle[0] === 'number'),
       map((candle) => adaptBitfinexRawCandleStick(<BitfinexRawCandleStick>candle)),
@@ -57,7 +57,7 @@ export class BitfinexCandleStick {
   candlestickWithInitialHistory$(pair: string, minutesFoot: number): Observable<CandleStick[] | CandleStick> {
     const subscribeRequest = getCandleSubcribeRequest(pair, minutesFoot);
 
-    return this.bitfinexWebsocket.subscribe<BitfinexRawCandleStick[] | BitfinexRawCandleStick>(subscribeRequest).pipe(
+    return this.bitfinexWebsocket.subscribeChannel<BitfinexRawCandleStick[] | BitfinexRawCandleStick>(subscribeRequest).pipe(
       map((candleArrayOrCandle) => {
         if (candleArrayOrCandle[0] && typeof candleArrayOrCandle[0] === 'object') {
           const initialCandles = <BitfinexRawCandleStick[]>candleArrayOrCandle;
@@ -77,7 +77,7 @@ export class BitfinexCandleStick {
    */
   stopCandleStick(pair: string, minutesFoot: number): void {
     const unsubscribeRequest = getCandleSubcribeRequest(pair, minutesFoot);
-    this.bitfinexWebsocket.unsubscribe(unsubscribeRequest);
+    this.bitfinexWebsocket.unsubscribeChannel(unsubscribeRequest);
   }
 }
 
@@ -86,7 +86,7 @@ export class BitfinexCandleStick {
  * @param pair
  * @param minutesFoot
  */
-function getCandleSubcribeRequest(pair: string, minutesFoot: number): WebsocketRequestBase {
+function getCandleSubcribeRequest(pair: string, minutesFoot: number): WebsocketRequestBaseI {
   const symbol = getSymbol(pair);
   const timeFrame = getCandleTimeFrame(minutesFoot);
 

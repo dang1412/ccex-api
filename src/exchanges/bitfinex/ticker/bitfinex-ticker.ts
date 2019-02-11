@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 
-// import { fetchRxjs } from '../../../common';
 import { Ticker } from '../../exchange-types';
 import { getSymbol } from '../bitfinex-common';
 import { BitfinexWebsocket } from '../websocket';
@@ -33,7 +32,7 @@ export class BitfinexTicker {
     };
 
     return this.bitfinexWebsocket
-      .subscribe<BitfinexRawTicker>(subscribeRequest)
+      .subscribeChannel<BitfinexRawTicker>(subscribeRequest)
       .pipe(map((rawTicker) => adaptBitfinexTicker(rawTicker, pair)));
   }
 
@@ -43,6 +42,6 @@ export class BitfinexTicker {
       symbol: getSymbol(pair),
     };
 
-    this.bitfinexWebsocket.unsubscribe(unsubscribeRequest);
+    this.bitfinexWebsocket.unsubscribeChannel(unsubscribeRequest);
   }
 }

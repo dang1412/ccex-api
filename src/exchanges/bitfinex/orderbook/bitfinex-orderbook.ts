@@ -5,7 +5,7 @@ import { ajax } from 'rxjs/ajax';
 import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
 import { getSymbol } from '../bitfinex-common';
-import { BitfinexWebsocket, getKey, WebsocketRequestBase } from '../websocket';
+import { BitfinexWebsocket, getKey, WebsocketRequestBaseI } from '../websocket';
 
 import { adaptBitfinexOrderbook, getOrderbookApiUrl } from './internal/functions';
 import { BitfinexOrderbookSingleItem } from './internal/types';
@@ -48,15 +48,15 @@ export class BitfinexOrderbook {
       subject.complete();
       delete this.keyOderbookStreamMap[key];
     }
-    this.bitfinexWebsocket.unsubscribe(unsubscribeRequest);
+    this.bitfinexWebsocket.unsubscribeChannel(unsubscribeRequest);
   }
 
   /**
    * Start subscribe to the orderbook for the first time
    * @param subscribeRequest
    */
-  private startOrderbook$(subscribeRequest: WebsocketRequestBase): Observable<Orderbook> {
-    const orderbookSnapshotAndUpdate$ = this.bitfinexWebsocket.subscribe<BitfinexOrderbookSingleItem[] | BitfinexOrderbookSingleItem>(
+  private startOrderbook$(subscribeRequest: WebsocketRequestBaseI): Observable<Orderbook> {
+    const orderbookSnapshotAndUpdate$ = this.bitfinexWebsocket.subscribeChannel<BitfinexOrderbookSingleItem[] | BitfinexOrderbookSingleItem>(
       subscribeRequest,
     );
 
@@ -88,7 +88,7 @@ export class BitfinexOrderbook {
   }
 }
 
-function getOrderbookRequest(pair: string, prec: string = 'P0', freq: string = 'F0', len: string = '25'): WebsocketRequestBase {
+function getOrderbookRequest(pair: string, prec: string = 'P0', freq: string = 'F0', len: string = '25'): WebsocketRequestBaseI {
   return {
     channel: 'book',
     symbol: getSymbol(pair),
