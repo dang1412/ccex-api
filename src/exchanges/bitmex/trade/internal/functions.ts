@@ -8,5 +8,5 @@ export function adaptBitmexTrade(bitmexTrade: BitmexTradeWebsocketData): Trade {
     price: bitmexTrade.price,
     amount: bitmexTrade.size,
     timestamp: new Date(bitmexTrade.timestamp).getTime(),
-  }
+  };
 }

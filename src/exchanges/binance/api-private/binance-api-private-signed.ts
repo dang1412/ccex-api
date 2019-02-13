@@ -44,7 +44,8 @@ export class BinanceApiPrivateSigned {
   }
 
   private sign(queryString: string): string {
-    return crypto.createHmac('sha256', this.secret)
+    return crypto
+      .createHmac('sha256', this.secret)
       .update(queryString)
       .digest('hex');
   }

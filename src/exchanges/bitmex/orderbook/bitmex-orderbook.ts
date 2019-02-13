@@ -12,7 +12,7 @@ export class BitmexOrderbook {
    * @param corsProxy
    * @param bitfinexWebsocket
    */
-  constructor(private readonly corsProxy: string = '', private readonly bitmexWebsocket: BitmexWebsocket) { }
+  constructor(private readonly corsProxy: string = '', private readonly bitmexWebsocket: BitmexWebsocket) {}
 
   fetchOrderbook$(pair: string): Observable<Orderbook> {
     return EMPTY;
@@ -43,15 +43,20 @@ export class BitmexOrderbook {
      * Make sure 'partial' come first and then 'insert' 'update' 'delete'
      */
     const snapshot$ = data$.pipe(
-      filter(orderbookData => orderbookData.action === 'partial'),
+      filter((orderbookData) => orderbookData.action === 'partial'),
       take(1),
     );
 
     const update$ = data$.pipe(
-      filter(orderbookData => orderbookData.action === 'update' || orderbookData.action === 'insert' || orderbookData.action === 'delete'),
+      filter(
+        (orderbookData) => orderbookData.action === 'update' || orderbookData.action === 'insert' || orderbookData.action === 'delete',
+      ),
     );
 
-    return concat(snapshot$, update$).pipe(scan(bitmexUpdateOrderbook), map(adaptBitmexOrderbook));
+    return concat(snapshot$, update$).pipe(
+      scan(bitmexUpdateOrderbook),
+      map(adaptBitmexOrderbook),
+    );
   }
 }
 

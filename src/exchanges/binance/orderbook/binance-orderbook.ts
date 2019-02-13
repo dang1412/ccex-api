@@ -77,7 +77,7 @@ export class BinanceOrderbook {
           return updateOrderbook(orderbook, update);
         }
 
-        return orderbook.lastUpdateId >= update.lastUpdateId ? orderbook : updateOrderbook(orderbook, update)
+        return orderbook.lastUpdateId >= update.lastUpdateId ? orderbook : updateOrderbook(orderbook, update);
       }),
     );
   }

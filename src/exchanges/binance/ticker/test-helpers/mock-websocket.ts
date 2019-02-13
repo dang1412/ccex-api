@@ -31,5 +31,5 @@ const MOCK_TICKER_DATA = [
 ];
 
 export const MOCK_SOCKET = new WebsocketRxJsMock({
-  default: MOCK_TICKER_DATA.map((data, i) => ({time: i + 1, payload: data})),
+  default: MOCK_TICKER_DATA.map((data, i) => ({ time: i + 1, payload: data })),
 });

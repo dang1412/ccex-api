@@ -24,7 +24,7 @@ export class CoinbaseCandleStick {
 
     return ajax.getJSON<CoinbaseRawCandleStick[]>(url).pipe(
       map((coinbaseCandles) => coinbaseCandles.map(adaptCoinbaseCandleStick)),
-      map(candles => candles.sort((c1, c2) => c1.timestamp - c2.timestamp)),
+      map((candles) => candles.sort((c1, c2) => c1.timestamp - c2.timestamp)),
     );
   }
 }

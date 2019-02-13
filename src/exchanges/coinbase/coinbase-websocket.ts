@@ -6,7 +6,7 @@ import { websocketEndpoint } from './coinbase-common';
 
 // normally the type in response message is the same to subscribed channel
 // if it is different we have this to determine which channel the message belongs to
-const typeChannelMap: {[key: string]: string} = {
+const typeChannelMap: { [key: string]: string } = {
   snapshot: 'level2',
   l2update: 'level2',
   match: 'matches',

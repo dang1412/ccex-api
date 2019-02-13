@@ -56,9 +56,9 @@ export class BitfinexOrderbook {
    * @param subscribeRequest
    */
   private startOrderbook$(subscribeRequest: WebsocketRequestBaseI): Observable<Orderbook> {
-    const orderbookSnapshotAndUpdate$ = this.bitfinexWebsocket.subscribeChannel<BitfinexOrderbookSingleItem[] | BitfinexOrderbookSingleItem>(
-      subscribeRequest,
-    );
+    const orderbookSnapshotAndUpdate$ = this.bitfinexWebsocket.subscribeChannel<
+      BitfinexOrderbookSingleItem[] | BitfinexOrderbookSingleItem
+    >(subscribeRequest);
 
     // snapshot (array of items) come at first
     const orderbookSnapshot$ = orderbookSnapshotAndUpdate$.pipe(

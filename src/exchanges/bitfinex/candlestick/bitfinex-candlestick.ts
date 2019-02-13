@@ -29,9 +29,9 @@ export class BitfinexCandleStick {
     const originUrl = getCandleStickUrl(pair, minutesFoot, start, end);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return ajax.getJSON<BitfinexRawCandleStick[]>(url).pipe(
-      map((bitfinexCandles) => bitfinexCandles.reverse().map(adaptBitfinexRawCandleStick)),
-    );
+    return ajax
+      .getJSON<BitfinexRawCandleStick[]>(url)
+      .pipe(map((bitfinexCandles) => bitfinexCandles.reverse().map(adaptBitfinexRawCandleStick)));
   }
 
   /**

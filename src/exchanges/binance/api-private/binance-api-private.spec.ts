@@ -8,14 +8,14 @@ const binanceApiPrivate = new BinanceApiPrivate(apiKeys.key);
 
 describe('Test binance api private functions', () => {
   it('Should fetch account information', (done) => {
-    binanceApiPrivateSigned.getAccountInformation().subscribe(accountInfo => {
+    binanceApiPrivateSigned.getAccountInformation().subscribe((accountInfo) => {
       checkBinanceAccountInformation(accountInfo);
       done();
     });
   });
 
   it('Should fetch user data stream listen key', (done) => {
-    binanceApiPrivate.getUserStreamListenKey$().subscribe(listenKey => {
+    binanceApiPrivate.getUserStreamListenKey$().subscribe((listenKey) => {
       expect(listenKey);
       done();
     });

@@ -11,7 +11,7 @@ export class BitmexTrade {
    * @param corsProxy
    * @param bitfinexWebsocket
    */
-  constructor(private readonly corsProxy: string = '', private readonly bitmexWebsocket: BitmexWebsocket) { }
+  constructor(private readonly corsProxy: string = '', private readonly bitmexWebsocket: BitmexWebsocket) {}
 
   // fetch trades
   fetchTrades$(pair: string, start?: number, end?: number, limit?: number, sort?: number): Observable<Trade[]> {
@@ -26,9 +26,7 @@ export class BitmexTrade {
   trade$(pair: string): Observable<Trade> {
     const channel = getTradeChannel(pair);
 
-    return this.bitmexWebsocket.subscribe<BitmexTradeWebsocketData>(channel).pipe(
-      map((wsData) => adaptBitmexTrade(wsData.data[0])),
-    );
+    return this.bitmexWebsocket.subscribe<BitmexTradeWebsocketData>(channel).pipe(map((wsData) => adaptBitmexTrade(wsData.data[0])));
   }
 
   stopTrade(pair: string): void {

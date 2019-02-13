@@ -22,7 +22,9 @@ describe('binanceTrade', () => {
           (trades) => {
             checkTrades(trades);
           },
-          () => {/* error */},
+          () => {
+            /* error */
+          },
           () => {
             binanceTrade.stopTrade(market);
             done();
@@ -37,7 +39,9 @@ describe('binanceTrade', () => {
         (trades) => {
           checkTrades(trades);
         },
-        () => {/* error */},
+        () => {
+          /* error */
+        },
         () => {
           done();
         },

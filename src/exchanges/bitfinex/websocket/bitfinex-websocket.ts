@@ -1,7 +1,14 @@
 import { ReplaySubject, Observable, empty } from 'rxjs';
 import { wsEndpoint } from '../bitfinex-common';
 import { WebSocketRxJs } from '../../../common';
-import { WebsocketMessageI, WebsocketRequestBaseI, WebsocketSubscribeI, WebsocketUnSubscribeI, WebsocketResponseI, WebsocketDataI } from './bitfinex-websocket.type';
+import {
+  WebsocketMessageI,
+  WebsocketRequestBaseI,
+  WebsocketSubscribeI,
+  WebsocketUnSubscribeI,
+  WebsocketResponseI,
+  WebsocketDataI,
+} from './bitfinex-websocket.type';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 
 export class BitfinexWebsocket {
@@ -19,9 +26,12 @@ export class BitfinexWebsocket {
   }
 
   constructor(endPointOrWs?: string | WebSocketRxJs) {
-    this.ws = endPointOrWs === undefined ? new WebSocketRxJs(wsEndpoint)
-      : typeof endPointOrWs === 'string' ? new WebSocketRxJs(endPointOrWs)
-      : endPointOrWs;
+    this.ws =
+      endPointOrWs === undefined
+        ? new WebSocketRxJs(wsEndpoint)
+        : typeof endPointOrWs === 'string'
+        ? new WebSocketRxJs(endPointOrWs)
+        : endPointOrWs;
   }
 
   subscribeChannel<T>(request: WebsocketRequestBaseI): Observable<T> {
@@ -31,13 +41,11 @@ export class BitfinexWebsocket {
     const chanId$ = this.keyChanIdMap.get(key) || new ReplaySubject<number | null>(1);
     if (!this.keyChanIdMap.has(key)) {
       this.keyChanIdMap.set(key, chanId$);
-      this.getUpcomingChanId$(key).subscribe(chanId => chanId$.next(chanId));
+      this.getUpcomingChanId$(key).subscribe((chanId) => chanId$.next(chanId));
       this.send({ ...request, event: 'subscribe' });
     }
 
-    return chanId$.pipe(
-      switchMap(chanId => chanId ? this.getChanIdData$<T>(chanId) : empty()),
-    );
+    return chanId$.pipe(switchMap((chanId) => (chanId ? this.getChanIdData$<T>(chanId) : empty())));
   }
 
   unsubscribeChannel(request: WebsocketRequestBaseI): void {
@@ -61,17 +69,17 @@ export class BitfinexWebsocket {
 
   private getUpcomingChanId$(key: string): Observable<number> {
     return this.subcribedResponse$.pipe(
-      filter(res => getKey(res) === key),
-      map(res => res.chanId),
+      filter((res) => getKey(res) === key),
+      map((res) => res.chanId),
       take(1),
     );
   }
 
   private getChanIdData$<T>(chanId: number): Observable<T> {
     return this.streamData$.pipe(
-      filter(m => m[0] === chanId),
-      map(m => m[1] === 'te' || m[1] === 'tu' ? m[2] : m[1]),
-    )
+      filter((m) => m[0] === chanId),
+      map((m) => (m[1] === 'te' || m[1] === 'tu' ? m[2] : m[1])),
+    );
   }
 
   private send(req: WebsocketSubscribeI | WebsocketUnSubscribeI): void {

@@ -29,6 +29,6 @@ export class BinanceApiPrivate {
       },
     };
 
-    return ajax.getJSON<BinanceUserStreamPostResponse>(url, fetchOptions).pipe(map(res => res.listenKey));
+    return ajax.getJSON<BinanceUserStreamPostResponse>(url, fetchOptions).pipe(map((res) => res.listenKey));
   }
 }

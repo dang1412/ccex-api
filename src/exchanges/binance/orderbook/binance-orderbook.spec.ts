@@ -16,7 +16,9 @@ describe('binanceOrderbook', () => {
         (orderbook) => {
           checkOrderbook(orderbook);
         },
-        () => {/* error */},
+        () => {
+          /* error */
+        },
         () => {
           binanceOrderbook.stopOrderbook(market);
           done();
@@ -34,7 +36,9 @@ describe('binanceOrderbook', () => {
           (orderbook) => {
             checkOrderbook(orderbook);
           },
-          () => {/* error */},
+          () => {
+            /* error */
+          },
           () => {
             binanceOrderbook.stopOrderbook(market);
             done();

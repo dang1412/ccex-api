@@ -17,7 +17,9 @@ describe('bitfinexTicker', () => {
       (ticker) => {
         checkTicker(ticker);
       },
-      () => {/* error */ },
+      () => {
+        /* error */
+      },
       () => {
         done();
       },

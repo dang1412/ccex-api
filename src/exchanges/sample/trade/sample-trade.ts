@@ -1,1 +1,1 @@
-export class SampleTrade { }
+export class SampleTrade {}

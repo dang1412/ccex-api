@@ -8,7 +8,9 @@ const bitfinexWebsocket = new BitfinexWebsocket(MOCK_SOCKET as any);
 describe('bitfinexWebsocket', () => {
   it('should subscribe', async () => {
     const raw = await bitfinexWebsocket
-      .subscribeChannel<BitfinexRawTickerI>({channel: 'ticker',symbol: 'tBTCUSD'}).pipe(take(1)).toPromise();
+      .subscribeChannel<BitfinexRawTickerI>({ channel: 'ticker', symbol: 'tBTCUSD' })
+      .pipe(take(1))
+      .toPromise();
 
     bitfinexWebsocket.unsubscribeChannel({ channel: 'ticker', symbol: 'tBTCUSD' });
 
@@ -16,12 +18,13 @@ describe('bitfinexWebsocket', () => {
   });
 
   it('should unsubscribe', (done) => {
-    bitfinexWebsocket
-      .subscribeChannel<BitfinexRawTickerI>({ channel: 'ticker', symbol: 'tBTCUSD' }).subscribe(
-        () => {},
-        (e) => {},
-        () => { done() },
-      );
+    bitfinexWebsocket.subscribeChannel<BitfinexRawTickerI>({ channel: 'ticker', symbol: 'tBTCUSD' }).subscribe(
+      () => {},
+      (e) => {},
+      () => {
+        done();
+      },
+    );
 
     bitfinexWebsocket.unsubscribeChannel({ channel: 'ticker', symbol: 'tBTCUSD' });
   });

@@ -39,14 +39,13 @@ export function bitmexUpdateOrderbook(
       if (update.action === 'update') {
         originData[position].size = updateItem.size;
         currentPosition = position + 1;
-      }
-      else if (update.action === 'delete') {
+      } else if (update.action === 'delete') {
         originData.splice(position, 1);
         currentPosition = position;
       }
     } else if (update.action === 'insert') {
       // not found, insert to position
-      originData.splice(position, 0, updateItem)
+      originData.splice(position, 0, updateItem);
       currentPosition = position + 1;
     }
   }
@@ -66,7 +65,9 @@ export function bitmexUpdateOrderbook(
 function findPosition(origin: BitmexOrderbookWebsocketData[], update: BitmexOrderbookWebsocketData, fromId: number = 0): number {
   let i = fromId;
   for (; i < origin.length; i++) {
-    if (origin[i].id >= update.id) { break; }
+    if (origin[i].id >= update.id) {
+      break;
+    }
   }
 
   return i;

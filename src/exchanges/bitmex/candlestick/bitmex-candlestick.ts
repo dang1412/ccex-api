@@ -11,7 +11,7 @@ export class BitmexCandleStick {
    * @param corsProxy
    * @param bitfinexWebsocket
    */
-  constructor(private readonly corsProxy: string = '') { }
+  constructor(private readonly corsProxy: string = '') {}
 
   /**
    *

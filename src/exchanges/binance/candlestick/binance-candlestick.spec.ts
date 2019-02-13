@@ -19,12 +19,10 @@ describe('Test binance candlestick functions', () => {
   jest.setTimeout(10000);
 
   it(`should fetch ${pair} ${minutesFoot}min candles in provided time range`, (done) => {
-    binanceCandlestick
-      .fetchCandleStickRange$(pair, minutesFoot, 1529509826239 - 60000 * 60 * 24, 1529509826239)
-      .subscribe((candles) => {
-        candles.forEach(checkCandleStick);
-        done();
-      });
+    binanceCandlestick.fetchCandleStickRange$(pair, minutesFoot, 1529509826239 - 60000 * 60 * 24, 1529509826239).subscribe((candles) => {
+      candles.forEach(checkCandleStick);
+      done();
+    });
   });
 
   it(`should get ${pair} ${minutesFoot}min last candle realtime`, (done) => {
@@ -44,7 +42,9 @@ describe('Test binance candlestick functions', () => {
 
   it(`should complete stream when stop candle socket`, (done) => {
     binanceCandlestick.candlestick$(pair, minutesFoot).subscribe(
-      () => { /**/ },
+      () => {
+        /**/
+      },
       () => console.log('error'),
       () => {
         done();
@@ -69,9 +69,7 @@ describe('Test binance candlestick functions', () => {
 
     binanceCandlestick
       .candlestick$(pair, minutesFoot)
-      .pipe(
-        skipUntil(timer(timeToStop + 200)),
-      )
+      .pipe(skipUntil(timer(timeToStop + 200)))
       .subscribe((candle) => {
         checkCandleStick(candle);
         expect(completeOtherCandleStream);

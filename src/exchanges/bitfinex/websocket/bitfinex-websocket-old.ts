@@ -42,7 +42,7 @@ export class BitfinexWebsocket extends ExchangeWebsocket<WebsocketSubscribe | We
       this.keyStreamMap.delete(key);
     }
 
-    const chanId = Array.from(this.chanIdKeyMap.keys()).find(cid => this.chanIdKeyMap.get(cid) === key);
+    const chanId = Array.from(this.chanIdKeyMap.keys()).find((cid) => this.chanIdKeyMap.get(cid) === key);
     if (chanId) {
       this.chanIdKeyMap.delete(chanId);
       this.send({ event: 'unsubscribe', chanId });

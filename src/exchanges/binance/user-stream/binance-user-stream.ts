@@ -17,11 +17,17 @@ export class BinanceUserStream {
   }
 
   userDataAccount$(): Observable<BinanceUserStreamAccount> {
-    return this.userData$().pipe(filter(data => data.e === 'outboundAccountInfo'), map(data => <BinanceUserStreamAccount>data));
+    return this.userData$().pipe(
+      filter((data) => data.e === 'outboundAccountInfo'),
+      map((data) => <BinanceUserStreamAccount>data),
+    );
   }
 
   userDataOrder$(): Observable<BinanceUserStreamOrder> {
-    return this.userData$().pipe(filter(data => data.e === 'executionReport'), map(data => <BinanceUserStreamOrder>data));
+    return this.userData$().pipe(
+      filter((data) => data.e === 'executionReport'),
+      map((data) => <BinanceUserStreamOrder>data),
+    );
   }
 
   stopUserData(): void {

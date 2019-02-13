@@ -19,7 +19,9 @@ describe('bitbankTicker', () => {
           (ticker) => {
             checkTicker(ticker);
           },
-          () => {/* error */ },
+          () => {
+            /* error */
+          },
           () => {
             bitbankTicker.stopTicker(market);
             done();
@@ -34,7 +36,9 @@ describe('bitbankTicker', () => {
         (ticker) => {
           checkTicker(ticker);
         },
-        () => {/* error */ },
+        () => {
+          /* error */
+        },
         () => {
           done();
         },

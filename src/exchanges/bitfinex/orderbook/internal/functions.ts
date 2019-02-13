@@ -20,7 +20,7 @@ export function adaptBitfinexOrderbook(bitfinexOrderbook: BitfinexOrderbookSingl
 
   bitfinexOrderbook.forEach((orderbookItem) => {
     // if count === 0 set amount 0
-    const amount = (orderbookItem[1] > 0 ? Math.abs(orderbookItem[2]) : 0);
+    const amount = orderbookItem[1] > 0 ? Math.abs(orderbookItem[2]) : 0;
     const price = orderbookItem[0];
     if (orderbookItem[2] > 0) {
       orderbook.bids.push([`${price}`, `${amount}`]);

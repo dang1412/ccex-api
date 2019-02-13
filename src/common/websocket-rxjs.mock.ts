@@ -8,9 +8,7 @@ interface MockMessage<T> {
   payload: T | 'stop';
 }
 
-type MockOf<Class> = {
-  [Member in keyof Class]: Class[Member];
-};
+type MockOf<Class> = { [Member in keyof Class]: Class[Member] };
 
 export interface MockDataScheme<T> {
   [key: string]: MockMessage<T>[];
@@ -40,8 +38,10 @@ export class WebsocketRxJsMock<T> implements MockOf<WebSocketRxJs> {
   }
 
   private receive(messages: MockMessage<T>[]): void {
-    messages.forEach(m => {
-      setTimeout(() => { m.payload === 'stop' ? this.close() : this.data$.next(m.payload) }, m.time);
+    messages.forEach((m) => {
+      setTimeout(() => {
+        m.payload === 'stop' ? this.close() : this.data$.next(m.payload);
+      }, m.time);
     });
   }
 }

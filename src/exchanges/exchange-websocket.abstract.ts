@@ -10,7 +10,7 @@ export type SocketFactory = <T>(endPoint: string) => WebSocketRxJs<T>;
  */
 export abstract class ExchangeWebsocket<T = any, U = any> {
   private ws: WebSocketRxJs<U> | null = null;
-  constructor(private readonly endPoint: string, private readonly createSocket: SocketFactory = socketFactory) { }
+  constructor(private readonly endPoint: string, private readonly createSocket: SocketFactory = socketFactory) {}
 
   abstract handleMessage(response: U): void;
   abstract onDestroy(): void;

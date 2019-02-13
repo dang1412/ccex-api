@@ -13,7 +13,7 @@ export abstract class ExchangeApi {
   abstract get supportFeatures(): SupportFeatures;
 
   constructor(options?: ExchangeOptions) {
-    this.options = {...defaultOptions, ...options};
+    this.options = { ...defaultOptions, ...options };
   }
 
   // request ticker

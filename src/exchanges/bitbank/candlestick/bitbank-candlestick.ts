@@ -41,7 +41,7 @@ export class BitbankCandlestick {
    * @param end
    */
   fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end?: number): Observable<CandleStick[]> {
-    const minutesToResolution: {[key: number]: string} = {
+    const minutesToResolution: { [key: number]: string } = {
       1: '1min',
       5: '5min',
       15: '15min',
@@ -69,13 +69,13 @@ export class BitbankCandlestick {
  * @param resolution
  * @param timeString
  */
-function fetchAndCacheCandleStick$(pair: string, resolution: string, timeString: string): Observable < CandleStick[] > {
+function fetchAndCacheCandleStick$(pair: string, resolution: string, timeString: string): Observable<CandleStick[]> {
   const key = pair + resolution + timeString;
-  if(candleFileCaches[key]) {
+  if (candleFileCaches[key]) {
     return of(candleFileCaches[key]);
   }
 
-    return fetchCandleStickFile$(pair, resolution, timeString).pipe(
+  return fetchCandleStickFile$(pair, resolution, timeString).pipe(
     tap((candles) => {
       // cache file request result if it is not newest file
       if (candles && candles.length && !isLatestTimestring(timeString)) {
@@ -91,7 +91,7 @@ function fetchAndCacheCandleStick$(pair: string, resolution: string, timeString:
  * @param resolution
  * @param timeString
  */
-function fetchCandleStickFile$(pair: string, resolution: string, timeString: string): Observable < CandleStick[] > {
+function fetchCandleStickFile$(pair: string, resolution: string, timeString: string): Observable<CandleStick[]> {
   const url = `${publicUrl}/${pair}/candlestick/${resolution}/${timeString}`;
 
   return ajax.getJSON<RawData<BitbankRawCandlesticks>>(url).pipe(map((raw) => raw.data.candlestick[0].ohlcv.map(adaptBitbankCandle)));

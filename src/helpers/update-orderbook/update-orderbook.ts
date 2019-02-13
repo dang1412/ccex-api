@@ -72,7 +72,7 @@ function mergeArray(originArr: [string, string][], updateArr: [string, string][]
       if (+update[1] > 0) {
         rs.push(update);
       }
-      updateIndex ++;
+      updateIndex++;
       continue;
     }
 
@@ -81,7 +81,7 @@ function mergeArray(originArr: [string, string][], updateArr: [string, string][]
       if (+origin[1] > 0) {
         rs.push(origin);
       }
-      originIndex ++;
+      originIndex++;
       continue;
     }
 
@@ -96,8 +96,8 @@ function mergeArray(originArr: [string, string][], updateArr: [string, string][]
       if (updateAmount > 0) {
         rs.push(update);
       }
-      originIndex ++;
-      updateIndex ++;
+      originIndex++;
+      updateIndex++;
       continue;
     }
 
@@ -106,7 +106,7 @@ function mergeArray(originArr: [string, string][], updateArr: [string, string][]
       if (originAmount > 0) {
         rs.push(origin);
       }
-      originIndex ++;
+      originIndex++;
     } else {
       // pick update if update amount > 0
       if (updateAmount > 0) {

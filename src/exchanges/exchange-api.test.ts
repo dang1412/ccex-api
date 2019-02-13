@@ -34,7 +34,9 @@ function testExchange(exchange: ExchangeApi): void {
 
     // it test for orderbook
     if (supportFeatures.orderbook) {
-      it('should get orderbook realtime for all pairs', () => {/* test orderbook */});
+      it('should get orderbook realtime for all pairs', () => {
+        /* test orderbook */
+      });
     }
   });
 }
