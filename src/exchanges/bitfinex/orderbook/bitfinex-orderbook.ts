@@ -67,9 +67,9 @@ export class BitfinexOrderbook {
         // this case is not expected (1 item come instead of array),
         // this happens when the stream is hot because ws channel already subscribed before so only update come,
         // in that case consider single updating item as snapshot
-        // if (typeof snapshot[0] === 'number') {
-        //   snapshot = [snapshot];
-        // }
+        if (typeof snapshot[0] === 'number') {
+          return [snapshot];
+        }
 
         return <BitfinexOrderbookSingleItem[]>snapshot;
       }),
