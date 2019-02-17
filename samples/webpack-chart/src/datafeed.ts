@@ -1,3 +1,5 @@
+import { BitfinexApi, CandleStick } from 'ccex-api';
+
 import {
   Bar,
   ErrorCallback,
@@ -8,39 +10,37 @@ import {
   ResolveCallback,
   SearchSymbolsCallback,
   SubscribeBarsCallback,
+  ResolutionString,
 } from '../lib/charting_library/charting_library.min';
 
-const resolutionToDataName: { [key: string]: string } = {
-  1: 'min1',
-  5: 'min5',
-  10: 'min10',
-  15: 'min15',
-  30: 'min30',
-  60: 'min60',
-  120: 'min120',
-  D: 'day',
-};
+const corsProxy = 'https://api.exchangecompare.com/';
+const pair = 'btc_usd';
 
 export class Datafeed implements IBasicDataFeed {
+  private exchangeApi: BitfinexApi;
+  private initialLastCandle: CandleStick | null = null;
+
+  constructor() {
+    this.exchangeApi = new BitfinexApi({ corsProxy });
+  }
+
   searchSymbols(userInput: string, exchange: string, symbolType: string, onResult: SearchSymbolsCallback): void {
     throw new Error('Method not implemented.');
   }
 
   resolveSymbol(symbolName: string, onResolve: ResolveCallback, onError: ErrorCallback): void {
-    const symbol = 'btc_usd';
-
     const symbolData = {
-      name: symbol,
-      full_name: symbol,
+      name: pair,
+      full_name: pair,
       exchange: 'bitfinex',
-      listed_exchange: symbol,
+      listed_exchange: pair,
       timezone: <TradingView.Timezone>'Asia/Tokyo',
       minmov: 1,
       pricescale: 100,
       session: '24x7',
       has_intraday: true,
       has_no_volume: false,
-      ticker: symbol,
+      ticker: pair,
       description: 'bitfinex',
       type: 'bitcoin',
       supported_resolutions: ['1', '5', '15', '30', '60', '120', 'D'],
@@ -53,28 +53,25 @@ export class Datafeed implements IBasicDataFeed {
 
   getBars(
     symbolInfo: LibrarySymbolInfo,
-    resolution: string,
+    resolution: ResolutionString,
     rangeStartDate: number,
     rangeEndDate: number,
     onResult: HistoryCallback,
     onError: ErrorCallback,
     isFirstCall: boolean,
   ): void {
-    // use only resolution to get stored data
-    const fileName = resolutionToDataName[resolution] || 'day';
-    const url = `${fileName}.json`;
+    const minutesFoot = resolutionToMinutes(resolution);
 
-    // return data only for first time
-    if (isFirstCall) {
-      /* tslint:disable:no-floating-promises promise-function-async */
-      fetch(url)
-        .then((data) => data.json())
-        .then((data: Bar[]) => {
-          onResult(data, { noData: false });
-        });
-    } else {
-      onResult([], { noData: true });
-    }
+    this.exchangeApi
+      .fetchCandleStickRange$(pair, minutesFoot, rangeStartDate * 1000, rangeEndDate * 1000)
+      .subscribe((candlesticks) => {
+        if (isFirstCall && candlesticks && candlesticks.length) {
+          this.initialLastCandle = candlesticks[candlesticks.length - 1];
+        }
+        const bars = candlesticks.map(adaptCandlestickToBar);
+        const noData = isFirstCall || (bars && bars.length > 0) ? false : true;
+        onResult(bars, { noData });
+      });
   }
 
   subscribeBars(
@@ -85,7 +82,14 @@ export class Datafeed implements IBasicDataFeed {
     onResetCacheNeededCallback: () => void,
   ): void {
     console.log('subscribeBars');
-    // throw new Error('Method not implemented.');
+    const minutesFoot = resolutionToMinutes(resolution);
+    if (this.initialLastCandle) {
+      this.exchangeApi.lastCandle$(pair, this.initialLastCandle, minutesFoot)
+        .subscribe((lastCandle) => {
+          const updatedLastBar = adaptCandlestickToBar(lastCandle);
+          onTick(updatedLastBar);
+        });
+    }
   }
 
   unsubscribeBars(listenerGuid: string): void {
@@ -99,4 +103,24 @@ export class Datafeed implements IBasicDataFeed {
     // default configuration
     setTimeout(callback);
   }
+}
+
+// get minutesFoot from Tradingview resolution
+function resolutionToMinutes(res: ResolutionString): number {
+  const resStringMinuteMap: {[key: string]: number} = {
+    'D': 1440,
+    '1D': 1440,
+  };
+
+  const minutes = resStringMinuteMap[res] || Number(res);
+  if (!minutes) {
+    throw new Error(`Resolution is not recognized ${res}`);
+  }
+
+  return minutes;
+}
+
+// adapt ccex-api CandleStick type to tradingview Bar type
+function adaptCandlestickToBar(candlestick: CandleStick): Bar {
+  return { ...candlestick, time: candlestick.timestamp };
 }

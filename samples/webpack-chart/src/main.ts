@@ -6,7 +6,7 @@ function initChart(): void {
     // debug: true, // uncomment this line to see Library errors and warnings in the console
     fullscreen: true,
     symbol: 'btc_jpy',
-    interval: '1',
+    interval: '60',
     container_id: 'tv_chart_container',
     // BEWARE: no trailing slash is expected in feed URL
     datafeed: new Datafeed(),

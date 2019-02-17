@@ -27,7 +27,7 @@ const config: Configuration = {
   devServer: {
     contentBase: join(__dirname, 'lib'),
     compress: true,
-    port: 9000,
+    port: 4200,
   },
 };
 
