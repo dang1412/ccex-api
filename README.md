@@ -20,10 +20,10 @@ These features are supported with all major exchanges
 # Sample
  - [Demo](https://angular-practice-starter.firebaseapp.com/ccex-api)
  - [Angular sample](https://github.com/dang1412/angular-practice-starter/tree/feature/ccex-api)
- - Webpack typescript (TODO)
- - Rollup typescript (TODO)
- - React sample (TODO)
- - Vue sample (TODO)
+ - [Production](https://www.exchangecompare.com/)
+ - [React](samples/react-ccex-api)
+ - [Webpack typescript](samples/webpack-chart)
+ - Vue (TODO)
 
 # Supported Exchanges
 Binance, Bitbank, Bitfinex, Coinbase
