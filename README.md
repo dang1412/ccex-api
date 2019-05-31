@@ -8,14 +8,14 @@ Cryptocurrency exchanges client api wrapper.
 These features are supported with all major exchanges
 - Public realtime api.
 - Public rest api.
-- Support for both Nodejs and Browser environments.
+- Support for both Nodejs and Browser (Webpack, React, Angular...see samples below) environments.
 - Modular structure make sure you include minimum code as you need (especially for client side application).
 - Option to bypass cors request problem in browser with [proxy](https://github.com/Rob--W/cors-anywhere).
 - More to come: Tradingview realtime datafeed, private rest api with api/secret key...
 
 # Prequisite
  - Using crypto to sign private request requrie node 10.
- - This library is built on top of [typescript](https://www.typescriptlang.org/) and [Rxjs](https://github.com/ReactiveX/rxjs) (v6). All async functions will return an `observable` stream so familiar with [Rxjs](https://github.com/ReactiveX/rxjs) would definitely be an advantage but basically using stream `.subscribe((data) => {/**/})` method should be sufficient. You can also easily turn an `one-time-complete` observable into promise using `.toPromise()` to be used with async await.
+ - This library is built on top of [Typescript](https://www.typescriptlang.org/) and [Rxjs](https://github.com/ReactiveX/rxjs) (v6). All async functions will return an `observable` stream so familiar with [Rxjs](https://github.com/ReactiveX/rxjs) would be an advantage but basically using stream `.subscribe((data) => {/**/})` method should be sufficient. You can also easily turn an `one-time-complete` observable (rest API request) into promise using `.toPromise()` to be used with async await.
 
 # Sample
  - [Demo](https://angular-practice-starter.firebaseapp.com/ccex-api)
@@ -100,7 +100,7 @@ lastCandle$| pair: `string` <br> minutesFoot: `number` <br> lastCandle: `CandleS
 Besides, an exchange may have more specific functions, it depends on exchange provided features and implementation.
 In that case, specific guide for that exchange will be located at `exchanges/{exchange}/README.md` (TODO)
 
-# Contributor guide
+# Contribution guide
 In order to add a new exchange, simply clone folder `src/exchanges/sample`, rename, implement functions and include appropiate tests for sub-modules (ticker, orderbook...) and some internal functions.
 
 Finally make sure the exchange `sample` pass predefined test by running
