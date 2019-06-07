@@ -1,4 +1,5 @@
-import { apiKeys } from '../api-key-test';
+ /* tslint:disable-next-line */
+const apiKeys = require('../api-private/api-key-test');
 import { BinanceUserStream } from './binance-user-stream';
 
 const binanceUserStream = new BinanceUserStream(apiKeys.key);

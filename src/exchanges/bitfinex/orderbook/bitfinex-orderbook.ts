@@ -1,7 +1,7 @@
 import { Observable, concat, ReplaySubject } from 'rxjs';
 import { map, take, filter, scan } from 'rxjs/operators';
-import { ajax } from 'rxjs/ajax';
 
+import { fetchRxjs } from '../../../common';
 import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
 import { getSymbol } from '../bitfinex-common';
@@ -23,7 +23,7 @@ export class BitfinexOrderbook {
     const originUrl = getOrderbookApiUrl(pair, prec);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return ajax.getJSON<BitfinexOrderbookSingleItem[]>(url).pipe(map(adaptBitfinexOrderbook));
+    return fetchRxjs<BitfinexOrderbookSingleItem[]>(url).pipe(map(adaptBitfinexOrderbook));
   }
 
   orderbook$(pair: string, prec: string = 'P0', freq: string = 'F0', len: string = '25'): Observable<Orderbook> {

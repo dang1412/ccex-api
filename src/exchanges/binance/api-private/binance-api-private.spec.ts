@@ -1,4 +1,5 @@
-import { apiKeys } from '../api-key-test';
+ /* tslint:disable-next-line */
+const apiKeys = require('./api-key-test');
 import { BinanceApiPrivate } from './binance-api-private';
 import { BinanceApiPrivateSigned } from './binance-api-private-signed';
 import { checkBinanceAccountInformation } from './internal/functions-test';

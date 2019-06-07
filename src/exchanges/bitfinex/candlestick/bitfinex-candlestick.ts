@@ -1,13 +1,13 @@
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { fetchRxjs } from '../../../common';
 import { CandleStick } from '../../exchange-types';
 import { getSymbol } from '../bitfinex-common';
 import { BitfinexWebsocket, WebsocketRequestBaseI } from '../websocket';
 
 import { getCandleStickUrl, adaptBitfinexRawCandleStick, getCandleTimeFrame } from './internal/functions';
 import { BitfinexRawCandleStick } from './internal/types';
-import { ajax } from 'rxjs/ajax';
 
 export class BitfinexCandleStick {
   /**
@@ -29,8 +29,7 @@ export class BitfinexCandleStick {
     const originUrl = getCandleStickUrl(pair, minutesFoot, start, end);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return ajax
-      .getJSON<BitfinexRawCandleStick[]>(url)
+    return fetchRxjs<BitfinexRawCandleStick[]>(url)
       .pipe(map((bitfinexCandles) => bitfinexCandles.reverse().map(adaptBitfinexRawCandleStick)));
   }
 

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ajax } from 'rxjs/ajax';
 
+import { fetchRxjs } from '../../../common';
 import { Ticker } from '../../exchange-types';
 import { WebsocketRequest } from '../coinbase-common.types';
 import { getProductId } from '../coinbase-common';
@@ -24,7 +24,7 @@ export class CoinbaseTicker {
     const originUrl = getTickerUrl(pair);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return ajax.getJSON<CoinbaseRawRestTicker>(url).pipe(map((rawRestTicker) => adaptCoinbaseRawRestTicker(rawRestTicker, pair)));
+    return fetchRxjs<CoinbaseRawRestTicker>(url).pipe(map((rawRestTicker) => adaptCoinbaseRawRestTicker(rawRestTicker, pair)));
   }
 
   ticker$(pair: string): Observable<Ticker> {

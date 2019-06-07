@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ajax } from 'rxjs/ajax';
 
+import { fetchRxjs } from '../../../common';
 import { CandleStick } from '../../exchange-types';
 import { getCandleStickUrl, adaptBitmexCandlestick, BitmexRestCandlestick } from './internal';
 
@@ -26,6 +26,6 @@ export class BitmexCandleStick {
     const originUrl = getCandleStickUrl(pair, minutesFoot, start, end);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return ajax.getJSON<BitmexRestCandlestick>(url).pipe(map(adaptBitmexCandlestick));
+    return fetchRxjs<BitmexRestCandlestick>(url).pipe(map(adaptBitmexCandlestick));
   }
 }

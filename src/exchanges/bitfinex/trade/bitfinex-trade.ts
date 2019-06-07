@@ -1,13 +1,13 @@
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { fetchRxjs } from '../../../common';
 import { Trade } from '../../exchange-types';
 import { getSymbol } from '../bitfinex-common';
 import { BitfinexWebsocket, WebsocketRequestBaseI } from '../websocket';
 
 import { getTradesUrl, adaptBitfinexTrade } from './internal/functions';
 import { BitfinexRawTrade } from './internal/types';
-import { ajax } from 'rxjs/ajax';
 
 export class BitfinexTrade {
   /**
@@ -22,7 +22,7 @@ export class BitfinexTrade {
     const originUrl = getTradesUrl(pair, start, end, limit, sort);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return ajax.getJSON<BitfinexRawTrade[]>(url).pipe(map((trades) => trades.map(adaptBitfinexTrade)));
+    return fetchRxjs<BitfinexRawTrade[]>(url).pipe(map((trades) => trades.map(adaptBitfinexTrade)));
   }
 
   /**

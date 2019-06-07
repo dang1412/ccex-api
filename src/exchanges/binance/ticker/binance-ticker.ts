@@ -1,8 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ajax } from 'rxjs/ajax';
 
-import { WebSocketRxJs } from '../../../common';
+import { WebSocketRxJs, fetchRxjs } from '../../../common';
 import { Ticker } from '../../exchange-types';
 import { BinanceRawWsTicker, BinanceRawRestTicker } from './internal/types';
 import { adaptBinanceWsTicker, adaptBinanceRestTicker, binanceTickerChannel, binanceTickerApiUrl } from './internal/functions';
@@ -31,7 +30,7 @@ export class BinanceTicker {
     const originUrl = binanceTickerApiUrl(this.pair);
     const url = corsProxy ? `${corsProxy}${originUrl}` : originUrl;
 
-    return ajax.getJSON<BinanceRawRestTicker>(url).pipe(map((binanceTicker) => adaptBinanceRestTicker(binanceTicker, this.pair)));
+    return fetchRxjs<BinanceRawRestTicker>(url).pipe(map((binanceTicker) => adaptBinanceRestTicker(binanceTicker, this.pair)));
   }
 
   getStream$(): Observable<Ticker> {
