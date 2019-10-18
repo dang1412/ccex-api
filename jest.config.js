@@ -4,7 +4,7 @@ module.exports = {
   modulePathIgnorePatterns: ['dist'],
   globals: {
     'ts-jest': {
-      tsConfigFile: './tsconfig.json',
+      tsConfig: './tsconfig.json',
     },
   },
   transform: {
