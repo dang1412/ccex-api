@@ -31,18 +31,9 @@ describe('bitbankTicker', () => {
   });
 
   markets.forEach((market) => {
-    it(`should fetch ticker ${market}`, (done) => {
-      bitbankTicker.fetchTicker$(market).subscribe(
-        (ticker) => {
-          checkTicker(ticker);
-        },
-        () => {
-          /* error */
-        },
-        () => {
-          done();
-        },
-      );
+    it(`should fetch ticker ${market}`, async () => {
+      const ticker = await bitbankTicker.fetchTicker(market);
+      checkTicker(ticker);
     });
   });
 });

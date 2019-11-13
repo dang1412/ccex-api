@@ -31,17 +31,9 @@ describe('bitbankTrade', () => {
   });
 
   markets.forEach((market) => {
-    it(`should fetch rest api trades ${market}`, (done) => {
-      bitbankTrade.fetchTrades$(market).subscribe(
-        (trades) => {
-          // check trades without increase timestamp order
-          checkTrades(trades, false);
-        },
-        (e) => console.log('Error'),
-        () => {
-          done();
-        },
-      );
+    it(`should fetch rest api trades ${market}`, async () => {
+      const trades = await bitbankTrade.fetchTrades(market);
+      checkTrades(trades, false);
     });
   });
 });

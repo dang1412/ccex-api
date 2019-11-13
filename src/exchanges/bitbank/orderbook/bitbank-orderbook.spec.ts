@@ -6,6 +6,8 @@ import { BitbankOrderbook } from './bitbank-orderbook';
 const bitbankOrderbook = new BitbankOrderbook();
 
 describe('bitbankOrderbook', () => {
+  jest.setTimeout(20000);
+
   const markets = ['btc_jpy', 'xrp_jpy'];
   markets.forEach((market) => {
     it(`should get depth ${market}`, (done) => {

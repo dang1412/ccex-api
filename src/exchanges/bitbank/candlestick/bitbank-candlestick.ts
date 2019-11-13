@@ -1,7 +1,5 @@
-import { Observable, forkJoin, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import fetch from 'node-fetch';
 
-import { fetchRxjs } from '../../../common';
 import { CandleStick } from '../../exchange-types';
 import { publicUrl, RawData } from '../bitbank-common';
 
@@ -22,16 +20,13 @@ export class BitbankCandlestick {
    * @param timestamp
    * @param minutesFoot (resolution)
    */
-  getApproximateHistoryPrice(pair: string, timestamp: number, minutesFoot: number): Observable<number> {
+  async getApproximateHistoryPrice(pair: string, timestamp: number, minutesFoot: number): Promise<number> {
     const candleTimestamp = convertTimestampToCandleFoot(timestamp, minutesFoot);
 
-    return this.fetchCandleStickRange$(pair, minutesFoot, candleTimestamp, candleTimestamp).pipe(
-      map((candles) => {
-        const foundCandle = candles.find((candle) => candle.timestamp === candleTimestamp);
+    const candles = await this.fetchCandleStickRange(pair, minutesFoot, candleTimestamp, candleTimestamp);
+    const foundCandle = candles.find((candle) => candle.timestamp === candleTimestamp);
 
-        return foundCandle ? foundCandle.close : 0;
-      }),
-    );
+    return foundCandle ? foundCandle.close : 0;
   }
 
   /**
@@ -40,7 +35,7 @@ export class BitbankCandlestick {
    * @param start
    * @param end
    */
-  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end?: number): Observable<CandleStick[]> {
+  async fetchCandleStickRange(pair: string, minutesFoot: number, start: number, end?: number): Promise<CandleStick[]> {
     const minutesToResolution: { [key: number]: string } = {
       1: '1min',
       5: '5min',
@@ -54,12 +49,12 @@ export class BitbankCandlestick {
     const resolution = minutesToResolution[minutesFoot] || '1hour';
     const timestrArray = getTimestringArrayFromRange(resolution, start, endAdjusted);
 
-    const requestArray = timestrArray.map((timestr) => fetchAndCacheCandleStick$(pair, resolution, timestr));
+    const requestArray = timestrArray.map((timestr) => fetchAndCacheCandleStick(pair, resolution, timestr));
 
-    return forkJoin(requestArray).pipe(
-      map((results) => Array.prototype.concat.apply([], results)),
-      map((candles) => eliminateRedundantCandles(candles, start, end)),
-    );
+    const results = await Promise.all(requestArray);
+    const candles: CandleStick[] = Array.prototype.concat.apply([], results);
+
+    return eliminateRedundantCandles(candles, start, end);
   }
 }
 // TODO move to internal
@@ -69,20 +64,18 @@ export class BitbankCandlestick {
  * @param resolution
  * @param timeString
  */
-function fetchAndCacheCandleStick$(pair: string, resolution: string, timeString: string): Observable<CandleStick[]> {
+async function fetchAndCacheCandleStick(pair: string, resolution: string, timeString: string): Promise<CandleStick[]> {
   const key = pair + resolution + timeString;
   if (candleFileCaches[key]) {
-    return of(candleFileCaches[key]);
+    return Promise.resolve(candleFileCaches[key]);
   }
 
-  return fetchCandleStickFile$(pair, resolution, timeString).pipe(
-    tap((candles) => {
-      // cache file request result if it is not newest file
-      if (candles && candles.length && !isLatestTimestring(timeString)) {
-        candleFileCaches[key] = candles;
-      }
-    }),
-  );
+  const candles = await fetchCandleStickFile(pair, resolution, timeString);
+  if (candles && candles.length && !isLatestTimestring(timeString)) {
+    candleFileCaches[key] = candles;
+  }
+
+  return candles;
 }
 
 /**
@@ -91,8 +84,9 @@ function fetchAndCacheCandleStick$(pair: string, resolution: string, timeString:
  * @param resolution
  * @param timeString
  */
-function fetchCandleStickFile$(pair: string, resolution: string, timeString: string): Observable<CandleStick[]> {
+async function fetchCandleStickFile(pair: string, resolution: string, timeString: string): Promise<CandleStick[]> {
   const url = `${publicUrl}/${pair}/candlestick/${resolution}/${timeString}`;
+  const raw: RawData<BitbankRawCandlesticks> = await fetch(url).then(res => res.json());
 
-  return fetchRxjs<RawData<BitbankRawCandlesticks>>(url).pipe(map((raw) => raw.data.candlestick[0].ohlcv.map(adaptBitbankCandle)));
+  return raw.data.candlestick[0].ohlcv.map(adaptBitbankCandle);
 }
