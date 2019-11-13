@@ -1,6 +1,7 @@
+import fetch from 'node-fetch';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { WebSocketRxJs, fetchRxjs } from '../../../common';
+import { WebSocketRxJs } from '../../../common';
 
 import { Trade } from '../../exchange-types';
 import { BinanceRawRestTrade, BinanceRawWsTrade } from './internal/types';
@@ -16,11 +17,13 @@ export class BinanceTrade {
   }
 
   // fetch trades
-  fetchTrades$(pair: string, limit: number = 100): Observable<Trade[]> {
+  async fetchTrades(pair: string, limit: number = 100): Promise<Trade[]> {
     const originUrl = binanceTradeApiUrl(pair, limit);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BinanceRawRestTrade[]>(url).pipe(map((trades) => trades.map(adaptBinanceRestTrade)));
+    const rawTrades: BinanceRawRestTrade[] = await fetch(url).then(res => res.json());
+
+    return rawTrades.map(adaptBinanceRestTrade);
   }
 
   // realtime trade

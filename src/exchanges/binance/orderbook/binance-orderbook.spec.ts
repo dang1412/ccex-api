@@ -11,19 +11,9 @@ describe('binanceOrderbook', () => {
   const markets = ['btc_usdt', 'eos_btc', 'eos_usdt'];
 
   markets.forEach((market) => {
-    it(`should fetch orderbook ${market}`, (done) => {
-      binanceOrderbook.fetchOrderbook$(market).subscribe(
-        (orderbook) => {
-          checkOrderbook(orderbook);
-        },
-        () => {
-          /* error */
-        },
-        () => {
-          binanceOrderbook.stopOrderbook(market);
-          done();
-        },
-      );
+    it(`should fetch orderbook ${market}`, async () => {
+      const orderbook = await binanceOrderbook.fetchOrderbook(market);
+      checkOrderbook(orderbook);
     });
   });
 

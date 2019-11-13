@@ -50,8 +50,8 @@ export class BinanceApi extends ExchangeApi {
    * Implement common interface
    */
 
-  fetchTicker$(pair: string): Observable<Ticker> {
-    return BinanceTicker.of(pair).fetch$(this.options.corsProxy);
+  async fetchTicker(pair: string): Promise<Ticker> {
+    return BinanceTicker.of(pair).fetch(this.options.corsProxy);
   }
 
   ticker$(pair: string): Observable<Ticker> {
@@ -62,8 +62,8 @@ export class BinanceApi extends ExchangeApi {
     BinanceTicker.of(pair).stop();
   }
 
-  fetchOrderbook$(pair: string): Observable<Orderbook> {
-    return this.binanceOrderbook.fetchOrderbook$(pair);
+  async fetchOrderbook(pair: string): Promise<Orderbook> {
+    return this.binanceOrderbook.fetchOrderbook(pair);
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
@@ -74,8 +74,8 @@ export class BinanceApi extends ExchangeApi {
     this.binanceOrderbook.stopOrderbook(pair);
   }
 
-  fetchTrades$(pair: string): Observable<Trade[]> {
-    return this.binanceTrade.fetchTrades$(pair);
+  async fetchTrades(pair: string): Promise<Trade[]> {
+    return this.binanceTrade.fetchTrades(pair);
   }
 
   trade$(pair: string): Observable<Trade> {
@@ -86,16 +86,16 @@ export class BinanceApi extends ExchangeApi {
     this.binanceTrade.stopTrade(pair);
   }
 
-  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
-    return this.binanceCandleStick.fetchCandleStickRange$(pair, minutesFoot, start, end);
+  async fetchCandleStickRange(pair: string, minutesFoot: number, start: number, end: number): Promise<CandleStick[]> {
+    return this.binanceCandleStick.fetchCandleStickRange(pair, minutesFoot, start, end);
   }
 
   /**
    * Specific exchange functions
    */
 
-  fetchOrderbookLimit$(pair: string, limit: number): Observable<Orderbook> {
-    return this.binanceOrderbook.fetchOrderbook$(pair, limit);
+  async fetchOrderbookLimit(pair: string, limit: number): Promise<Orderbook> {
+    return this.binanceOrderbook.fetchOrderbook(pair, limit);
   }
 
   candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {

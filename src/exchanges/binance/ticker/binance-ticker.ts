@@ -1,7 +1,8 @@
+import fetch from 'node-fetch';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { WebSocketRxJs, fetchRxjs } from '../../../common';
+import { WebSocketRxJs } from '../../../common';
 import { Ticker } from '../../exchange-types';
 import { BinanceRawWsTicker, BinanceRawRestTicker } from './internal/types';
 import { adaptBinanceWsTicker, adaptBinanceRestTicker, binanceTickerChannel, binanceTickerApiUrl } from './internal/functions';
@@ -24,13 +25,15 @@ export class BinanceTicker {
    * @param pair
    * @param createSocket
    */
-  constructor(private pair: string, private createSocket: (pair: string) => WebSocketRxJs<BinanceRawWsTicker> = socketFactory) {}
+  constructor(private readonly pair: string, private readonly createSocket: (pair: string) => WebSocketRxJs<BinanceRawWsTicker> = socketFactory) {}
 
-  fetch$(corsProxy?: string): Observable<Ticker> {
+  async fetch(corsProxy?: string): Promise<Ticker> {
     const originUrl = binanceTickerApiUrl(this.pair);
     const url = corsProxy ? `${corsProxy}${originUrl}` : originUrl;
 
-    return fetchRxjs<BinanceRawRestTicker>(url).pipe(map((binanceTicker) => adaptBinanceRestTicker(binanceTicker, this.pair)));
+    const rawTicker: BinanceRawRestTicker = await fetch(url).then(res => res.json());
+
+    return adaptBinanceRestTicker(rawTicker, this.pair);
   }
 
   getStream$(): Observable<Ticker> {
