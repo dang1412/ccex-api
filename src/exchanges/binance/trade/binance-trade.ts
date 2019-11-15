@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { WebSocketRxJs } from '../../../common';

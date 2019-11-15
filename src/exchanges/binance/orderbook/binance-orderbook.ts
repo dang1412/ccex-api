@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+
 import { Observable, concat, from, merge, ReplaySubject } from 'rxjs';
 import { map, scan, buffer, take, mergeMap } from 'rxjs/operators';
 
