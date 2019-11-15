@@ -1,10 +1,12 @@
+import fetch from 'node-fetch';
+
 import { Observable, concat, from, merge, ReplaySubject } from 'rxjs';
 import { map, scan, buffer, take, mergeMap } from 'rxjs/operators';
 
-import { WebSocketRxJs, fetchRxjs } from '../../../common';
+import { WebSocketRxJs } from '../../../common';
 import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
-import { BinanceRawOrderbook, BinanceRawWsOrderbook } from './internal/types';
+import { BinanceRawWsOrderbook } from './internal/types';
 import { binanceOrderbookApiUrl, binanceOrderbookChannel, adaptBinanceWsOrderbook } from './internal/functions';
 
 export class BinanceOrderbook {
@@ -16,11 +18,12 @@ export class BinanceOrderbook {
     this.corsProxy = corsProxy;
   }
 
-  fetchOrderbook$(pair: string, limit: number = 20): Observable<Orderbook> {
+  async fetchOrderbook(pair: string, limit: number = 20): Promise<Orderbook> {
     const originUrl = binanceOrderbookApiUrl(pair, limit);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BinanceRawOrderbook>(url);
+    // type BinanceRawOrderbook is same with Orderbook
+    return fetch(url).then(res => res.json());
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
@@ -50,8 +53,8 @@ export class BinanceOrderbook {
     const ws = new WebSocketRxJs<BinanceRawWsOrderbook>(channel);
     this.pairSocketMap[pair] = ws;
 
-    // orderbook fetched from rest api stream
-    const fetchOrderbook$ = this.fetchOrderbook$(pair);
+    // orderbook fetched from rest api
+    const fetchOrderbook$ = from(this.fetchOrderbook(pair));
     // orderbook (diff) realtime stream
     const update$ = ws.message$.pipe(map(adaptBinanceWsOrderbook));
     // orderbook (diff) realtime stream, buffered in time range: [fetch start => fetch done]

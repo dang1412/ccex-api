@@ -1,4 +1,4 @@
-import { EMPTY, Observable, concat } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Trade } from '../../exchange-types';
 import { getSymbol } from '../bitmex-common';
 import { BitmexWebsocket } from '../websocket';
@@ -14,8 +14,8 @@ export class BitmexTrade {
   constructor(private readonly corsProxy: string = '', private readonly bitmexWebsocket: BitmexWebsocket) {}
 
   // fetch trades
-  fetchTrades$(pair: string, start?: number, end?: number, limit?: number, sort?: number): Observable<Trade[]> {
-    return EMPTY;
+  async fetchTrades(pair: string, start?: number, end?: number, limit?: number, sort?: number): Promise<Trade[] | undefined> {
+    return Promise.resolve(undefined);
   }
 
   /**

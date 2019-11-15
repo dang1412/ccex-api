@@ -13,16 +13,9 @@ describe('bitfinexTrade', () => {
   const markets = ['btc_usd'];
 
   markets.forEach((market) => {
-    it(`should fetch rest api trades ${market}`, (done) => {
-      bitfinexTrade.fetchTrades$(market, undefined, undefined, 10, 1).subscribe(
-        (trades) => {
-          checkTrades(trades);
-        },
-        (e) => console.log('Error'),
-        () => {
-          done();
-        },
-      );
+    it(`should fetch rest api trades ${market}`, async () => {
+      const trades = await bitfinexTrade.fetchTrades(market, undefined, undefined, 10, 1);
+      checkTrades(trades);
     });
   });
 

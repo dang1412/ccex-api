@@ -18,11 +18,9 @@ beforeEach(() => {
 describe('Test binance candlestick functions', () => {
   jest.setTimeout(10000);
 
-  it(`should fetch ${pair} ${minutesFoot}min candles in provided time range`, (done) => {
-    binanceCandlestick.fetchCandleStickRange$(pair, minutesFoot, 1529509826239 - 60000 * 60 * 24, 1529509826239).subscribe((candles) => {
-      candles.forEach(checkCandleStick);
-      done();
-    });
+  it(`should fetch ${pair} ${minutesFoot}min candles in provided time range`, async () => {
+    const candles = await binanceCandlestick.fetchCandleStickRange(pair, minutesFoot, 1529509826239 - 60000 * 60 * 24, 1529509826239);
+    candles.forEach(checkCandleStick);
   });
 
   it(`should get ${pair} ${minutesFoot}min last candle realtime`, (done) => {

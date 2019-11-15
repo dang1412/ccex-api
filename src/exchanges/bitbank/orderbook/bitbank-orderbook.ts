@@ -1,7 +1,9 @@
-import { Observable } from 'rxjs';
-import { map, concat } from 'rxjs/operators';
+import fetch from 'node-fetch';
 
-import { PubnubRxJs, fetchRxjs } from '../../../common';
+import { Observable, concat } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { PubnubRxJs } from '../../../common';
 import { Orderbook } from '../../exchange-types';
 import { publicUrl, subscribeKey, RawData } from '../bitbank-common';
 
@@ -12,14 +14,15 @@ export class BitbankOrderbook {
     this.pubnub = pubnub || new PubnubRxJs({ subscribeKey });
   }
 
-  fetchOrderbook$(pair: string): Observable<Orderbook> {
-    const orderbookUrl = `${publicUrl}/${pair}/depth`;
+  async fetchOrderbook(pair: string): Promise<Orderbook> {
+    const url = `${publicUrl}/${pair}/depth`;
+    const raw: RawData<Orderbook> = await fetch(url).then(res => res.json());
 
-    return fetchRxjs<RawData<Orderbook>>(orderbookUrl).pipe(map((raw) => raw.data));
+    return raw.data;
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
-    return this.fetchOrderbook$(pair).pipe(concat(this.pubnubOrderbook$(pair)));
+    return concat(this.fetchOrderbook(pair), this.pubnubOrderbook$(pair));
   }
 
   stopOrderbook(pair: string): void {

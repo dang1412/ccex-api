@@ -14,16 +14,9 @@ describe('coinbaseTicker', () => {
    * Rest api ticker
    */
   markets.forEach((market) => {
-    it(`should fetch ticker api ${market}`, (done) => {
-      coinbaseTicker.fetchTicker$(market).subscribe(
-        (ticker) => {
-          checkTicker(ticker);
-        },
-        (e) => console.log('Error'),
-        () => {
-          done();
-        },
-      );
+    it(`should fetch ticker api ${market}`, async () => {
+      const ticker = await coinbaseTicker.fetchTicker(market);
+      checkTicker(ticker);
     });
   });
 

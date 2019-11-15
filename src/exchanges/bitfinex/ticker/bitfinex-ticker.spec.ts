@@ -13,18 +13,9 @@ const pair = 'btc_usd';
 describe('bitfinexTicker', () => {
   jest.setTimeout(30000);
 
-  it(`should fetch ticker ${pair}`, (done) => {
-    bitfinexTicker.fetchTicker$(pair).subscribe(
-      (ticker) => {
-        checkTicker(ticker);
-      },
-      () => {
-        /* error */
-      },
-      () => {
-        done();
-      },
-    );
+  it(`should fetch ticker ${pair}`, async () => {
+    const ticker = await bitfinexTicker.fetchTicker(pair);
+    checkTicker(ticker);
   });
 
   it(`should get ticker realtime ${pair}`, (done) => {

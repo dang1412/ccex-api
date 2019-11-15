@@ -1,7 +1,9 @@
+import fetch from 'node-fetch';
+
 import { Observable, concat } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { PubnubRxJs, fetchRxjs } from '../../../common';
+import { PubnubRxJs } from '../../../common';
 import { Ticker } from '../../exchange-types';
 import { publicUrl, subscribeKey, RawData } from '../bitbank-common';
 import { BitbankRawTicker } from './internal/types';
@@ -14,14 +16,15 @@ export class BitbankTicker {
     this.pubnub = pubnub || new PubnubRxJs({ subscribeKey });
   }
 
-  fetchTicker$(pair: string): Observable<Ticker> {
-    const tickerUrl = `${publicUrl}/${pair}/ticker`;
+  async fetchTicker(pair: string): Promise<Ticker> {
+    const url = `${publicUrl}/${pair}/ticker`;
+    const raw: RawData<BitbankRawTicker> = await fetch(url).then(res => res.json());
 
-    return fetchRxjs<RawData<BitbankRawTicker>>(tickerUrl).pipe(map((rawTicker) => adaptBitbankTicker(rawTicker.data, pair)));
+    return adaptBitbankTicker(raw.data, pair);
   }
 
   ticker$(pair: string): Observable<Ticker> {
-    return concat(this.fetchTicker$(pair), this.pubnubTicker$(pair));
+    return concat(this.fetchTicker(pair), this.pubnubTicker$(pair));
   }
 
   stopTicker(pair: string): void {

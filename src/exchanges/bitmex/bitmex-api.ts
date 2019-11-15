@@ -49,8 +49,8 @@ export class BitmexApi extends ExchangeApi {
   }
 
   // api request for ticker
-  fetchTicker$(pair: string): Observable<Ticker> {
-    return EMPTY;
+  async fetchTicker(pair: string): Promise<Ticker> {
+    return Promise.resolve(undefined as any);
   }
 
   // realtime ticker
@@ -64,8 +64,8 @@ export class BitmexApi extends ExchangeApi {
   }
 
   // api request for orderbook
-  fetchOrderbook$(pair: string): Observable<Orderbook> {
-    return EMPTY;
+  async fetchOrderbook(pair: string): Promise<Orderbook> {
+    return Promise.resolve(undefined as any);
   }
 
   // realtime orderbook
@@ -78,8 +78,8 @@ export class BitmexApi extends ExchangeApi {
     this.bitmexOrderbook.stopOrderbook(pair);
   }
 
-  fetchTrades$(pair: string): Observable<Trade[]> {
-    return EMPTY;
+  async fetchTrades(pair: string): Promise<Trade[]> {
+    return Promise.resolve(undefined as any);
   }
 
   trade$(pair: string): Observable<Trade> {
@@ -92,7 +92,7 @@ export class BitmexApi extends ExchangeApi {
   }
 
   // request candlestick by time range and resolution
-  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
-    return this.bitmexCandleStick.fetchCandleStickRange$(pair, minutesFoot, start, end);
+  async fetchCandleStickRange(pair: string, minutesFoot: number, start: number, end: number): Promise<CandleStick[]> {
+    return this.bitmexCandleStick.fetchCandleStickRange(pair, minutesFoot, start, end);
   }
 }

@@ -6,9 +6,16 @@ import { BinanceTrade } from './binance-trade';
 const binanceTrade = new BinanceTrade();
 
 describe('binanceTrade', () => {
-  jest.setTimeout(10000);
+  jest.setTimeout(20000);
 
   const markets = ['btc_usdt', 'eth_btc'];
+
+  markets.forEach((market) => {
+    it(`should fetch rest api trades ${market}`, async () => {
+      const trades = await binanceTrade.fetchTrades(market, 10);
+      checkTrades(trades);
+    });
+  });
 
   markets.forEach((market) => {
     it(`should get realtime trades ${market}`, (done) => {
@@ -30,22 +37,6 @@ describe('binanceTrade', () => {
             done();
           },
         );
-    });
-  });
-
-  markets.forEach((market) => {
-    it(`should fetch rest api trades ${market}`, (done) => {
-      binanceTrade.fetchTrades$(market, 10).subscribe(
-        (trades) => {
-          checkTrades(trades);
-        },
-        () => {
-          /* error */
-        },
-        () => {
-          done();
-        },
-      );
     });
   });
 });

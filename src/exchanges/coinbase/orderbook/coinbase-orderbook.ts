@@ -1,7 +1,8 @@
+import fetch from 'node-fetch';
+
 import { Observable } from 'rxjs';
 import { map, scan } from 'rxjs/operators';
 
-import { fetchRxjs } from '../../../common';
 import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
 import { CoinbaseWebsocket } from '../coinbase-websocket';
@@ -26,11 +27,13 @@ export class CoinbaseOrderbook {
     this.coinbaseWebsocket = coinbaseWebsocket || new CoinbaseWebsocket();
   }
 
-  fetchOrderbook$(pair: string): Observable<Orderbook> {
+  async fetchOrderbook(pair: string): Promise<Orderbook> {
     const originUrl = getOrderbookUrl(pair);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<CoinbaseRestOrderbook>(url).pipe(map(adaptCoinbaseRestOrderbook));
+    const orderbook: CoinbaseRestOrderbook = await fetch(url).then(res => res.json());
+
+    return adaptCoinbaseRestOrderbook(orderbook);
   }
 
   orderbook$(pair: string): Observable<Orderbook> {

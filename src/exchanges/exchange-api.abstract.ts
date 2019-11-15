@@ -17,28 +17,28 @@ export abstract class ExchangeApi {
   }
 
   // request ticker
-  abstract fetchTicker$(pair: string): Observable<Ticker>;
+  abstract fetchTicker(pair: string): Promise<Ticker>;
   // realtime ticker
   abstract ticker$(pair: string): Observable<Ticker>;
   // stop realtime ticker
   abstract stopTicker(pair: string): void;
 
   // request orderbook
-  abstract fetchOrderbook$(pair: string): Observable<Orderbook>;
+  abstract fetchOrderbook(pair: string): Promise<Orderbook>;
   // realtime orderbook
   abstract orderbook$(pair: string): Observable<Orderbook>;
   // stop realtime orderbook
   abstract stopOrderbook(pair: string): void;
 
   // request trades
-  abstract fetchTrades$(pair: string): Observable<Trade[]>;
+  abstract fetchTrades(pair: string): Promise<Trade[]>;
   // realtime trades
   abstract trade$(pair: string): Observable<Trade>;
   // stop realtime trades
   abstract stopTrade(pair: string): void;
 
   // request candlestick (used in tradingview or other chart)
-  abstract fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]>;
+  abstract fetchCandleStickRange(pair: string, minutesFoot: number, start: number, end: number): Promise<CandleStick[]>;
 
   // realtime last candlestick using initial last candle and realtime trade (used for tradingview datafeed)
   lastCandle$(pair: string, initialLastCandle: CandleStick, minutesFoot: number): Observable<CandleStick> {

@@ -14,16 +14,9 @@ describe('coinbaseOrderbook', () => {
    * Rest api orderbook
    */
   markets.forEach((market) => {
-    it(`should fetch orderbook api ${market}`, (done) => {
-      coinbaseOrderbook.fetchOrderbook$(market).subscribe(
-        (orderbook) => {
-          checkOrderbook(orderbook);
-        },
-        (e) => console.log('Error'),
-        () => {
-          done();
-        },
-      );
+    it(`should fetch orderbook api ${market}`, async () => {
+      const orderbook = await coinbaseOrderbook.fetchOrderbook(market);
+      checkOrderbook(orderbook);
     });
   });
 

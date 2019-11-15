@@ -51,8 +51,8 @@ export class BitfinexApi extends ExchangeApi {
     this.bitfinexTrade = new BitfinexTrade(corsProxy, this.bitfinexWebsocket);
   }
 
-  fetchTicker$(pair: string): Observable<Ticker> {
-    return this.bitfinexTicker.fetchTicker$(pair);
+  async fetchTicker(pair: string): Promise<Ticker> {
+    return this.bitfinexTicker.fetchTicker(pair);
   }
 
   ticker$(pair: string): Observable<Ticker> {
@@ -63,8 +63,8 @@ export class BitfinexApi extends ExchangeApi {
     this.bitfinexTicker.stopTicker(pair);
   }
 
-  fetchOrderbook$(pair: string): Observable<Orderbook> {
-    return this.bitfinexOrderbook.fetchOrderbook$(pair);
+  async fetchOrderbook(pair: string): Promise<Orderbook> {
+    return this.bitfinexOrderbook.fetchOrderbook(pair);
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
@@ -75,8 +75,8 @@ export class BitfinexApi extends ExchangeApi {
     this.bitfinexOrderbook.stopOrderbook(pair);
   }
 
-  fetchTrades$(pair: string): Observable<Trade[]> {
-    return this.bitfinexTrade.fetchTrades$(pair);
+  async fetchTrades(pair: string): Promise<Trade[]> {
+    return this.bitfinexTrade.fetchTrades(pair);
   }
 
   trade$(pair: string): Observable<Trade> {
@@ -87,8 +87,8 @@ export class BitfinexApi extends ExchangeApi {
     this.bitfinexTrade.stopTrade(pair);
   }
 
-  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
-    return this.bitfinexCandleStick.fetchCandleStickRange$(pair, minutesFoot, start, end);
+  async fetchCandleStickRange(pair: string, minutesFoot: number, start: number, end: number): Promise<CandleStick[]> {
+    return this.bitfinexCandleStick.fetchCandleStickRange(pair, minutesFoot, start, end);
   }
 
   candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {

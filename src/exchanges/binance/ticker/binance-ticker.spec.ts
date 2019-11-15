@@ -7,6 +7,12 @@ const pair = 'btc_usdt';
 
 describe('binanceTicker', () => {
   const binanceTicker = new BinanceTicker(pair, (p) => MOCK_SOCKET as any);
+
+  it(`should fetch ticker ${pair}`, async () => {
+    const ticker = await binanceTicker.fetch();
+    checkTicker(ticker);
+  });
+
   it(`should get ticker realtime ${pair}`, (done) => {
     binanceTicker.getStream$().subscribe(
       (ticker) => {
@@ -17,20 +23,6 @@ describe('binanceTicker', () => {
       },
       () => {
         binanceTicker.stop();
-        done();
-      },
-    );
-  });
-
-  it(`should fetch ticker ${pair}`, (done) => {
-    binanceTicker.fetch$().subscribe(
-      (ticker) => {
-        checkTicker(ticker);
-      },
-      () => {
-        /* error */
-      },
-      () => {
         done();
       },
     );
