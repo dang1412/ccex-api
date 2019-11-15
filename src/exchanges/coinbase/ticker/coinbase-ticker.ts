@@ -1,3 +1,5 @@
+import fetch from 'node-fetch';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -19,12 +21,14 @@ export class CoinbaseTicker {
     this.coinbaseWebsocket = coinbaseWebsocket || new CoinbaseWebsocket();
   }
 
-  fetchTicker$(pair: string): Observable<Ticker> {
+  async fetchTicker(pair: string): Promise<Ticker> {
     // receive rawTicker and adapt to Ticker here
     const originUrl = getTickerUrl(pair);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<CoinbaseRawRestTicker>(url).pipe(map((rawRestTicker) => adaptCoinbaseRawRestTicker(rawRestTicker, pair)));
+    const rawTicker: CoinbaseRawRestTicker = await fetch(url).then(res => res.json());
+
+    return adaptCoinbaseRawRestTicker(rawTicker, pair)
   }
 
   ticker$(pair: string): Observable<Ticker> {

@@ -14,16 +14,9 @@ describe('coinbaseTrade', () => {
    * Rest api trades
    */
   markets.forEach((market) => {
-    it(`should fetch rest api trades ${market}`, (done) => {
-      coinbaseTrade.fetchTrades$(market).subscribe(
-        (trades) => {
-          checkTrades(trades, false);
-        },
-        (e) => console.log('Error'),
-        () => {
-          done();
-        },
-      );
+    it(`should fetch rest api trades ${market}`, async () => {
+      const trades = await coinbaseTrade.fetchTrades(market);
+      checkTrades(trades, false);
     });
   });
 

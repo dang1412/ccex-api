@@ -7,10 +7,8 @@ describe('coinbaseCandlestick', () => {
   /**
    * Rest api candlestick
    */
-  it('should fetch btc_usd 5min candles in provided time range', (done) => {
-    coinbaseCandlestick.fetchCandleStickRange$('btc_usd', 5).subscribe((candles) => {
-      checkCandleStick(candles[0]);
-      done();
-    });
+  it('should fetch btc_usd 5min candles in provided time range', async () => {
+    const candles = await coinbaseCandlestick.fetchCandleStickRange('btc_usd', 5);
+    checkCandleStick(candles[0]);
   });
 });

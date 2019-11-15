@@ -1,3 +1,5 @@
+import fetch from 'node-fetch';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -25,11 +27,13 @@ export class CoinbaseTrade {
   }
 
   // fetch trades
-  fetchTrades$(pair: string): Observable<Trade[]> {
+  async fetchTrades(pair: string): Promise<Trade[]> {
     const originUrl = getTradesUrl(pair);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<CoinbaseRawRestTrade[]>(url).pipe(map((rawTrades) => rawTrades.map(adaptCoinbaseRawTrade)));
+    const rawTrades: CoinbaseRawRestTrade[] = await fetch(url).then(res => res.json());
+
+    return rawTrades.map(adaptCoinbaseRawTrade);
   }
 
   trade$(pair: string): Observable<Trade> {

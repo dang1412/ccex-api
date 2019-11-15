@@ -52,8 +52,8 @@ export class CoinbaseApi extends ExchangeApi {
   }
 
   // api request for ticker
-  fetchTicker$(pair: string): Observable<Ticker> {
-    return this.coinbaseTicker.fetchTicker$(pair);
+  async fetchTicker(pair: string): Promise<Ticker> {
+    return this.coinbaseTicker.fetchTicker(pair);
   }
 
   // realtime ticker
@@ -67,8 +67,8 @@ export class CoinbaseApi extends ExchangeApi {
   }
 
   // api request for depth
-  fetchOrderbook$(pair: string): Observable<Orderbook> {
-    return this.coinbaseOrderbook.fetchOrderbook$(pair);
+  async fetchOrderbook(pair: string): Promise<Orderbook> {
+    return this.coinbaseOrderbook.fetchOrderbook(pair);
   }
 
   // realtime depth
@@ -81,8 +81,8 @@ export class CoinbaseApi extends ExchangeApi {
     this.coinbaseOrderbook.stopOrderbook(pair);
   }
 
-  fetchTrades$(pair: string): Observable<Trade[]> {
-    return this.coinbaseTrade.fetchTrades$(pair);
+  async fetchTrades(pair: string): Promise<Trade[]> {
+    return this.coinbaseTrade.fetchTrades(pair);
   }
 
   trade$(pair: string): Observable<Trade> {
@@ -94,7 +94,7 @@ export class CoinbaseApi extends ExchangeApi {
   }
 
   // request candlestick by time range and resolution
-  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
-    return this.coinbaseCandleStick.fetchCandleStickRange$(pair, minutesFoot, start, end);
+  async fetchCandleStickRange(pair: string, minutesFoot: number, start: number, end: number): Promise<CandleStick[]> {
+    return this.coinbaseCandleStick.fetchCandleStickRange(pair, minutesFoot, start, end);
   }
 }
