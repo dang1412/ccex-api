@@ -38,8 +38,8 @@ export class CoincheckApi extends ExchangeApi {
   }
 
   // api request for ticker
-  fetchTicker$(pair: string): Observable<Ticker> {
-    return this.coincheckTicker.fetchTicker$(pair);
+  async fetchTicker(pair: string): Promise<Ticker> {
+    return this.coincheckTicker.fetchTicker(pair);
   }
 
   // realtime ticker
@@ -53,8 +53,8 @@ export class CoincheckApi extends ExchangeApi {
   }
 
   // api request for depth
-  fetchOrderbook$(pair: string): Observable<Orderbook> {
-    return EMPTY;
+  async fetchOrderbook(pair: string): Promise<Orderbook> {
+    return Promise.resolve(undefined as any);
   }
 
   // realtime depth
@@ -67,8 +67,8 @@ export class CoincheckApi extends ExchangeApi {
     // implement
   }
 
-  fetchTrades$(pair: string): Observable<Trade[]> {
-    return EMPTY;
+  async fetchTrades(pair: string): Promise<Trade[]> {
+    return Promise.resolve(undefined as any);
   }
 
   trade$(pair: string): Observable<Trade> {
@@ -81,7 +81,7 @@ export class CoincheckApi extends ExchangeApi {
   }
 
   // request candlestick by time range and resolution
-  fetchCandleStickRange$(pair: string, minutesFoot: number, start: number, end: number): Observable<CandleStick[]> {
-    return EMPTY;
+  async fetchCandleStickRange(pair: string, minutesFoot: number, start: number, end: number): Promise<CandleStick[]> {
+    return Promise.resolve(undefined as any);
   }
 }

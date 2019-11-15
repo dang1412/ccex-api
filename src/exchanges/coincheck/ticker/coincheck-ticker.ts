@@ -1,16 +1,18 @@
-import { Observable, EMPTY } from 'rxjs';
-import { map } from 'rxjs/operators';
+import fetch from 'node-fetch';
 
-import { fetchRxjs } from '../../../common';
+import { Observable, EMPTY } from 'rxjs';
+
 import { Ticker } from '../../exchange-types';
 import { CoincheckRawTicker } from '../coincheck-types';
 import { adaptCoincheckRawTicker, publicUrl } from '../coincheck-functions';
 
 export class CoincheckTicker {
-  fetchTicker$(pair: string): Observable<Ticker> {
+  async fetchTicker(pair: string): Promise<Ticker> {
     const url = `${publicUrl}/api/ticker`;
 
-    return fetchRxjs<CoincheckRawTicker>(url).pipe(map((coincheckRawTicker) => adaptCoincheckRawTicker(coincheckRawTicker, pair)));
+    const rawTicker: CoincheckRawTicker = await fetch(url).then(res => res.json());
+
+    return adaptCoincheckRawTicker(rawTicker, pair);
   }
 
   ticker$(pair: string): Observable<Ticker> {
