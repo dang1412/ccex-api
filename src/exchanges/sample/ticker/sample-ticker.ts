@@ -3,8 +3,8 @@ import { Observable, EMPTY } from 'rxjs';
 import { Ticker } from '../../exchange-types';
 
 export class SampleTicker {
-  fetchTicker$(pair: string): Observable<Ticker> {
-    return EMPTY;
+  async fetchTicker(pair: string): Promise<Ticker> {
+    return Promise.resolve(undefined as any);
   }
 
   ticker$(pair: string): Observable<Ticker> {
