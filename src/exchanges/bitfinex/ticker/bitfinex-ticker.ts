@@ -1,7 +1,8 @@
+import fetch from 'node-fetch';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { fetchRxjs } from '../../../common';
 import { Ticker } from '../../exchange-types';
 import { getSymbol } from '../bitfinex-common';
 import { BitfinexWebsocket } from '../websocket';
@@ -16,12 +17,14 @@ export class BitfinexTicker {
    */
   constructor(private readonly corsProxy: string = '', private readonly bitfinexWebsocket: BitfinexWebsocket) {}
 
-  fetchTicker$(pair: string): Observable<Ticker> {
+  async fetchTicker(pair: string): Promise<Ticker> {
     // https://api.bitfinex.com/v2/ticker/tBTCUSD
     const originUrl = getTickerApiUrl(pair);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BitfinexRawTicker>(url).pipe(map((rawTicker) => adaptBitfinexTicker(rawTicker, pair)));
+    const rawTicker: BitfinexRawTicker = await fetch(url).then(res => res.json());
+
+    return adaptBitfinexTicker(rawTicker, pair);
   }
 
   ticker$(pair: string): Observable<Ticker> {

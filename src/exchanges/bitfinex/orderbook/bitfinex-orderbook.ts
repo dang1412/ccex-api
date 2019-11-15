@@ -1,7 +1,8 @@
+import fetch from 'node-fetch';
+
 import { Observable, concat, ReplaySubject } from 'rxjs';
 import { map, take, filter, scan } from 'rxjs/operators';
 
-import { fetchRxjs } from '../../../common';
 import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
 import { getSymbol } from '../bitfinex-common';
@@ -19,11 +20,13 @@ export class BitfinexOrderbook {
    */
   constructor(private readonly corsProxy: string = '', private readonly bitfinexWebsocket: BitfinexWebsocket) {}
 
-  fetchOrderbook$(pair: string, prec: string = 'P0'): Observable<Orderbook> {
+  async fetchOrderbook(pair: string, prec: string = 'P0'): Promise<Orderbook> {
     const originUrl = getOrderbookApiUrl(pair, prec);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BitfinexOrderbookSingleItem[]>(url).pipe(map(adaptBitfinexOrderbook));
+    const orderbooks: BitfinexOrderbookSingleItem[] = await fetch(url).then(res => res.json());
+
+    return adaptBitfinexOrderbook(orderbooks);
   }
 
   orderbook$(pair: string, prec: string = 'P0', freq: string = 'F0', len: string = '25'): Observable<Orderbook> {

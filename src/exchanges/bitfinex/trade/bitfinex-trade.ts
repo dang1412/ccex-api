@@ -1,7 +1,8 @@
+import fetch from 'node-fetch';
+
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-import { fetchRxjs } from '../../../common';
 import { Trade } from '../../exchange-types';
 import { getSymbol } from '../bitfinex-common';
 import { BitfinexWebsocket, WebsocketRequestBaseI } from '../websocket';
@@ -18,11 +19,13 @@ export class BitfinexTrade {
   constructor(private readonly corsProxy: string = '', private readonly bitfinexWebsocket: BitfinexWebsocket) {}
 
   // fetch trades
-  fetchTrades$(pair: string, start?: number, end?: number, limit?: number, sort?: number): Observable<Trade[]> {
+  async fetchTrades(pair: string, start?: number, end?: number, limit?: number, sort?: number): Promise<Trade[]> {
     const originUrl = getTradesUrl(pair, start, end, limit, sort);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    return fetchRxjs<BitfinexRawTrade[]>(url).pipe(map((trades) => trades.map(adaptBitfinexTrade)));
+    const rawTrades: BitfinexRawTrade[] = await fetch(url).then(res => res.json());
+
+    return rawTrades.map(adaptBitfinexTrade);
   }
 
   /**
