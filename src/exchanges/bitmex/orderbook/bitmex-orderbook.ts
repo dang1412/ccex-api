@@ -1,4 +1,4 @@
-import { EMPTY, Observable, concat } from 'rxjs';
+import { Observable, concat } from 'rxjs';
 import { Orderbook } from '../../exchange-types';
 import { getSymbol } from '../bitmex-common';
 import { BitmexWebsocket } from '../websocket';
@@ -14,8 +14,8 @@ export class BitmexOrderbook {
    */
   constructor(private readonly corsProxy: string = '', private readonly bitmexWebsocket: BitmexWebsocket) {}
 
-  fetchOrderbook$(pair: string): Observable<Orderbook> {
-    return EMPTY;
+  async fetchOrderbook(pair: string): Promise<Orderbook | undefined> {
+    return Promise.resolve(undefined);
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
