@@ -68,12 +68,11 @@ export class CoinbaseWebsocket {
     }
 
     this.websocket = new WebSocketRxJs(websocketEndpoint);
-    this.websocket.message$.subscribe((response: any) => {
+    this.websocket.message$.subscribe((response) => {
       if (response.type && response.product_id) {
-        const messageResponse = <WebsocketMessageResponse>response;
-        const key = getKeyFromResponse(messageResponse);
+        const key = getKeyFromResponse(response);
         if (this.keyStreamMap[key]) {
-          this.keyStreamMap[key].next(messageResponse);
+          this.keyStreamMap[key].next(response);
         }
       }
     });
