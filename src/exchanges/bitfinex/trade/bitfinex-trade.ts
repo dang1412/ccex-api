@@ -65,9 +65,9 @@ export class BitfinexTrade {
     );
   }
 
-  stopTrade(pair: string): void {
+  async stopTrade(pair: string): Promise<void> {
     const unsubscribeRequest = getTradeRequest(pair);
-    this.bitfinexWebsocket.unsubscribeChannel(unsubscribeRequest);
+    await this.bitfinexWebsocket.unsubscribeChannel(unsubscribeRequest);
   }
 }
 

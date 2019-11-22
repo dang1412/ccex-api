@@ -32,8 +32,8 @@ describe('bitfinexTrade', () => {
             checkTrades(trades);
           },
           (e) => console.log('Error'),
-          () => {
-            bitfinexTrade.stopTrade(market);
+          async () => {
+            await bitfinexTrade.stopTrade(market);
             bitfinexWebsocket.destroy();
             done();
           },

@@ -59,8 +59,8 @@ export class BitfinexApi extends ExchangeApi {
     return this.bitfinexTicker.ticker$(pair);
   }
 
-  stopTicker(pair: string): void {
-    this.bitfinexTicker.stopTicker(pair);
+  async stopTicker(pair: string): Promise<void> {
+    await this.bitfinexTicker.stopTicker(pair);
   }
 
   async fetchOrderbook(pair: string): Promise<Orderbook> {
@@ -71,8 +71,8 @@ export class BitfinexApi extends ExchangeApi {
     return this.bitfinexOrderbook.orderbook$(pair);
   }
 
-  stopOrderbook(pair: string): void {
-    this.bitfinexOrderbook.stopOrderbook(pair);
+  async stopOrderbook(pair: string): Promise<void> {
+    await this.bitfinexOrderbook.stopOrderbook(pair);
   }
 
   async fetchTrades(pair: string): Promise<Trade[]> {
@@ -83,8 +83,8 @@ export class BitfinexApi extends ExchangeApi {
     return this.bitfinexTrade.trade$(pair);
   }
 
-  stopTrade(pair: string): void {
-    this.bitfinexTrade.stopTrade(pair);
+  async stopTrade(pair: string): Promise<void> {
+    await this.bitfinexTrade.stopTrade(pair);
   }
 
   async fetchCandleStickRange(pair: string, minutesFoot: number, start: number, end: number): Promise<CandleStick[]> {

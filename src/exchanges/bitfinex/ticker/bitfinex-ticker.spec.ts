@@ -5,7 +5,7 @@ import { BitfinexTicker } from './bitfinex-ticker';
 import { BitfinexWebsocket } from '../websocket';
 import { MOCK_SOCKET } from './test-helpers';
 
-const bitfinexWebsocket = new BitfinexWebsocket(MOCK_SOCKET as any);
+const bitfinexWebsocket = new BitfinexWebsocket();
 const bitfinexTicker = new BitfinexTicker('', bitfinexWebsocket);
 
 const pair = 'btc_usd';
@@ -21,14 +21,14 @@ describe('bitfinexTicker', () => {
   it(`should get ticker realtime ${pair}`, (done) => {
     bitfinexTicker
       .ticker$(pair)
-      .pipe(take(2))
+      .pipe(take(1))
       .subscribe(
         (ticker) => {
           checkTicker(ticker);
         },
         (e) => console.log('Error'),
-        () => {
-          bitfinexTicker.stopTicker(pair);
+        async () => {
+          await bitfinexTicker.stopTicker(pair);
           bitfinexWebsocket.destroy();
           done();
         },

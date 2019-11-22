@@ -76,9 +76,9 @@ export class BitfinexCandleStick {
    * @param pair
    * @param minutesFoot
    */
-  stopCandleStick(pair: string, minutesFoot: number): void {
+  async stopCandleStick(pair: string, minutesFoot: number): Promise<void> {
     const unsubscribeRequest = getCandleSubcribeRequest(pair, minutesFoot);
-    this.bitfinexWebsocket.unsubscribeChannel(unsubscribeRequest);
+    await this.bitfinexWebsocket.unsubscribeChannel(unsubscribeRequest);
   }
 }
 
