@@ -4,7 +4,7 @@ import { WebsocketResponseI, WebsocketDataI } from '../bitfinex-websocket.type';
 export const MOCK_SOCKET = new WebsocketRxJsMock<WebsocketResponseI | WebsocketDataI>({
   '{"channel":"ticker","symbol":"tBTCUSD","event":"subscribe"}': [
     {
-      time: 1,
+      time: 10,
       payload: {
         channel: 'ticker',
         event: 'subscribed',
@@ -14,15 +14,19 @@ export const MOCK_SOCKET = new WebsocketRxJsMock<WebsocketResponseI | WebsocketD
       },
     },
     {
-      time: 2,
+      time: 20,
       payload: [1, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
     },
   ],
   '{"event":"unsubscribe","chanId":1}': [
     {
-      time: 1,
+      time: 30,
       // not handle this case yet
-      payload: [] as any,
+      payload: {
+        channel: 'ticker',
+        event: 'unsubscribed',
+        chanId: 1,
+      },
     },
   ],
 });

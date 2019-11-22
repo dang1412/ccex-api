@@ -1,4 +1,4 @@
-import { ReplaySubject, Observable, empty } from 'rxjs';
+import { Observable } from 'rxjs';
 import { wsEndpoint } from '../bitfinex-common';
 import { WebSocketRxJs } from '../../../common';
 import {
@@ -9,84 +9,118 @@ import {
   WebsocketResponseI,
   WebsocketDataI,
 } from './bitfinex-websocket.type';
-import { filter, map, switchMap, take } from 'rxjs/operators';
+import { filter, map, switchMap, take, takeUntil, mapTo } from 'rxjs/operators';
 
 export class BitfinexWebsocket {
-  private readonly keyChanIdMap = new Map<string, ReplaySubject<number | null>>();
-  private readonly ws: WebSocketRxJs<WebsocketMessageI>;
+  private ws: WebSocketRxJs<WebsocketMessageI> | null = null;
+  private readonly cache = new Map<string, [Observable<any>, Promise<number>]>();
 
-  private get subcribedResponse$(): Observable<WebsocketResponseI> {
-    // filter type WebsocketResponseI
-    return this.ws.message$.pipe(filter((m: any) => m.event === 'subscribed'));
-  }
-
-  private get streamData$(): Observable<WebsocketDataI> {
-    // filter type WebsocketDataI
-    return this.ws.message$.pipe(filter((m: any) => m.length >= 2 && typeof m[0] === 'number' && m[1] !== 'hb'));
-  }
-
-  constructor(endPointOrWs?: string | WebSocketRxJs) {
-    this.ws =
-      endPointOrWs === undefined
-        ? new WebSocketRxJs(wsEndpoint)
-        : typeof endPointOrWs === 'string'
-        ? new WebSocketRxJs(endPointOrWs)
-        : endPointOrWs;
-  }
+  constructor(private readonly endPointOrWs?: string | WebSocketRxJs) { }
 
   subscribeChannel<T>(request: WebsocketRequestBaseI): Observable<T> {
-    const key = getKey(request);
-
-    // get chanId$ and cache
-    const chanId$ = this.keyChanIdMap.get(key) || new ReplaySubject<number | null>(1);
-    if (!this.keyChanIdMap.has(key)) {
-      this.keyChanIdMap.set(key, chanId$);
-      this.getUpcomingChanId$(key).subscribe((chanId) => chanId$.next(chanId));
-      this.send({ ...request, event: 'subscribe' });
+    if (!this.ws) {
+      this.ws = typeof this.endPointOrWs === 'object' ? this.endPointOrWs : new WebSocketRxJs(this.endPointOrWs || wsEndpoint);
     }
 
-    return chanId$.pipe(switchMap((chanId) => (chanId ? this.getChanIdData$<T>(chanId) : empty())));
+    const message$ = this.ws.message$;
+    const key = getKey(request);
+    const cached = this.cache.get(key);
+
+    // stream created
+    if (cached) {
+      return cached[0];
+    }
+
+    // create stream
+    this.send({ ...request, event: 'subscribe' });
+
+    // chanId stream (once and complete)
+    const chanId$ = getChanId$(message$, key);
+
+    // unsubscribe stream
+    const unsub$ = chanId$.pipe(
+      switchMap(chanId => getUnsub$(message$, chanId)),
+    );
+
+    // data stream
+    const data$ = chanId$.pipe(
+      switchMap(chanId => getChanData$<T>(message$, chanId)),
+      takeUntil(unsub$),
+    );
+
+    // cache stream
+    this.cache.set(key, [data$, chanId$.toPromise()]);
+
+    return data$;
   }
 
-  unsubscribeChannel(request: WebsocketRequestBaseI): void {
-    const key = getKey(request);
-    const chanId$ = this.keyChanIdMap.get(key);
-    if (chanId$) {
-      chanId$.subscribe((chanId) => {
-        if (chanId) {
-          this.keyChanIdMap.delete(key);
-          this.send({ chanId, event: 'unsubscribe' });
-          chanId$.next(null);
-          chanId$.complete();
-        }
-      });
+  async unsubscribeChannel(req: WebsocketRequestBaseI): Promise<void> {
+    if (!this.ws) {
+      return;
     }
+
+    const key = getKey(req);
+    const cache = this.cache.get(key);
+    if (!cache) {
+      return;
+    }
+
+    // send unsubcribe request
+    const chanId = await cache[1];
+    this.send({ event: 'unsubscribe', chanId });
+
+    // wait until unsubcribe sucess
+    await getUnsub$(this.ws.message$, chanId).toPromise();
+    this.cache.delete(key);
   }
 
   destroy(): void {
-    this.ws.close();
-  }
-
-  private getUpcomingChanId$(key: string): Observable<number> {
-    return this.subcribedResponse$.pipe(
-      filter((res) => getKey(res) === key),
-      map((res) => res.chanId),
-      take(1),
-    );
-  }
-
-  private getChanIdData$<T>(chanId: number): Observable<T> {
-    return this.streamData$.pipe(
-      filter((m) => m[0] === chanId),
-      map((m) => (m[1] === 'te' || m[1] === 'tu' ? m[2] : m[1])),
-    );
+    if (this.ws) {
+      this.ws.close();
+    }
   }
 
   private send(req: WebsocketSubscribeI | WebsocketUnSubscribeI): void {
-    this.ws.send(JSON.stringify(req));
+    if (this.ws) {
+      this.ws.send(JSON.stringify(req));
+    }
   }
 }
 
+// get chanId stream
+function getChanId$(message$: Observable<WebsocketMessageI>, key: string): Observable<number> {
+  return message$.pipe(
+    map(m => m as WebsocketResponseI),  // work arround to cast type
+    filter((m) => m.event === 'subscribed'),
+    filter((m) => getKey(m) === key),
+    map((m) => m.chanId),
+    take(1),
+  );
+}
+
+// get chanData stream
+function getChanData$<T>(message$: Observable<WebsocketMessageI>, chanId: number): Observable<T> {
+  return message$.pipe(
+    map(m => m as WebsocketDataI),  // work arround to cast type
+    filter((m) => m.length >= 2 && m[0] === chanId && m[1] !== 'hb'),
+    map((m) => (m[1] === 'te' || m[1] === 'tu' ? m[2] : m[1])),
+  );
+}
+
+// unsubcribe stream
+function getUnsub$(message$: Observable<WebsocketMessageI>, chanId: number): Observable<number> {
+  return message$.pipe(
+    map(m => m as WebsocketResponseI),  // work arround to cast type
+    filter((m) => m.event === 'unsubscribed' && m.chanId === chanId),
+    mapTo(chanId),
+    take(1),
+  );
+}
+
+/**
+ * Get key from request and from subcribe response
+ * @param request
+ */
 export function getKey(request: WebsocketRequestBaseI): string {
   return (
     request.channel +

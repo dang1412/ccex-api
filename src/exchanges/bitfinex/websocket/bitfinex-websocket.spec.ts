@@ -7,18 +7,20 @@ const bitfinexWebsocket = new BitfinexWebsocket(MOCK_SOCKET as any);
 
 describe('bitfinexWebsocket', () => {
   it('should subscribe', async () => {
-    const raw = await bitfinexWebsocket
-      .subscribeChannel<BitfinexRawTickerI>({ channel: 'ticker', symbol: 'tBTCUSD' })
-      .pipe(take(1))
-      .toPromise();
+    const data$ = bitfinexWebsocket
+      .subscribeChannel<BitfinexRawTickerI>({ channel: 'ticker', symbol: 'tBTCUSD' });
 
-    bitfinexWebsocket.unsubscribeChannel({ channel: 'ticker', symbol: 'tBTCUSD' });
+    const raw = await data$.pipe(take(1)).toPromise();
+    await bitfinexWebsocket.unsubscribeChannel({ channel: 'ticker', symbol: 'tBTCUSD' });
 
     expect(raw).toEqual([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
   });
 
-  it('should unsubscribe', (done) => {
-    bitfinexWebsocket.subscribeChannel<BitfinexRawTickerI>({ channel: 'ticker', symbol: 'tBTCUSD' }).subscribe(
+  it('should unsubscribe', async (done) => {
+    const data$ = bitfinexWebsocket
+      .subscribeChannel<BitfinexRawTickerI>({ channel: 'ticker', symbol: 'tBTCUSD' });
+
+    data$.subscribe(
       () => {},
       (e) => {},
       () => {
@@ -26,6 +28,6 @@ describe('bitfinexWebsocket', () => {
       },
     );
 
-    bitfinexWebsocket.unsubscribeChannel({ channel: 'ticker', symbol: 'tBTCUSD' });
+    await bitfinexWebsocket.unsubscribeChannel({ channel: 'ticker', symbol: 'tBTCUSD' });
   });
 });

@@ -41,7 +41,7 @@ export class BitfinexOrderbook {
     return this.keyOderbookStreamMap[key].asObservable();
   }
 
-  stopOrderbook(pair: string, prec: string = 'P0', freq: string = 'F0', len: string = '25'): void {
+  async stopOrderbook(pair: string, prec: string = 'P0', freq: string = 'F0', len: string = '25'): Promise<void> {
     const unsubscribeRequest = getOrderbookRequest(pair, prec, freq, len);
 
     const key = getKey(unsubscribeRequest);
@@ -51,7 +51,8 @@ export class BitfinexOrderbook {
       subject.complete();
       delete this.keyOderbookStreamMap[key];
     }
-    this.bitfinexWebsocket.unsubscribeChannel(unsubscribeRequest);
+
+    await this.bitfinexWebsocket.unsubscribeChannel(unsubscribeRequest);
   }
 
   /**

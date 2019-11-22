@@ -24,8 +24,8 @@ describe('Test bitfinex candlestick functions', () => {
           checkCandleStick(candle);
         },
         () => console.log('error'),
-        () => {
-          bitfinexCandlestick.stopCandleStick('btc_usd', 5);
+        async () => {
+          await bitfinexCandlestick.stopCandleStick('btc_usd', 5);
           bitfinexWebsocket.destroy();
           done();
         },

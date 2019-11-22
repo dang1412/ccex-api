@@ -3,9 +3,8 @@ import { take } from 'rxjs/operators';
 import { checkOrderbook } from '../../exchange-test.functions';
 import { BitfinexOrderbook } from './bitfinex-orderbook';
 import { BitfinexWebsocket } from '../websocket';
-import { MOCK_SOCKET } from './test-helpers';
 
-const bitfinexWebsocket = new BitfinexWebsocket(MOCK_SOCKET as any);
+const bitfinexWebsocket = new BitfinexWebsocket();
 const bitfinexOrderbook = new BitfinexOrderbook('', bitfinexWebsocket);
 
 describe('bitfinexOrderbook', () => {
@@ -17,14 +16,14 @@ describe('bitfinexOrderbook', () => {
     it(`should get orderbook realtime ${market}`, (done) => {
       bitfinexOrderbook
         .orderbook$(market)
-        .pipe(take(3))
+        .pipe(take(1))
         .subscribe(
           (orderbook) => {
             checkOrderbook(orderbook);
           },
-          (e) => console.log('Error'),
-          () => {
-            bitfinexOrderbook.stopOrderbook(market);
+          (e) => console.log('Error', e),
+          async () => {
+            await bitfinexOrderbook.stopOrderbook(market);
             bitfinexWebsocket.destroy();
             done();
           },
