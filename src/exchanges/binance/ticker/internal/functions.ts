@@ -1,6 +1,6 @@
 import { Ticker } from '../../../exchange-types';
 import { wsEndpoint, apiEndPoint, binancePair } from '../../binance-common';
-import { BinanceRawRestTicker, BinanceRawWsTicker } from './types';
+import { BinanceRestTicker, BinanceWsTicker } from './types';
 
 // ticker rest api url
 export function binanceTickerApiUrl(pair: string): string {
@@ -10,12 +10,12 @@ export function binanceTickerApiUrl(pair: string): string {
 }
 
 // ticker ws channel
-export function binanceTickerChannel(pair: string): string {
-  return `${wsEndpoint}/${binancePair(pair)}@ticker`;
+export function getTickerChannel(pair: string): string {
+  return `${binancePair(pair)}@ticker`;
 }
 
 // adapt rest ticker
-export function adaptBinanceRestTicker(binanceTicker: BinanceRawRestTicker, pair: string): Ticker {
+export function adaptBinanceRestTicker(binanceTicker: BinanceRestTicker, pair: string): Ticker {
   return {
     pair,
     ask: +binanceTicker.askPrice,
@@ -33,7 +33,7 @@ export function adaptBinanceRestTicker(binanceTicker: BinanceRawRestTicker, pair
 }
 
 // adapt ws ticker
-export function adaptBinanceWsTicker(binanceTicker: BinanceRawWsTicker, pair: string): Ticker {
+export function adaptBinanceWsTicker(binanceTicker: BinanceWsTicker, pair: string): Ticker {
   return {
     pair,
     ask: +binanceTicker.a,
