@@ -1,24 +1,25 @@
 import fetch from 'node-fetch';
 
-import { Observable, concat, from, merge, ReplaySubject } from 'rxjs';
+import { Observable, concat, from, merge } from 'rxjs';
 import { map, scan, buffer, take, mergeMap } from 'rxjs/operators';
 
-import { WebSocketRxJs } from '../../../common';
 import { updateOrderbook } from '../../../helpers';
 import { Orderbook } from '../../exchange-types';
-import { BinanceRawWsOrderbook } from './internal/types';
-import { binanceOrderbookApiUrl, binanceOrderbookChannel, adaptBinanceWsOrderbook } from './internal/functions';
+import { BinanceWsUpdateOrderbook } from './internal/types';
+import { binanceOrderbookApiUrl, adaptBinanceWsOrderbook, getOrderbookChannel } from './internal/functions';
+import { BinanceWebsocket } from '../websocket';
 
 export class BinanceOrderbook {
-  private readonly pairStreamMap: { [pair: string]: ReplaySubject<Orderbook> } = {};
-  private readonly pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
-  private readonly corsProxy: string;
+  private readonly cacheStreams = new Map<string, Observable<Orderbook>>();
 
-  constructor(corsProxy: string = '') {
-    this.corsProxy = corsProxy;
-  }
+  /**
+   *
+   * @param binanceWebsocket
+   * @param corsProxy
+   */
+  constructor(private readonly binanceWebsocket: BinanceWebsocket, private readonly corsProxy: string = '') {}
 
-  async fetchOrderbook(pair: string, limit: number = 20): Promise<Orderbook> {
+  async fetch(pair: string, limit: number = 20): Promise<Orderbook> {
     const originUrl = binanceOrderbookApiUrl(pair, limit);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
@@ -26,37 +27,33 @@ export class BinanceOrderbook {
     return fetch(url).then(res => res.json());
   }
 
-  orderbook$(pair: string): Observable<Orderbook> {
-    if (!this.pairStreamMap[pair]) {
-      this.pairStreamMap[pair] = new ReplaySubject<Orderbook>(1);
-      this.startOrderbook$(pair).subscribe((orderbook) => this.pairStreamMap[pair].next(orderbook));
+  stream$(pair: string): Observable<Orderbook> {
+    const cached$ = this.cacheStreams.get(pair);
+    if (cached$) {
+      return cached$;
     }
 
-    return this.pairStreamMap[pair].asObservable();
+    const orderbook$ = this.startOrderbook$(pair);
+    this.cacheStreams.set(pair, orderbook$);
+
+    return orderbook$;
   }
 
   stopOrderbook(pair: string): void {
-    if (this.pairSocketMap[pair]) {
-      // close socket also cause the stream to complete
-      this.pairSocketMap[pair].close();
-      delete this.pairSocketMap[pair];
-    }
+    this.binanceWebsocket.unsubscribeChannel(getOrderbookChannel(pair));
+    this.cacheStreams.delete(pair);
+  }
 
-    if (this.pairStreamMap[pair]) {
-      this.pairStreamMap[pair].complete();
-      delete this.pairStreamMap[pair];
-    }
+  private update$(pair: string): Observable<Orderbook> {
+    return this.binanceWebsocket.subscribeChannel<BinanceWsUpdateOrderbook>(getOrderbookChannel(pair))
+      .pipe(map(adaptBinanceWsOrderbook));
   }
 
   private startOrderbook$(pair: string): Observable<Orderbook> {
-    const channel = binanceOrderbookChannel(pair);
-    const ws = new WebSocketRxJs<BinanceRawWsOrderbook>(channel);
-    this.pairSocketMap[pair] = ws;
-
     // orderbook fetched from rest api
-    const fetchOrderbook$ = from(this.fetchOrderbook(pair));
+    const fetchOrderbook$ = from(this.fetch(pair));
     // orderbook (diff) realtime stream
-    const update$ = ws.message$.pipe(map(adaptBinanceWsOrderbook));
+    const update$ = this.update$(pair);
     // orderbook (diff) realtime stream, buffered in time range: [fetch start => fetch done]
     const updateBufferBeforeFetchDone$ = update$.pipe(
       buffer(fetchOrderbook$),
