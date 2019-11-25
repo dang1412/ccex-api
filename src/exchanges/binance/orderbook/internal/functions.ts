@@ -1,6 +1,6 @@
 import { Orderbook } from '../../../exchange-types';
-import { apiEndPoint, wsEndpoint, binancePair } from '../../binance-common';
-import { BinanceRawWsOrderbook } from './types';
+import { apiEndPoint, binancePair } from '../../binance-common';
+import { BinanceWsUpdateOrderbook } from './types';
 
 // orderbook rest api url
 export function binanceOrderbookApiUrl(pair: string, limit: number = 20): string {
@@ -10,12 +10,12 @@ export function binanceOrderbookApiUrl(pair: string, limit: number = 20): string
 }
 
 // orderbook ws channel
-export function binanceOrderbookChannel(pair: string): string {
-  return `${wsEndpoint}/${binancePair(pair)}@depth`;
+export function getOrderbookChannel(pair: string): string {
+  return `${binancePair(pair)}@depth`;
 }
 
 // adapt socket orderbook
-export function adaptBinanceWsOrderbook(binanceOrderbook: BinanceRawWsOrderbook): Orderbook {
+export function adaptBinanceWsOrderbook(binanceOrderbook: BinanceWsUpdateOrderbook): Orderbook {
   return {
     bids: binanceOrderbook.b,
     asks: binanceOrderbook.a,

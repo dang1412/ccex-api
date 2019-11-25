@@ -21,7 +21,7 @@ export class WebsocketRxJsMock<T> implements MockOf<WebSocketRxJs> {
     return this.data$.asObservable();
   }
 
-  constructor(private mockDataScheme: MockDataScheme<T>) {
+  constructor(private readonly mockDataScheme: MockDataScheme<T>) {
     if (mockDataScheme['default']) {
       this.receive(mockDataScheme.default);
     }

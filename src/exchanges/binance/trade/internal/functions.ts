@@ -1,6 +1,6 @@
 import { Trade } from '../../../exchange-types';
-import { apiEndPoint, binancePair, wsEndpoint } from '../../binance-common';
-import { BinanceRawRestTrade, BinanceRawWsTrade } from './types';
+import { apiEndPoint, binancePair } from '../../binance-common';
+import { BinanceRestTrade, BinanceWsTrade } from './types';
 
 // trades rest api url
 export function binanceTradeApiUrl(pair: string, limit: number = 100): string {
@@ -10,11 +10,11 @@ export function binanceTradeApiUrl(pair: string, limit: number = 100): string {
 }
 
 // trades ws channel
-export function binanceTradeChannel(pair: string): string {
-  return `${wsEndpoint}/${binancePair(pair)}@trade`;
+export function getTradeChannel(pair: string): string {
+  return `${binancePair(pair)}@trade`;
 }
 
-export function adaptBinanceRestTrade(binanceTrade: BinanceRawRestTrade): Trade {
+export function adaptBinanceRestTrade(binanceTrade: BinanceRestTrade): Trade {
   return {
     id: binanceTrade.id,
     price: +binanceTrade.price,
@@ -24,7 +24,7 @@ export function adaptBinanceRestTrade(binanceTrade: BinanceRawRestTrade): Trade 
   };
 }
 
-export function adaptBinanceWsTrade(binanceTrade: BinanceRawWsTrade): Trade {
+export function adaptBinanceWsTrade(binanceTrade: BinanceWsTrade): Trade {
   return {
     id: binanceTrade.t,
     price: +binanceTrade.p,

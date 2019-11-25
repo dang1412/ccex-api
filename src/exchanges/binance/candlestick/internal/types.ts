@@ -12,73 +12,66 @@
 //   "28.46694368",      // Taker buy quote asset volume
 //   "17928899.62484339" // Ignore
 // ]
-export type BinanceRawRestCandle = [
-  // Open time
-  number,
-  // Open price
-  string,
-  // High
-  string,
-  // Low
-  string,
-  // Close
-  string,
-  // Volume
-  string,
-  // Close time
-  number,
-  // Quote asset volume
-  string,
-  // Number of trades
-  number,
-  // Taker buy base asset volume
-  string,
-  // Taker buy quote asset volume
-  string,
-  // Ignore
-  string
+export type BinanceRestCandle = [
+  number, // Open time
+  string, // Open price
+  string, // High
+  string, // Low
+  string, // Close
+  string, // Volume
+  number, // Close time
+  string, // Quote asset volume
+  number, // Number of trades
+  string, // Taker buy base asset volume
+  string, // Taker buy quote asset volume
+  string  // Ignore
 ];
 
-export interface BinanceRawWsCandle {
+// {
+//   "e": "kline",     // Event type
+//   "E": 123456789,   // Event time
+//   "s": "BNBBTC",    // Symbol
+//   "k": {
+//     "t": 123400000, // Kline start time
+//     "T": 123460000, // Kline close time
+//     "s": "BNBBTC",  // Symbol
+//     "i": "1m",      // Interval
+//     "f": 100,       // First trade ID
+//     "L": 200,       // Last trade ID
+//     "o": "0.0010",  // Open price
+//     "c": "0.0020",  // Close price
+//     "h": "0.0025",  // High price
+//     "l": "0.0015",  // Low price
+//     "v": "1000",    // Base asset volume
+//     "n": 100,       // Number of trades
+//     "x": false,     // Is this kline closed?
+//     "q": "1.0000",  // Quote asset volume
+//     "V": "500",     // Taker buy base asset volume
+//     "Q": "0.500",   // Taker buy quote asset volume
+//     "B": "123456"   // Ignore
+//   }
+// }
+export interface BinanceWsCandle {
   e: 'kline';
-  // Event time
-  E: number;
-  // Symbol
-  s: string;
+  E: number;  // Event time
+  s: string;  // Symbol
   k: {
-    // Kline start time
-    t: number;
-    // Kline close time
-    T: number;
-    // Symbol
-    s: string;
-    // Interval
-    i: string;
-    // First trade ID
-    f: number;
-    // Last trade ID
-    L: number;
-    // Open price
-    o: string;
-    // Close price
-    c: string;
-    // High price
-    h: string;
-    // Low price
-    l: string;
-    // Base asset volume
-    v: string;
-    // Number of trades
-    n: number;
-    // Is this kline closed?
-    x: boolean;
-    // Quote asset volume
-    q: string;
-    // Taker buy base asset volume
-    V: string;
-    // Taker buy quote asset volume
-    Q: string;
-    // Ignore
-    B: string;
+    t: number;    // Kline start time
+    T: number;    // Kline close time
+    s: string;    // Symbol
+    i: string;    // Interval
+    f: number;    // First trade ID
+    L: number;    // Last trade ID
+    o: string;    // Open price
+    c: string;    // Close price
+    h: string;    // High price
+    l: string;    // Low price
+    v: string;    // Base asset volume
+    n: number;    // Number of trades
+    x: boolean;   // Is this kline closed?
+    q: string;    // Quote asset volume
+    V: string;    // Taker buy base asset volume
+    Q: string;    // Taker buy quote asset volume
+    B: string;    // Ignore
   };
 }

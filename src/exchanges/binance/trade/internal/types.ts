@@ -1,4 +1,4 @@
-export interface BinanceRawRestTrade {
+export interface BinanceRestTrade {
   id: number;
   price: string;
   qty: string;
@@ -7,25 +7,41 @@ export interface BinanceRawRestTrade {
   isBestMatch: boolean;
 }
 
-export interface BinanceRawWsTrade {
-  // Event type
-  e: 'trade';
-  // Event time
-  E: number;
-  // Symbol
-  s: string;
-  // Trade ID
-  t: number;
-  // Price
-  p: string;
-  // Quantity
-  q: string;
-  // Buyer order Id
-  b: number;
-  // Seller order Id
-  a: number;
-  // Trade time
-  T: number;
-  // Is the buyer the market maker?
-  m: boolean;
+export interface BinanceWsTrade {
+  e: 'trade'; // Event type
+  E: number;  // Event time
+  s: string;  // Symbol
+  t: number;  // Trade ID
+  p: string;  // Price
+  q: string;  // Quantity
+  b: number;  // Buyer order ID
+  a: number;  // Seller order ID
+  T: number;  // Trade time
+  m: boolean; // Is the buyer the market maker?
+}
+
+// {
+//   "e": "aggTrade",  // Event type
+//   "E": 123456789,   // Event time
+//   "s": "BNBBTC",    // Symbol
+//   "a": 12345,       // Aggregate trade ID
+//   "p": "0.001",     // Price
+//   "q": "100",       // Quantity
+//   "f": 100,         // First trade ID
+//   "l": 105,         // Last trade ID
+//   "T": 123456785,   // Trade time
+//   "m": true,        // Is the buyer the market maker?
+//   "M": true         // Ignore
+// }
+export interface BinanceWsAggTrade {
+  e: 'aggTrade'; // Event type
+  E: number;  // Event time
+  s: string;  // Symbol
+  t: number;  // Trade ID
+  p: string;  // Price
+  q: string;  // Quantity
+  f: number;  // First trade ID
+  l: number;  // Last trade ID
+  T: number;  // Trade time
+  m: boolean; // Is the buyer the market maker?
 }
