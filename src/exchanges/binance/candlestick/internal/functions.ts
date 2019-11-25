@@ -1,6 +1,6 @@
 import { CandleStick } from '../../../exchange-types';
-import { apiEndPoint, wsEndpoint, binancePair } from '../../binance-common';
-import { BinanceRawRestCandle, BinanceRawWsCandle } from './types';
+import { apiEndPoint, binancePair } from '../../binance-common';
+import { BinanceRestCandle, BinanceWsCandle } from './types';
 
 // candlestick rest api url
 export function binanceCandleStickApiUrl(pair: string, minutesFoot: number, startTime?: number, endTime?: number, limit?: number): string {
@@ -30,13 +30,13 @@ export function binanceCandleStickApiUrl(pair: string, minutesFoot: number, star
 }
 
 // candlestick ws channel
-export function binanceCandleStickChannel(pair: string, minutesFoot: number): string {
+export function getCandleStickChannel(pair: string, minutesFoot: number): string {
   const interval = getCandleInterval(minutesFoot);
 
-  return `${wsEndpoint}/${binancePair(pair)}@kline_${interval}`;
+  return `${binancePair(pair)}@kline_${interval}`;
 }
 
-export function adaptBinanceRestCandle(binanceCandle: BinanceRawRestCandle): CandleStick {
+export function adaptBinanceRestCandle(binanceCandle: BinanceRestCandle): CandleStick {
   return {
     open: +binanceCandle[1],
     high: +binanceCandle[2],
@@ -47,7 +47,7 @@ export function adaptBinanceRestCandle(binanceCandle: BinanceRawRestCandle): Can
   };
 }
 
-export function adaptBinanceWsCandle(binanceCandle: BinanceRawWsCandle): CandleStick {
+export function adaptBinanceWsCandle(binanceCandle: BinanceWsCandle): CandleStick {
   return {
     open: +binanceCandle.k.o,
     high: +binanceCandle.k.h,

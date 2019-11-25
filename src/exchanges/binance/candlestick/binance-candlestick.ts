@@ -3,55 +3,33 @@ import fetch from 'node-fetch';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { WebSocketRxJs } from '../../../common';
 import { CandleStick } from '../../exchange-types';
-import { BinanceRawRestCandle, BinanceRawWsCandle } from './internal/types';
-import { binanceCandleStickApiUrl, adaptBinanceRestCandle, adaptBinanceWsCandle, binanceCandleStickChannel } from './internal/functions';
+import { BinanceWebsocket } from '../websocket';
+import { BinanceRestCandle, BinanceWsCandle } from './internal/types';
+import { binanceCandleStickApiUrl, adaptBinanceRestCandle, adaptBinanceWsCandle, getCandleStickChannel } from './internal/functions';
 
 export class BinanceCandleStick {
-  private readonly pairStreamMap: { [pair: string]: Observable<CandleStick> } = {};
-  private readonly pairSocketMap: { [pair: string]: WebSocketRxJs } = {};
-  private readonly corsProxy: string;
+  constructor(private readonly binanceWebsocket: BinanceWebsocket, private readonly corsProxy: string = '') {}
 
-  constructor(corsProxy: string = '') {
-    this.corsProxy = corsProxy;
-  }
-
-  async fetchCandleStickRange(pair: string, minutesFoot: number, start: number, end: number): Promise<CandleStick[]> {
+  async fetchRange(pair: string, minutesFoot: number, start: number, end: number): Promise<CandleStick[]> {
     const originUrl = binanceCandleStickApiUrl(pair, minutesFoot, start, end);
     const url = this.corsProxy ? this.corsProxy + originUrl : originUrl;
 
-    const raws: BinanceRawRestCandle[] = await fetch(url).then(res => res.json());
+    const raws: BinanceRestCandle[] = await fetch(url).then(res => res.json());
 
     return raws.map(adaptBinanceRestCandle);
   }
 
-  candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {
-    const key = getKey(pair, minutesFoot);
-    if (!this.pairStreamMap[key]) {
-      const channel = binanceCandleStickChannel(pair, minutesFoot);
-      const ws = new WebSocketRxJs<BinanceRawWsCandle>(channel);
-      this.pairStreamMap[key] = ws.message$.pipe(map(adaptBinanceWsCandle));
-      this.pairSocketMap[key] = ws;
-    }
+  stream$(pair: string, minutesFoot: number): Observable<CandleStick> {
+    const channel = getCandleStickChannel(pair, minutesFoot);
 
-    return this.pairStreamMap[key];
+    return this.binanceWebsocket.subscribeChannel<BinanceWsCandle>(channel).pipe(
+      map(adaptBinanceWsCandle),
+    );
   }
 
-  stopCandleStick(pair: string, minutesFoot: number): void {
-    const key = getKey(pair, minutesFoot);
-    if (this.pairSocketMap[key]) {
-      // stream associates with this socket also complete
-      this.pairSocketMap[key].close();
-      delete this.pairSocketMap[key];
-    }
-
-    if (this.pairStreamMap[key]) {
-      delete this.pairStreamMap[key];
-    }
+  stop(pair: string, minutesFoot: number): void {
+    const channel = getCandleStickChannel(pair, minutesFoot);
+    this.binanceWebsocket.unsubscribeChannel(channel);
   }
-}
-
-function getKey(pair: string, minutesFoot: number): string {
-  return `${pair}${minutesFoot}`;
 }

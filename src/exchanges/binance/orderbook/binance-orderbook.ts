@@ -39,7 +39,7 @@ export class BinanceOrderbook {
     return orderbook$;
   }
 
-  stopOrderbook(pair: string): void {
+  stop(pair: string): void {
     this.binanceWebsocket.unsubscribeChannel(getOrderbookChannel(pair));
     this.cacheStreams.delete(pair);
   }

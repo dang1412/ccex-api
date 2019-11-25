@@ -26,14 +26,13 @@ describe('binanceOrderbook', () => {
         .pipe(take(2))
         .subscribe(
           (orderbook) => {
-            console.log(orderbook.asks[0]);
             checkOrderbook(orderbook);
           },
           () => {
             /* error */
           },
           () => {
-            binanceOrderbook.stopOrderbook(market);
+            binanceOrderbook.stop(market);
             done();
           },
         );

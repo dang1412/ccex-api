@@ -34,6 +34,7 @@ export class BinanceTicker {
   }
 
   stop(pair: string): void {
-    this.binanceWebsocket.unsubscribeChannel(pair);
+    const channel = getTickerChannel(pair);
+    this.binanceWebsocket.unsubscribeChannel(channel);
   }
 }

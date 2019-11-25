@@ -6,8 +6,11 @@ import { BinanceTicker } from './ticker';
 import { BinanceOrderbook } from './orderbook';
 import { BinanceTrade } from './trade';
 import { BinanceCandleStick } from './candlestick';
+import { BinanceWebsocket } from './websocket';
 
 export class BinanceApi extends ExchangeApi {
+  private readonly binanceWebsocket: BinanceWebsocket;
+  private readonly binanceTicker: BinanceTicker;
   private readonly binanceOrderbook: BinanceOrderbook;
   private readonly binanceTrade: BinanceTrade;
   private readonly binanceCandleStick: BinanceCandleStick;
@@ -41,9 +44,11 @@ export class BinanceApi extends ExchangeApi {
     super(options);
     const corsProxy = this.options.corsProxy;
 
-    this.binanceOrderbook = new BinanceOrderbook(corsProxy);
-    this.binanceTrade = new BinanceTrade(corsProxy);
-    this.binanceCandleStick = new BinanceCandleStick(corsProxy);
+    this.binanceWebsocket = new BinanceWebsocket();
+    this.binanceTicker = new BinanceTicker(this.binanceWebsocket, corsProxy);
+    this.binanceOrderbook = new BinanceOrderbook(this.binanceWebsocket, corsProxy);
+    this.binanceTrade = new BinanceTrade(this.binanceWebsocket, corsProxy);
+    this.binanceCandleStick = new BinanceCandleStick(this.binanceWebsocket, corsProxy);
   }
 
   /**
@@ -51,43 +56,43 @@ export class BinanceApi extends ExchangeApi {
    */
 
   async fetchTicker(pair: string): Promise<Ticker> {
-    return BinanceTicker.of(pair).fetch(this.options.corsProxy);
+    return this.binanceTicker.fetch(pair);
   }
 
   ticker$(pair: string): Observable<Ticker> {
-    return BinanceTicker.of(pair).getStream$();
+    return this.binanceTicker.stream$(pair);
   }
 
   stopTicker(pair: string): void {
-    BinanceTicker.of(pair).stop();
+    this.binanceTicker.stop(pair);
   }
 
   async fetchOrderbook(pair: string): Promise<Orderbook> {
-    return this.binanceOrderbook.fetchOrderbook(pair);
+    return this.binanceOrderbook.fetch(pair);
   }
 
   orderbook$(pair: string): Observable<Orderbook> {
-    return this.binanceOrderbook.orderbook$(pair);
+    return this.binanceOrderbook.stream$(pair);
   }
 
   stopOrderbook(pair: string): void {
-    this.binanceOrderbook.stopOrderbook(pair);
+    this.binanceOrderbook.stop(pair);
   }
 
   async fetchTrades(pair: string): Promise<Trade[]> {
-    return this.binanceTrade.fetchTrades(pair);
+    return this.binanceTrade.fetch(pair);
   }
 
   trade$(pair: string): Observable<Trade> {
-    return this.binanceTrade.trade$(pair);
+    return this.binanceTrade.stream$(pair);
   }
 
   stopTrade(pair: string): void {
-    this.binanceTrade.stopTrade(pair);
+    this.binanceTrade.stop(pair);
   }
 
   async fetchCandleStickRange(pair: string, minutesFoot: number, start: number, end: number): Promise<CandleStick[]> {
-    return this.binanceCandleStick.fetchCandleStickRange(pair, minutesFoot, start, end);
+    return this.binanceCandleStick.fetchRange(pair, minutesFoot, start, end);
   }
 
   /**
@@ -95,14 +100,14 @@ export class BinanceApi extends ExchangeApi {
    */
 
   async fetchOrderbookLimit(pair: string, limit: number): Promise<Orderbook> {
-    return this.binanceOrderbook.fetchOrderbook(pair, limit);
+    return this.binanceOrderbook.fetch(pair, limit);
   }
 
   candlestick$(pair: string, minutesFoot: number): Observable<CandleStick> {
-    return this.binanceCandleStick.candlestick$(pair, minutesFoot);
+    return this.binanceCandleStick.stream$(pair, minutesFoot);
   }
 
   stopCandleStick(pair: string, minutesFoot: number): void {
-    this.binanceCandleStick.stopCandleStick(pair, minutesFoot);
+    this.binanceCandleStick.stop(pair, minutesFoot);
   }
 }
