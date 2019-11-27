@@ -3,7 +3,8 @@ import { MOCK_SOCKET } from './test-helpers';
 import { BitfinexRawTickerI } from './bitfinex-websocket.type';
 import { take } from 'rxjs/operators';
 
-const bitfinexWebsocket = new BitfinexWebsocket(MOCK_SOCKET as any);
+const bitfinexWebsocket = new BitfinexWebsocket();
+(bitfinexWebsocket as any).ws = MOCK_SOCKET;
 
 describe('bitfinexWebsocket', () => {
   it('should subscribe', async () => {

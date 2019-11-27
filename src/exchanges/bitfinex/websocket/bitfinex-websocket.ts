@@ -15,11 +15,9 @@ export class BitfinexWebsocket {
   private ws: WebSocketRxJs<WebsocketMessageI> | null = null;
   private readonly cache = new Map<string, [Observable<any>, Promise<number>]>();
 
-  constructor(private readonly endPointOrWs?: string | WebSocketRxJs) { }
-
   subscribeChannel<T>(request: WebsocketRequestBaseI): Observable<T> {
     if (!this.ws) {
-      this.ws = typeof this.endPointOrWs === 'object' ? this.endPointOrWs : new WebSocketRxJs(this.endPointOrWs || wsEndpoint);
+      this.ws = new WebSocketRxJs<WebsocketMessageI>(wsEndpoint);
     }
 
     const message$ = this.ws.message$;
