@@ -12,7 +12,7 @@ export class BinanceWebsocket {
 
   subscribeChannel<T>(channel: string): Observable<T> {
     if (!this.ws) {
-      this.ws = initWebsocket(binanceWsEndpoint);
+      this.ws = new WebSocketRxJs<BinanceWebsocketMessage>(binanceWsEndpoint);
     }
 
     const cached$ = this.cache.get(channel);
@@ -57,8 +57,4 @@ export class BinanceWebsocket {
       this.ws.send(JSON.stringify(req));
     }
   }
-}
-
-function initWebsocket(wsEndpoint: string): WebSocketRxJs<BinanceWebsocketMessage> {
-  return new WebSocketRxJs<BinanceWebsocketMessage>(wsEndpoint);
 }
